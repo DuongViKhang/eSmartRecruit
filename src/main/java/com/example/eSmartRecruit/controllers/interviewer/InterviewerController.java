@@ -9,8 +9,5 @@ import java.util.List;
 @RestController
 @RequestMapping("eSmartRecruit/interviewer")
 public class InterviewerController {
-    @GetMapping("/home")
-    List<String> getAllInterviewer(){
-        return List.of("Hello interviewer");
-    }
+
 }
