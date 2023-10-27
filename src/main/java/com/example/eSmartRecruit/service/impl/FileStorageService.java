@@ -1,5 +1,6 @@
-package com.example.eSmartRecruit.service;
+package com.example.eSmartRecruit.service.impl;
 
+import com.example.eSmartRecruit.service.IStorageService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
@@ -17,7 +18,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 @Service
-public class FileStorageService implements IStorageService{
+public class FileStorageService implements IStorageService {
     private final Path storageFolder = Paths.get("uploads");
 
     public FileStorageService() {

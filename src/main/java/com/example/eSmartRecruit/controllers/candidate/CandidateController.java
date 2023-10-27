@@ -2,13 +2,16 @@ package com.example.eSmartRecruit.controllers.candidate;
 
 import com.example.eSmartRecruit.models.Applications;
 import com.example.eSmartRecruit.models.Positions;
-import com.example.eSmartRecruit.service.ApplicationService;
+import com.example.eSmartRecruit.service.impl.ApplicationService;
 import com.example.eSmartRecruit.service.IStorageService;
-import com.example.eSmartRecruit.service.PositionService;
+import com.example.eSmartRecruit.service.impl.PositionService;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,20 +45,23 @@ public class CandidateController {
     //Đợi session
     //Để candidateID mặc định 1
     @PostMapping("/application/create/{positionID}")
-    ResponseEntity<String> applyForPosition(@PathVariable("positionID")Integer id, @RequestParam("file")MultipartFile file){
+    ResponseEntity<String> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("file")MultipartFile file){
         try {
+            //
+            String authHeader = request.getHeader("Authorization");
+            System.out.println(authHeader);
+
+            //
+
             String generatedFileName = storageService.storeFile(file);
-            Applications applications = new Applications(1,id,"PENDING",generatedFileName, Date.valueOf(LocalDate.now()));
+            Integer candidateId = 1;
+            Applications applications = new Applications(candidateId, id,"PENDING", generatedFileName, Date.valueOf(LocalDate.now()));
 
             return new ResponseEntity<String>(applicationService.apply(applications),HttpStatus.OK);
-//                    ResponseEntity.status(HttpStatus.OK).body(
-//                    List.of("ok","upload successfully",generatedFileName)
-//            );
+
         }catch (Exception e){
             return new ResponseEntity<String>(e.getMessage(),HttpStatus.NOT_IMPLEMENTED);
         }
 
-//        Applications applications = new Applications(1,1,id,"PENDING",CV, Date.valueOf(LocalDate.now()));
-//        return new ResponseEntity<String>(applicationService.apply(applications),HttpStatus.CREATED);
     }
 }
