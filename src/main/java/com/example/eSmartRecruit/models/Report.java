@@ -1,8 +1,8 @@
 package com.example.eSmartRecruit.models;
 
-import java.util.Date;
-
 import jakarta.persistence.*;
+
+import java.sql.Date;
 
 @Entity
 @Table(name = "Reports")
@@ -10,16 +10,16 @@ public class Report {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private int id;
+    private Integer id;
 
     @Column(name = "SessionID")
-    private int sessionID;
+    private Integer sessionID;
 
     @Column(name = "ReportName", length = 255)
     private String reportName;
 
     @Lob
-    @Column(name = "ReportData")
+    @Column(name = "ReportData", columnDefinition = "text")
     private String reportData;
 
     @Temporal(TemporalType.DATE)
@@ -32,7 +32,7 @@ public class Report {
 
     public Report() {}
 
-	public Report(int sessionID, String reportName, String reportData, Date createDate, Date updateDate) {
+	public Report(Integer sessionID, String reportName, String reportData, Date createDate, Date updateDate) {
 		super();
 		this.sessionID = sessionID;
 		this.reportName = reportName;
@@ -41,7 +41,7 @@ public class Report {
 		this.updateDate = updateDate;
 	}
 
-	public Report(int id, int sessionID, String reportName, String reportData, Date createDate, Date updateDate) {
+	public Report(Integer id, Integer sessionID, String reportName, String reportData, Date createDate, Date updateDate) {
 		super();
 		this.id = id;
 		this.sessionID = sessionID;
@@ -51,19 +51,19 @@ public class Report {
 		this.updateDate = updateDate;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public int getSessionID() {
+	public Integer getSessionID() {
 		return sessionID;
 	}
 
-	public void setSessionID(int sessionID) {
+	public void setSessionID(Integer sessionID) {
 		this.sessionID = sessionID;
 	}
 

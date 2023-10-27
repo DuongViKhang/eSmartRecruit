@@ -1,27 +1,35 @@
 package com.example.eSmartRecruit.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 @Table(name = "Positions")
+//@AllArgsConstructor
+//@NoArgsConstructor
+@Data
+@Builder
 public class Position {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private int id;
+    private Integer id;
 
     @Column(name = "Title", length = 255)
     private String title;
 
     @Lob
-    @Column(name = "JobDescription")
+    @Column(name = "JobDescription", columnDefinition = "text")
     private String jobDescription;
 
     @Lob
-    @Column(name = "JobRequirements")
+    @Column(name = "JobRequirements", columnDefinition = "text")
     private String jobRequirements;
 
     @Column(name = "Salary")
@@ -50,7 +58,7 @@ public class Position {
 		this.location = location;
 	}
 
-	public Position(int id, String title, String jobDescription, String jobRequirements, BigDecimal salary,
+	public Position(Integer id, String title, String jobDescription, String jobRequirements, BigDecimal salary,
 			Date postDate, Date expireDate, String location) {
 		super();
 		this.id = id;
@@ -63,11 +71,11 @@ public class Position {
 		this.location = location;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
