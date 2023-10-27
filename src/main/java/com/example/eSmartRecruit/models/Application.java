@@ -1,34 +1,33 @@
 package com.example.eSmartRecruit.models;
 
-import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.sql.Date;
-import java.time.LocalDate;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Applications")
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
 public class Application {
+	
+	public static enum Status {
+	    Pending,
+	    Approved,
+	    Declined
+	}
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private Integer id;
+    private int id;
 
     @Column(name = "CandidateID")
-    private Integer candidateID;
+    private int candidateID;
 
     @Column(name = "PositionID")
-    private Integer positionID;
+    private int positionID;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "Status")
-	@Enumerated(EnumType.STRING)
-    private ApplicationStatus status;
+    private Status status;
 
     @Column(name = "CV", length = 255)
     private String cv;
@@ -41,18 +40,9 @@ public class Application {
     @Column(name = "UpdateDate")
     private Date updateDate;
 
-//    public Application() {}
+    public Application() {}
 
-	public Application(Integer candidateID, Integer positionID, String cv, Date updateDate) {
-		super();
-		this.candidateID = candidateID;
-		this.positionID = positionID;
-		this.cv = cv;
-		this.createDate = Date.valueOf(LocalDate.now());
-		this.updateDate = updateDate;
-	}
-
-	public Application(Integer candidateID, Integer positionID, ApplicationStatus status, String cv, Date createDate, Date updateDate) {
+	public Application(int candidateID, int positionID, Status status, String cv, Date createDate, Date updateDate) {
 		super();
 		this.candidateID = candidateID;
 		this.positionID = positionID;
@@ -62,71 +52,72 @@ public class Application {
 		this.updateDate = updateDate;
 	}
 
-//	public Application(Integer id, Integer candidateID, Integer positionID, String status, String cv, Date createDate,
-//			Date updateDate) {
-//		super();
-//		this.id = id;
-//		this.candidateID = candidateID;
-//		this.positionID = positionID;
-//		this.status = status;
-//		this.cv = cv;
-//		this.createDate = createDate;
-//		this.updateDate = updateDate;
-//	}
+	public Application(int id, int candidateID, int positionID, Status status, String cv, Date createDate,
+			Date updateDate) {
+		super();
+		this.id = id;
+		this.candidateID = candidateID;
+		this.positionID = positionID;
+		this.status = status;
+		this.cv = cv;
+		this.createDate = createDate;
+		this.updateDate = updateDate;
+	}
 
-//	public Integer getId() {
-//		return id;
-//	}
-//
-//	public void setId(Integer id) {
-//		this.id = id;
-//	}
-//
-//	public Integer getCandidateID() {
-//		return candidateID;
-//	}
-//
-//	public void setCandidateID(Integer candidateID) {
-//		this.candidateID = candidateID;
-//	}
-//
-//	public Integer getPositionID() {
-//		return positionID;
-//	}
-//
-//	public void setPositionID(Integer positionID) {
-//		this.positionID = positionID;
-//	}
-//
-//	public String getStatus() {
-//		return status;
-//	}
-//
-//	public void setStatus(String status) {
-//		this.status = status;
-//	}
-//
-//	public String getCv() {
-//		return cv;
-//	}
-//
-//	public void setCv(String cv) {
-//		this.cv = cv;
-//	}
-//
-//	public Date getCreateDate() {
-//		return createDate;
-//	}
-//
-//	public void setCreateDate(Date createDate) {
-//		this.createDate = createDate;
-//	}
-//
-//	public Date getUpdateDate() {
-//		return updateDate;
-//	}
-//
-//	public void setUpdateDate(Date updateDate) {
-//		this.updateDate = updateDate;
-//	}
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getCandidateID() {
+		return candidateID;
+	}
+
+	public void setCandidateID(int candidateID) {
+		this.candidateID = candidateID;
+	}
+
+	public int getPositionID() {
+		return positionID;
+	}
+
+	public void setPositionID(int positionID) {
+		this.positionID = positionID;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public String getCv() {
+		return cv;
+	}
+
+	public void setCv(String cv) {
+		this.cv = cv;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
 }
