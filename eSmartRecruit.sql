@@ -9,7 +9,7 @@ CREATE TABLE Users (
     Email VARCHAR(255) UNIQUE,
     PhoneNumber VARCHAR(20) UNIQUE,
     RoleName ENUM('Candidate', 'Admin', 'Interviewer') DEFAULT('Candidate'),
-    Status ENUM('Hoạt động', 'Bị khóa') DEFAULT('Hoạt động'),
+    Status ENUM('Active', 'Inactive') DEFAULT('Active'),
     CreateDate Date,
     UpdateDate Date
 );
@@ -31,7 +31,7 @@ CREATE TABLE Applications (
     ID INT AUTO_INCREMENT PRIMARY KEY,
     CandidateID INT,
     PositionID INT,
-    Status ENUM('Chưa duyệt', 'Đã duyệt', 'Từ chối') DEFAULT('Chưa duyệt'),
+    Status ENUM('Pending', 'Approved', 'Declined') DEFAULT('Pending'),
     CV VARCHAR(255),
     CreateDate Date,
     UpdateDate Date,
@@ -65,8 +65,8 @@ CREATE TABLE InterviewSessions (
     CandidateID INT,
     Date DATE,
     Location NVARCHAR(255),
-    Status ENUM('Chưa có lịch phỏng vấn','Chưa phỏng vấn', 'Đã phỏng vấn') DEFAULT('Chưa có lịch phỏng vấn'),
-    Result ENUM('Chưa đánh giá', 'Đạt', 'Không đạt') DEFAULT('Chưa đánh giá'),
+	Status ENUM('NotOnSchedule','Yet', 'Already') DEFAULT('NotOnSchedule'),
+    Result ENUM('NotYet', 'Good', 'NotGood') DEFAULT('NotYet'),
     Notes TEXT,
     FOREIGN KEY (PositionID) REFERENCES Positions(ID),
     FOREIGN KEY (InterviewerID) REFERENCES Users(ID),
