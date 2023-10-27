@@ -1,6 +1,6 @@
 package com.example.eSmartRecruit.authentication;
 
-import com.example.eSmartRecruit.models.Users;
+import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.service.impl.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class Authentication {
     }
 
     @GetMapping("/hello")
-    public List<Users> sayHello(){
+    public List<User> sayHello(){
         System.out.println("get hello");
         return userService.getAllUser();
     }

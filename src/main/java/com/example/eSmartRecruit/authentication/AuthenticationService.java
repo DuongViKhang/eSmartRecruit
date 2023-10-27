@@ -2,28 +2,36 @@ package com.example.eSmartRecruit.authentication;
 
 
 import com.example.eSmartRecruit.config.JwtService;
-import com.example.eSmartRecruit.models.RoleName;
-import com.example.eSmartRecruit.models.Users;
-import com.example.eSmartRecruit.repository.UserRepository;
+import com.example.eSmartRecruit.models.enumModel.Role;
+import com.example.eSmartRecruit.models.User;
+import com.example.eSmartRecruit.models.enumModel.UserStatus;
+import com.example.eSmartRecruit.repositories.UserRepos;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.sql.Date;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final UserRepository userRepo;
+    private final UserRepos userRepo;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     public AuthenticationResponse register(RegisterRequest request) {
-        var user = Users.builder()
-                .userName(request.getUserName())
+        //Role role = Role.valueOf(request.getRoleName());
+        var user = User.builder()
+                .username(request.getUsername())
                 .email(request.getEmail())
+                .phoneNumber(request.getPhoneNumber())
+                .roleName(Role.valueOf(request.getRoleName()))
+                .status(UserStatus.Active)
                 .password(passwordEncoder.encode(request.getPassword()))
-                .roleName(RoleName.CANDIDATE)
+                .createDate(Date.valueOf(LocalDate.now()))
+                .updateDate(Date.valueOf(LocalDate.now()))
                 .build();
         userRepo.save(user);
         var jwtToken = jwtService.generateToken(user);

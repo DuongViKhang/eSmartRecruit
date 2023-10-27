@@ -1,7 +1,8 @@
 package com.example.eSmartRecruit.service;
 
-import com.example.eSmartRecruit.models.Positions;
+import com.example.eSmartRecruit.models.Position;
+
 
 public interface IPositionService {
-    public Positions getSelectedPosition(Integer id);
+    public Position getSelectedPosition(int id);
 }

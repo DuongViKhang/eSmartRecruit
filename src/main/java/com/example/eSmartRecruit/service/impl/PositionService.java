@@ -1,7 +1,7 @@
 package com.example.eSmartRecruit.service.impl;
 
-import com.example.eSmartRecruit.models.Positions;
-import com.example.eSmartRecruit.repository.PositionRepository;
+import com.example.eSmartRecruit.models.Position;
+import com.example.eSmartRecruit.repositories.PositionRepos;
 import com.example.eSmartRecruit.service.IPositionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class PositionService implements IPositionService {
-    private final PositionRepository positionRepository;
-    public Positions getSelectedPosition(Integer id){
+    private final PositionRepos positionRepository;
+    public Position getSelectedPosition(int id){
         return positionRepository.findById(id).orElseThrow();
     }
 }

@@ -1,6 +1,6 @@
 package com.example.eSmartRecruit.config;
 
-import com.example.eSmartRecruit.repository.UserRepository;
+import com.example.eSmartRecruit.repositories.UserRepos;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
-    private final UserRepository userRepo;
+    private final UserRepos userRepo;
     @Bean
     public UserDetailsService userDetailsService(){
         return new UserDetailsService() {

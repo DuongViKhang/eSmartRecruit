@@ -1,6 +1,6 @@
 package com.example.eSmartRecruit.config;
 
-import com.example.eSmartRecruit.models.Users;
+import com.example.eSmartRecruit.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -35,7 +35,7 @@ public class JwtService {
         return extractClaim(token,Claims::getId);
     }
 
-    public String generateToken(Users user){
+    public String generateToken(User user){
         return generateToken(new HashMap<>(), user);
     }
 
@@ -54,13 +54,13 @@ public class JwtService {
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            Users users
+            User users
     ){
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(users.getRoleName().name())
-                .setId(users.getId().toString())
+                .setId(Integer.toString(users.getId()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+1000*60*60))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
