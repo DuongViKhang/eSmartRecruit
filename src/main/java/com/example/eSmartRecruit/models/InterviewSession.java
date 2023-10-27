@@ -8,6 +8,18 @@ import jakarta.persistence.*;
 @Table(name = "InterviewSessions")
 public class InterviewSession {
 	
+	public enum Status {
+	    NotOnSchedule,
+	    Yet,
+	    Already
+	}
+
+	public enum Result {
+	    NotYet,
+	    Good,
+	    NotGood
+	}
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -28,11 +40,13 @@ public class InterviewSession {
     @Column(name = "Location", length = 255)
     private String location;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "Status")
-    private String status;
+    private Status status;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "Result")
-    private String result;
+    private Result result;
 
     @Lob
     @Column(name = "Notes")
@@ -41,7 +55,7 @@ public class InterviewSession {
     public InterviewSession() {}
 
 	public InterviewSession(int positionID, Integer interviewerID, int candidateID, Date date, String location,
-			String status, String result, String notes) {
+			Status status, Result result, String notes) {
 		super();
 		this.positionID = positionID;
 		this.interviewerID = interviewerID;
@@ -54,7 +68,7 @@ public class InterviewSession {
 	}
 
 	public InterviewSession(int id, int positionID, Integer interviewerID, int candidateID, Date date, String location,
-			String status, String result, String notes) {
+			Status status, Result result, String notes) {
 		super();
 		this.id = id;
 		this.positionID = positionID;
@@ -71,89 +85,72 @@ public class InterviewSession {
 		return id;
 	}
 
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 	public int getPositionID() {
 		return positionID;
 	}
 
-
 	public void setPositionID(int positionID) {
 		this.positionID = positionID;
 	}
-
 
 	public Integer getInterviewerID() {
 		return interviewerID;
 	}
 
-
 	public void setInterviewerID(Integer interviewerID) {
 		this.interviewerID = interviewerID;
 	}
-
 
 	public int getCandidateID() {
 		return candidateID;
 	}
 
-
 	public void setCandidateID(int candidateID) {
 		this.candidateID = candidateID;
 	}
-
 
 	public Date getDate() {
 		return date;
 	}
 
-
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
 
 	public String getLocation() {
 		return location;
 	}
 
-
 	public void setLocation(String location) {
 		this.location = location;
 	}
 
-
-	public String getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
-
-	public void setStatus(String status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 
-
-	public String getResult() {
+	public Result getResult() {
 		return result;
 	}
 
-
-	public void setResult(String result) {
+	public void setResult(Result result) {
 		this.result = result;
 	}
-
 
 	public String getNotes() {
 		return notes;
 	}
 
-
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-
+    
 }

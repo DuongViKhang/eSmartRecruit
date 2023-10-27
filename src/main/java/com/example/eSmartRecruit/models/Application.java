@@ -7,6 +7,13 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "Applications")
 public class Application {
+	
+	public static enum Status {
+	    Pending,
+	    Approved,
+	    Declined
+	}
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -18,8 +25,9 @@ public class Application {
     @Column(name = "PositionID")
     private int positionID;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "Status")
-    private String status;
+    private Status status;
 
     @Column(name = "CV", length = 255)
     private String cv;
@@ -34,7 +42,7 @@ public class Application {
 
     public Application() {}
 
-	public Application(int candidateID, int positionID, String status, String cv, Date createDate, Date updateDate) {
+	public Application(int candidateID, int positionID, Status status, String cv, Date createDate, Date updateDate) {
 		super();
 		this.candidateID = candidateID;
 		this.positionID = positionID;
@@ -44,7 +52,7 @@ public class Application {
 		this.updateDate = updateDate;
 	}
 
-	public Application(int id, int candidateID, int positionID, String status, String cv, Date createDate,
+	public Application(int id, int candidateID, int positionID, Status status, String cv, Date createDate,
 			Date updateDate) {
 		super();
 		this.id = id;
@@ -80,11 +88,11 @@ public class Application {
 		this.positionID = positionID;
 	}
 
-	public String getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 
@@ -111,4 +119,5 @@ public class Application {
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
+
 }

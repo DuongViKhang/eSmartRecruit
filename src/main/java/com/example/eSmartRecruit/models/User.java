@@ -7,6 +7,18 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "Users")
 public class User {
+	
+	public static enum Role {
+        Candidate,
+        Admin,
+        Interviewer
+    }
+
+    public static enum Status {
+        Active,
+        Inactive
+    }
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -24,17 +36,48 @@ public class User {
     @Column(name = "PhoneNumber", unique = true)
     private String phoneNumber;
     
+    @Enumerated(EnumType.STRING)
     @Column(name = "RoleName")
-    private String roleName;
+    private Role roleName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "Status")
-    private String status;
+    private Status status;
 
     @Column(name = "CreateDate")
     private Date createDate;
 
     @Column(name = "UpdateDate")
     private Date updateDate;
+    
+    public User() {}
+
+	public User(String username, String password, String email, String phoneNumber, Role roleName, Status status,
+			Date createDate, Date updateDate) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.roleName = roleName;
+		this.status = status;
+		this.createDate = createDate;
+		this.updateDate = updateDate;
+	}
+
+	public User(int id, String username, String password, String email, String phoneNumber, Role roleName,
+			Status status, Date createDate, Date updateDate) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.roleName = roleName;
+		this.status = status;
+		this.createDate = createDate;
+		this.updateDate = updateDate;
+	}
 
 	public int getId() {
 		return id;
@@ -76,19 +119,19 @@ public class User {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public String getRoleName() {
+	public Role getRoleName() {
 		return roleName;
 	}
 
-	public void setRoleName(String roleName) {
+	public void setRoleName(Role roleName) {
 		this.roleName = roleName;
 	}
 
-	public String getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 
@@ -107,33 +150,5 @@ public class User {
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
-    
-    public User() {}
 
-	public User(String username, String password, String email, String phoneNumber, String roleName, String status,
-			Date createDate, Date updateDate) {
-		super();
-		this.username = username;
-		this.password = password;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-		this.roleName = roleName;
-		this.status = status;
-		this.createDate = createDate;
-		this.updateDate = updateDate;
-	}
-
-	public User(int id, String username, String password, String email, String phoneNumber, String roleName,
-			String status, Date createDate, Date updateDate) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-		this.roleName = roleName;
-		this.status = status;
-		this.createDate = createDate;
-		this.updateDate = updateDate;
-	}
 }
