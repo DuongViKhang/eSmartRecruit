@@ -1,8 +1,9 @@
 package com.example.eSmartRecruit.models;
 
-import java.sql.Date;
-
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
+
+import java.sql.Date;
 
 @Entity
 @Table(name = "Blacklists")
@@ -10,13 +11,13 @@ public class Blacklist {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private int id;
+    private Integer id;
 
     @Column(name = "CandidateID")
-    private int candidateID;
+    private Integer candidateID;
 
     @Lob
-    @Column(name = "Reason")
+    @Column(name = "Reason", columnDefinition = "text")
     private String reason;
 
     @Temporal(TemporalType.DATE)
@@ -29,7 +30,7 @@ public class Blacklist {
     
     public Blacklist() {}
 
-	public Blacklist(int candidateID, String reason, Date createDate, Date updateDate) {
+	public Blacklist(Integer candidateID, String reason, Date createDate, Date updateDate) {
 		super();
 		this.candidateID = candidateID;
 		this.reason = reason;
@@ -37,7 +38,7 @@ public class Blacklist {
 		this.updateDate = updateDate;
 	}
 
-	public Blacklist(int id, int candidateID, String reason, Date createDate, Date updateDate) {
+	public Blacklist(Integer id, Integer candidateID, String reason, Date createDate, Date updateDate) {
 		super();
 		this.id = id;
 		this.candidateID = candidateID;
@@ -46,19 +47,19 @@ public class Blacklist {
 		this.updateDate = updateDate;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public int getCandidateID() {
+	public Integer getCandidateID() {
 		return candidateID;
 	}
 
-	public void setCandidateID(int candidateID) {
+	public void setCandidateID(Integer candidateID) {
 		this.candidateID = candidateID;
 	}
 

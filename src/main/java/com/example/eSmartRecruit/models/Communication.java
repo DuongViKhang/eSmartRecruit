@@ -1,8 +1,8 @@
 package com.example.eSmartRecruit.models;
 
-import java.util.Date;
-
 import jakarta.persistence.*;
+
+import java.sql.Date;
 
 @Entity
 @Table(name = "Communications")
@@ -11,13 +11,13 @@ public class Communication {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private int id;
+    private Integer id;
 
     @Column(name = "CandidateID")
-    private int candidateID;
+    private Integer candidateID;
 
     @Lob
-    @Column(name = "Notes")
+    @Column(name = "Notes", columnDefinition = "text")
     private String notes;
 
     @Column(name = "DateContacted")
@@ -33,7 +33,7 @@ public class Communication {
 
     public Communication() {}
 
-	public Communication(int candidateID, String notes, Date dateContacted, Date createDate, Date updateDate) {
+	public Communication(Integer candidateID, String notes, Date dateContacted, Date createDate, Date updateDate) {
 		super();
 		this.candidateID = candidateID;
 		this.notes = notes;
@@ -42,7 +42,7 @@ public class Communication {
 		this.updateDate = updateDate;
 	}
 
-	public Communication(int id, int candidateID, String notes, Date dateContacted, Date createDate, Date updateDate) {
+	public Communication(Integer id, Integer candidateID, String notes, Date dateContacted, Date createDate, Date updateDate) {
 		super();
 		this.id = id;
 		this.candidateID = candidateID;
@@ -52,19 +52,19 @@ public class Communication {
 		this.updateDate = updateDate;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public int getCandidateID() {
+	public Integer getCandidateID() {
 		return candidateID;
 	}
 
-	public void setCandidateID(int candidateID) {
+	public void setCandidateID(Integer candidateID) {
 		this.candidateID = candidateID;
 	}
 

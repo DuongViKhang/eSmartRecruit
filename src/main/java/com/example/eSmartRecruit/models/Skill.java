@@ -9,42 +9,42 @@ public class Skill {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
-    private int id;
+    private Integer id;
 
     @Column(name = "CandidateID")
-    private int candidateId;
+    private Integer candidateId;
 
     @Column(name = "SkillName")
     private String skillName;
     
     public Skill() {}
 
-    public Skill(int candidateId, String skillName) {
+    public Skill(Integer candidateId, String skillName) {
 		super();
 		this.candidateId = candidateId;
 		this.skillName = skillName;
 	}
     
-	public Skill(int id, int candidateId, String skillName) {
+	public Skill(Integer id, Integer candidateId, String skillName) {
 		super();
 		this.id = id;
 		this.candidateId = candidateId;
 		this.skillName = skillName;
 	}
 
-	public int getId() {
+	public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getCandidateId() {
+    public Integer getCandidateId() {
         return candidateId;
     }
 
-    public void setCandidate(int candidateId) {
+    public void setCandidate(Integer candidateId) {
         this.candidateId = candidateId;
     }
 
