@@ -3,21 +3,19 @@ package com.example.eSmartRecruit.controllers.candidate;
 import com.example.eSmartRecruit.models.Application;
 
 import com.example.eSmartRecruit.models.Position;
-import com.example.eSmartRecruit.service.impl.ApplicationService;
-import com.example.eSmartRecruit.service.IStorageService;
-import com.example.eSmartRecruit.service.impl.PositionService;
-import jakarta.servlet.http.HttpServlet;
+import com.example.eSmartRecruit.repositories.PositionRepos;
+import com.example.eSmartRecruit.services.impl.ApplicationService;
+import com.example.eSmartRecruit.services.IStorageService;
+import com.example.eSmartRecruit.services.impl.PositionService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -27,9 +25,10 @@ public class CandidateController {
     private PositionService positionService;
     private ApplicationService applicationService;
     private IStorageService storageService;
+    private PositionRepos positionRepository;
     @GetMapping("/home")
-    List<String> getAllCandidate(){
-        return List.of("Hello candidate","");
+    List<Position> getAllCandidate(){
+        return positionRepository.findAll();
     }
 
     @GetMapping("/position/{positionID}")

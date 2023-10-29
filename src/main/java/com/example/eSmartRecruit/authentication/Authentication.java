@@ -1,7 +1,7 @@
 package com.example.eSmartRecruit.authentication;
 
 import com.example.eSmartRecruit.models.User;
-import com.example.eSmartRecruit.service.impl.UserService;
+import com.example.eSmartRecruit.services.impl.UserService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +15,7 @@ import java.util.List;
 public class Authentication {
     private final AuthenticationService authenticationService;
     private final UserService userService;
+
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request

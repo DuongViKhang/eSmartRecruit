@@ -1,10 +1,9 @@
 package com.example.eSmartRecruit.controllers;
 
-import com.example.eSmartRecruit.service.IStorageService;
+import com.example.eSmartRecruit.services.IStorageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
