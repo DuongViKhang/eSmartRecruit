@@ -1,8 +1,10 @@
 package com.example.eSmartRecruit.controllers.candidate;
 
+import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.models.Application;
 
 import com.example.eSmartRecruit.models.Position;
+import com.example.eSmartRecruit.models.enumModel.Role;
 import com.example.eSmartRecruit.service.impl.ApplicationService;
 import com.example.eSmartRecruit.service.IStorageService;
 import com.example.eSmartRecruit.service.impl.PositionService;
@@ -41,23 +43,19 @@ public class CandidateController {
         //return new ResponseEntity<Positions>(positionService.getSelectedPosition(id),HttpStatus.OK);
     }
 
-
-
-
-    //Để candidateID mặc định 1
     @PostMapping("/application/create/{positionID}")
-    ResponseEntity<String> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv,
-                                                                                                                @RequestParam("updateDate")Date updateDate){
+    ResponseEntity<String> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv){
         try {
-            //
             String authHeader = request.getHeader("Authorization");
-            System.out.println(authHeader);
-
-            //
+            ExtractUser userInfo = new ExtractUser(authHeader);
+            if(userInfo.getUserRole()!= Role.Candidate){
+                return new ResponseEntity<String>("Not a candidate",HttpStatus.BAD_REQUEST);
+            }
 
             String generatedFileName = storageService.storeFile(cv);
-            int candidateId = 1;
-            Application application = new Application(candidateId, id, generatedFileName, updateDate);
+            int candidateId = userInfo.getUserId();
+
+            Application application = new Application(candidateId, id, generatedFileName);
 
             return new ResponseEntity<String>(applicationService.apply(application),HttpStatus.OK);
 
