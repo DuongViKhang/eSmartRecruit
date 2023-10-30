@@ -1,5 +1,6 @@
 package com.example.eSmartRecruit.config;
 
+import com.example.eSmartRecruit.models.enumModel.Role;
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +24,9 @@ public class SecurityConfiguration {
         httpSecurity.csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests(auth->auth
                                             .requestMatchers("/eSmartRecruit/**")
-                                            .permitAll()
+                                            .permitAll() //let all request pass to the above URL, no authen yet
+                                            .requestMatchers("/eSmartRecruit/application/create/**")
+                                            .hasAnyAuthority(Role.Candidate.name())//only candidate can get access to the link above
                                             .anyRequest()
                                             .authenticated())
                 .sessionManagement(session -> session
