@@ -50,7 +50,7 @@ public class AuthenticationService {
 //                )
 //        );
         System.out.println("before user");
-        var user = userRepo.findByEmail(request.getEmail()).orElseThrow(RuntimeException::new);
+        var user = userRepo.findByUsername(request.getUsername()).orElseThrow(RuntimeException::new);
         System.out.println("after user");
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
