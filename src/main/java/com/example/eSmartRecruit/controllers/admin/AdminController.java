@@ -28,44 +28,4 @@ public class AdminController {
         return List.of("Hello admin");
     }
 
-    //get useradmin
-    @GetMapping("/profile")
-    ResponseEntity<ResponseObject> getDetailUserAdmin(HttpServletRequest request) throws JSONException {
-        String authHeader = request.getHeader("Authorization");
-        //return new ResponseEntity<String>("hello",HttpStatus.OK);
-        ExtractUser userInfo = new ExtractUser(authHeader, userService);
-        if(!userInfo.isEnabled()){
-            return null;
-        }
-        Integer userId = userInfo.getUserId();
-        User user = userService.getUserById(userId);
-
-        Map<String, String> data = new HashMap<>();
-        data.put("username", user.getUsername());
-        data.put("email", user.getEmail());
-        data.put("phonename", user.getPhoneNumber());
-
-        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(data).build(), HttpStatus.OK);
-
-    }
-    //update userAdmin
-    @PutMapping("/profile")
-    ResponseEntity<ResponseObject> updateUserAdmin(HttpServletRequest request,
-//                                              @RequestParam("email")String email,
-//                                              @RequestParam("phoneNumber")String phoneNumber
-                                              @RequestBody User user0
-    ) throws JSONException {
-        String authHeader = request.getHeader("Authorization");
-        //return new ResponseEntity<String>("hello",HttpStatus.OK);
-        ExtractUser userInfo = new ExtractUser(authHeader, userService);
-        if(!userInfo.isEnabled()){
-            return null;
-        }
-        Integer userId = userInfo.getUserId();
-        User user = userService.updateUser(User.builder()
-                .email(user0.getEmail())
-                .phoneNumber(user0.getPhoneNumber()).build(),userId);
-        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(user).build(),HttpStatus.OK);
-
-    }
 }
