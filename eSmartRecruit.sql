@@ -23,6 +23,7 @@ CREATE TABLE Positions (
     Salary DECIMAL,
     PostDate DATE,
     ExpireDate DATE,
+    UpdateDate DATE,
     Location VARCHAR(255)
 );
 
@@ -60,9 +61,8 @@ CREATE TABLE Skills (
 -- Tạo bảng Phiên phỏng vấn
 CREATE TABLE InterviewSessions (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    PositionID INT,
     InterviewerID INT DEFAULT NULL,
-    CandidateID INT,
+    ApplicationID INT,
     Date DATE,
     Location NVARCHAR(255),
 	Status ENUM('NotOnSchedule','Yet', 'Already') DEFAULT('NotOnSchedule'),
