@@ -1,6 +1,11 @@
 package com.example.eSmartRecruit.authentication;
 
 
+
+import com.example.eSmartRecruit.authentication.request_reponse.AuthenticationRequest;
+import com.example.eSmartRecruit.authentication.request_reponse.AuthenticationResponse;
+import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
+
 import com.example.eSmartRecruit.config.JwtService;
 import com.example.eSmartRecruit.models.enumModel.Role;
 import com.example.eSmartRecruit.models.User;
@@ -42,18 +47,25 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){
-        System.out.println("before authen");
+
 //        authenticationManager.authenticate(
 //                new UsernamePasswordAuthenticationToken(
 //                        request.getEmail(),
 //                        request.getPassword()
 //                )
 //        );
-        System.out.println("before user");
-        var user = userRepo.findByEmail(request.getEmail()).orElseThrow(RuntimeException::new);
-        System.out.println("after user");
+
+
+        var user = userRepo.findByUsername(request.getUsername()).orElseThrow(RuntimeException::new);
+        if (!user.isEnabled()){
+            return AuthenticationResponse.builder()
+                    .message("Account not active")
+                    .build();
+        }
+
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
+                .message("Success")
                 .token(jwtToken)
                 .build();
     }

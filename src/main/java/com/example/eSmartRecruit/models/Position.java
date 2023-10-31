@@ -47,4 +47,5 @@ public class Position {
     @Column(name = "Location", length = 255)
     private String location;
 
+
 }
