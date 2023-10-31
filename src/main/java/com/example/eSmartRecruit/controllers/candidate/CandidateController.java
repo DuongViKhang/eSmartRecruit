@@ -1,23 +1,18 @@
 package com.example.eSmartRecruit.controllers.candidate;
 
 import com.example.eSmartRecruit.models.Application;
-
 import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.service.impl.ApplicationService;
 import com.example.eSmartRecruit.service.IStorageService;
 import com.example.eSmartRecruit.service.impl.PositionService;
-import jakarta.servlet.http.HttpServlet;
+//import com.example.eSmartRecruit.repositories.PositionRepos;
 import jakarta.servlet.http.HttpServletRequest;
-
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -27,43 +22,40 @@ public class CandidateController {
     private PositionService positionService;
     private ApplicationService applicationService;
     private IStorageService storageService;
+    //  private PositionRepos positionRepository;
+
     @GetMapping("/home")
-    List<String> getAllCandidate(){
-        return List.of("Hello candidate","");
+    public List<Position> getAllPositions() {
+        return positionService.getAllPositions();
     }
 
     @GetMapping("/position/{positionID}")
-    ResponseEntity<Position> getDetailPosition(@PathVariable("positionID")Integer id){
+    public ResponseEntity<Position> getDetailPosition(@PathVariable("positionID") Integer id) {
         Position pos = positionService.getSelectedPosition(id);
-        //return new ResponseEntity<String>("hello",HttpStatus.OK);
-        return new ResponseEntity<Position>(pos,HttpStatus.OK);
-
-        //return new ResponseEntity<Positions>(positionService.getSelectedPosition(id),HttpStatus.OK);
+        return new ResponseEntity<>(pos, HttpStatus.OK);
     }
 
-
-
-
-    //Để candidateID mặc định 1
     @PostMapping("/application/create/{positionID}")
-    ResponseEntity<String> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv,
-                                                                                                                @RequestParam("updateDate")Date updateDate){
+    public ResponseEntity<String> applyForPosition(@PathVariable("positionID") Integer id, HttpServletRequest request,
+                                                   @RequestParam("cv") MultipartFile cv,
+                                                   @RequestParam("updateDate") Date updateDate) {
         try {
-            //
             String authHeader = request.getHeader("Authorization");
             System.out.println(authHeader);
-
-            //
 
             String generatedFileName = storageService.storeFile(cv);
             int candidateId = 1;
             Application application = new Application(candidateId, id, generatedFileName, updateDate);
 
-            return new ResponseEntity<String>(applicationService.apply(application),HttpStatus.OK);
+            return new ResponseEntity<>(applicationService.apply(application), HttpStatus.OK);
 
-        }catch (Exception e){
-            return new ResponseEntity<String>(e.getMessage(),HttpStatus.NOT_IMPLEMENTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_IMPLEMENTED);
         }
+    }
 
+    @GetMapping("/positions")
+    public List<Position> searchPositions(@RequestParam("keyword") String keyword) {
+        return positionService.searchPositions(keyword);
     }
 }
