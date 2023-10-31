@@ -25,7 +25,7 @@ public class FileStorageService implements IStorageService {
         try {
             Files.createDirectories(storageFolder);
         }catch (IOException e){
-            throw new RuntimeException("Khong the tao duong dan",e);
+            throw new RuntimeException("Path error",e);
         }
     }
 
@@ -38,15 +38,15 @@ public class FileStorageService implements IStorageService {
     public String storeFile(MultipartFile file) {
         try{
             if(file.isEmpty()){
-                throw new RuntimeException("File rong");
+                throw new RuntimeException("Empty!");
             }
             if(!isPDF(file)){
-                throw new RuntimeException("Chi nhan pdf");
+                throw new RuntimeException("Only pdf file accepted!");
             }
 
             float fileSizeInMegabytes = file.getSize()/1000000;
             if (fileSizeInMegabytes>=5){
-                throw new RuntimeException("File nen nho hon 5mb");
+                throw new RuntimeException("Only accept file less than 5MB");
             }
 
             String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
@@ -57,7 +57,7 @@ public class FileStorageService implements IStorageService {
 
             Path absPath = this.storageFolder.toAbsolutePath();
             if(!destinationFilePath.getParent().equals(this.storageFolder.toAbsolutePath())){
-                throw new RuntimeException("Khong the luu ngoai duong dan ban dau");
+                throw new RuntimeException("Cant save outside original path!");
             }
             try(InputStream inputStream = file.getInputStream()){
                 Files.copy(inputStream, destinationFilePath, StandardCopyOption.REPLACE_EXISTING);
@@ -65,7 +65,7 @@ public class FileStorageService implements IStorageService {
             return generatedFileName;
         }
         catch (IOException e){
-            throw new RuntimeException("Luu file that bai", e);
+            throw new RuntimeException("Failed to save file!", e);
         }
 
     }

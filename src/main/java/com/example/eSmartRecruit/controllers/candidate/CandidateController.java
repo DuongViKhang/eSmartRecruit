@@ -42,22 +42,24 @@ public class CandidateController {
     }
 
     @PostMapping("/application/create/{positionID}")
-    ResponseEntity<String> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv){
+    ResponseEntity<CandidateResponse> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv){
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             if(!userInfo.isEnabled()){
-                return new ResponseEntity<String>("Account not active!",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<CandidateResponse>(CandidateResponse.builder()
+                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
             }
             String generatedFileName = storageService.storeFile(cv);
             int candidateId = userInfo.getUserId();
 
             Application application = new Application(candidateId, id, generatedFileName);
 
-            return new ResponseEntity<String>(applicationService.apply(application),HttpStatus.OK);
+            return new ResponseEntity<CandidateResponse>(CandidateResponse.builder()
+                    .message(applicationService.apply(application)).status("SUCCESS").build(),HttpStatus.OK);
 
         }catch (Exception e){
-            return new ResponseEntity<String>(e.getMessage(),HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<CandidateResponse>(CandidateResponse.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
         }
 
     }

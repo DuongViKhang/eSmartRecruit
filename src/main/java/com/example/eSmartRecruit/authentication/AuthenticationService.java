@@ -42,23 +42,24 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){
-        System.out.println("before authen");
+
 //        authenticationManager.authenticate(
 //                new UsernamePasswordAuthenticationToken(
 //                        request.getEmail(),
 //                        request.getPassword()
 //                )
 //        );
-        System.out.println("before user");
+
         var user = userRepo.findByUsername(request.getUsername()).orElseThrow(RuntimeException::new);
         if (!user.isEnabled()){
             return AuthenticationResponse.builder()
-                    .token("Account not active")
+                    .message("Account not active")
                     .build();
         }
-        System.out.println("after user");
+
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
+                .message("Success")
                 .token(jwtToken)
                 .build();
     }
