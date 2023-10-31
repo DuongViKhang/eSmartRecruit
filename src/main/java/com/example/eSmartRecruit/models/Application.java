@@ -43,6 +43,7 @@ public class Application {
 
 //    public Application() {}
 
+
 	public Application(Integer candidateID, Integer positionID, String cv, Date updateDate) {
 		super();
 		this.candidateID = candidateID;
@@ -51,6 +52,19 @@ public class Application {
 		this.createDate = Date.valueOf(LocalDate.now());
 		this.updateDate = updateDate;
 	}
+
+
+	//To create new
+	public Application(Integer candidateID, Integer positionID, String cv) {
+		super();
+		this.candidateID = candidateID;
+		this.positionID = positionID;
+		this.status = ApplicationStatus.Pending;
+		this.cv = cv;
+		this.createDate = Date.valueOf(LocalDate.now());
+		this.updateDate = Date.valueOf(LocalDate.now());
+	}
+
 
 	public Application(Integer candidateID, Integer positionID, ApplicationStatus status, String cv, Date createDate, Date updateDate) {
 		super();

@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class PositionService implements IPositionService {
-    private PositionRepos positionRepository;
+
+    private final PositionRepos positionRepository;
+
     public Position getSelectedPosition(int id){
         return positionRepository.findById(id).orElseThrow();
     }
