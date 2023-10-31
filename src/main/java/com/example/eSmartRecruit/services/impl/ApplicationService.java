@@ -25,10 +25,16 @@ public class ApplicationService implements IApplicationService {
 
     @Override
     public String update(Application applications, Integer id) {
-        Application exApplication = applicationRepository.findById(id).orElse(null);
-        exApplication.setCv(applications.getCv());
-        exApplication.setUpdateDate(Date.valueOf(LocalDate.now()));
-        return null;
+        try{
+            Application exApplication = applicationRepository.findById(id).orElse(null);
+            exApplication.setCv(applications.getCv());
+            exApplication.setUpdateDate(Date.valueOf(LocalDate.now()));
+            applicationRepository.save(exApplication);
+            return "update Success";
+        }catch (Exception e){
+            return e.getMessage();
+        }
+
     }
 
 
