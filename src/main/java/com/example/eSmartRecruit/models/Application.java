@@ -41,7 +41,9 @@ public class Application {
     @Column(name = "UpdateDate")
     private Date updateDate;
 
-//    public Application() {}
+   public Application(String cv) {
+	   this.cv = cv;
+   }
 
 
 	public Application(Integer candidateID, Integer positionID, String cv, Date updateDate) {
