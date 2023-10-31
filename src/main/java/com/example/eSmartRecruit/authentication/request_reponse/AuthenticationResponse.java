@@ -1,4 +1,4 @@
-package com.example.eSmartRecruit.authentication;
+package com.example.eSmartRecruit.authentication.request_reponse;
 
 import lombok.*;
 

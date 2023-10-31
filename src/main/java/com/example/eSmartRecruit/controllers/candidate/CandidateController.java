@@ -1,10 +1,11 @@
 package com.example.eSmartRecruit.controllers.candidate;
 
 import com.example.eSmartRecruit.config.ExtractUser;
+import com.example.eSmartRecruit.controllers.request_reponse.CandidateApplyResponse;
+import com.example.eSmartRecruit.controllers.request_reponse.OnePositionResponse;
 import com.example.eSmartRecruit.models.Application;
 
 import com.example.eSmartRecruit.models.Position;
-import com.example.eSmartRecruit.models.enumModel.UserStatus;
 import com.example.eSmartRecruit.service.impl.ApplicationService;
 import com.example.eSmartRecruit.service.IStorageService;
 import com.example.eSmartRecruit.service.impl.PositionService;
@@ -33,21 +34,21 @@ public class CandidateController {
     }
 
     @GetMapping("/position/{positionID}")
-    ResponseEntity<Position> getDetailPosition(@PathVariable("positionID")Integer id){
+    ResponseEntity<OnePositionResponse> getDetailPosition(@PathVariable("positionID")Integer id){
         Position pos = positionService.getSelectedPosition(id);
         //return new ResponseEntity<String>("hello",HttpStatus.OK);
-        return new ResponseEntity<Position>(pos,HttpStatus.OK);
+        return new ResponseEntity<OnePositionResponse>(OnePositionResponse.builder().status("SUCCESS").position(pos).build(),HttpStatus.OK);
 
         //return new ResponseEntity<Positions>(positionService.getSelectedPosition(id),HttpStatus.OK);
     }
 
     @PostMapping("/application/create/{positionID}")
-    ResponseEntity<CandidateResponse> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv){
+    ResponseEntity<CandidateApplyResponse> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv){
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             if(!userInfo.isEnabled()){
-                return new ResponseEntity<CandidateResponse>(CandidateResponse.builder()
+                return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder()
                         .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
             }
             String generatedFileName = storageService.storeFile(cv);
@@ -55,11 +56,11 @@ public class CandidateController {
 
             Application application = new Application(candidateId, id, generatedFileName);
 
-            return new ResponseEntity<CandidateResponse>(CandidateResponse.builder()
+            return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder()
                     .message(applicationService.apply(application)).status("SUCCESS").build(),HttpStatus.OK);
 
         }catch (Exception e){
-            return new ResponseEntity<CandidateResponse>(CandidateResponse.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
         }
 
     }
