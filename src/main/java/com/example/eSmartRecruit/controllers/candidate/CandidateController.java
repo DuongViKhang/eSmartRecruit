@@ -4,6 +4,7 @@ package com.example.eSmartRecruit.controllers.candidate;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.CandidateApplyResponse;
 import com.example.eSmartRecruit.controllers.request_reponse.OnePositionResponse;
+import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.models.Application;
 
 import com.example.eSmartRecruit.models.Position;
@@ -109,4 +110,25 @@ public class CandidateController {
 
     }
 
-}
+    @DeleteMapping("/application/{applicationID}")
+    ResponseEntity<CandidateApplyResponse> updateApplyPosition(@PathVariable("applicationID")Integer id, HttpServletRequest request){
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if(!userInfo.isEnabled()){
+                return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder()
+                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
+            }
+            return null;
+
+
+    }catch (Exception e){
+            return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder().message("Error").status("error").build(),HttpStatus.NOT_IMPLEMENTED);
+        }
+
+        }
+
+
+
+
+    }

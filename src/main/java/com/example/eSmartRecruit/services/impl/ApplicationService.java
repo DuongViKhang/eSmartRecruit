@@ -23,7 +23,7 @@ public class ApplicationService implements IApplicationService {
         }
     }
 
-    @Override
+
     public String update(Application applications, Integer id) {
         try{
             Application exApplication = applicationRepository.findById(id).orElse(null);
@@ -37,5 +37,28 @@ public class ApplicationService implements IApplicationService {
 
     }
 
+    public Boolean isPresent(Integer jobid){
+        try{
+            Application application = applicationRepository.findById(jobid).orElse(null);
+            if(application == null){
+                return false;
+            }
+            return true;
+
+        }catch (Exception e){
+            return false;
+        }
+    }
+    public Boolean deletejob(Integer jobid){
+        try{
+            if(!isPresent(jobid)){
+                return false;
+            }
+            applicationRepository.deleteById(jobid);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
 
 }
