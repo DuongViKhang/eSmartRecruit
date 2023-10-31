@@ -1,10 +1,8 @@
 package com.example.eSmartRecruit.config;
 
-import com.example.eSmartRecruit.models.enumModel.UserStatus;
-import com.example.eSmartRecruit.service.impl.UserService;
+import com.example.eSmartRecruit.services.impl.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.json.JSONException;
 import org.json.JSONObject;
 

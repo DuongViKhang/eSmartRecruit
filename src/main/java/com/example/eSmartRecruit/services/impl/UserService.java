@@ -1,7 +1,6 @@
-package com.example.eSmartRecruit.service.impl;
+package com.example.eSmartRecruit.services.impl;
 
 import com.example.eSmartRecruit.models.User;
-import com.example.eSmartRecruit.models.enumModel.UserStatus;
 import com.example.eSmartRecruit.repositories.UserRepos;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

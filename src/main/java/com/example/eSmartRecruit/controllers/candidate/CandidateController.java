@@ -6,10 +6,10 @@ import com.example.eSmartRecruit.controllers.request_reponse.OnePositionResponse
 import com.example.eSmartRecruit.models.Application;
 
 import com.example.eSmartRecruit.models.Position;
-import com.example.eSmartRecruit.service.impl.ApplicationService;
-import com.example.eSmartRecruit.service.IStorageService;
-import com.example.eSmartRecruit.service.impl.PositionService;
-import com.example.eSmartRecruit.service.impl.UserService;
+import com.example.eSmartRecruit.services.impl.ApplicationService;
+import com.example.eSmartRecruit.services.IStorageService;
+import com.example.eSmartRecruit.services.impl.PositionService;
+import com.example.eSmartRecruit.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import lombok.AllArgsConstructor;

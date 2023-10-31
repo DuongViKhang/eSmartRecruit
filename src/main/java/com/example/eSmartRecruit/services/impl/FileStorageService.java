@@ -1,8 +1,6 @@
-package com.example.eSmartRecruit.service.impl;
+package com.example.eSmartRecruit.services.impl;
 
-import com.example.eSmartRecruit.service.IStorageService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.example.eSmartRecruit.services.IStorageService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

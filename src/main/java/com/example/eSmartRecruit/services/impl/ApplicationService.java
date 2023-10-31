@@ -1,9 +1,9 @@
-package com.example.eSmartRecruit.service.impl;
+package com.example.eSmartRecruit.services.impl;
 
 import com.example.eSmartRecruit.models.Application;
 
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
-import com.example.eSmartRecruit.service.IApplicationService;
+import com.example.eSmartRecruit.services.IApplicationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
