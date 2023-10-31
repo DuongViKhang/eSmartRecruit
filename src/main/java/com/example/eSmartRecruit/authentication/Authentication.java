@@ -1,8 +1,10 @@
 package com.example.eSmartRecruit.authentication;
 
+
 import com.example.eSmartRecruit.authentication.request_reponse.AuthenticationRequest;
 import com.example.eSmartRecruit.authentication.request_reponse.AuthenticationResponse;
 import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
+
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.services.impl.UserService;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class Authentication {
     private final AuthenticationService authenticationService;
     private final UserService userService;
+
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request

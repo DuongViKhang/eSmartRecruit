@@ -40,6 +40,7 @@ public class FileStorageService implements IStorageService {
             }
             if(!isPDF(file)){
                 throw new RuntimeException("Only pdf file accepted!");
+
             }
 
             float fileSizeInMegabytes = file.getSize()/1000000;

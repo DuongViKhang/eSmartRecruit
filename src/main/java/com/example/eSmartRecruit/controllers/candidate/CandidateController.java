@@ -1,5 +1,6 @@
 package com.example.eSmartRecruit.controllers.candidate;
 
+
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.CandidateApplyResponse;
 import com.example.eSmartRecruit.controllers.request_reponse.OnePositionResponse;
@@ -18,6 +19,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import com.example.eSmartRecruit.models.Position;
+import com.example.eSmartRecruit.repositories.PositionRepos;
+import com.example.eSmartRecruit.services.impl.ApplicationService;
+import com.example.eSmartRecruit.services.IStorageService;
+import com.example.eSmartRecruit.services.impl.PositionService;
+import jakarta.servlet.http.HttpServletRequest;
+
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.sql.Date;
 import java.util.List;
 
 @RestController
@@ -26,6 +42,7 @@ import java.util.List;
 public class CandidateController {
     private PositionService positionService;
     private ApplicationService applicationService;
+
     private UserService userService;
     private IStorageService storageService;
     @GetMapping("/home")
@@ -38,6 +55,7 @@ public class CandidateController {
         Position pos = positionService.getSelectedPosition(id);
         //return new ResponseEntity<String>("hello",HttpStatus.OK);
         return new ResponseEntity<OnePositionResponse>(OnePositionResponse.builder().status("SUCCESS").position(pos).build(),HttpStatus.OK);
+
 
         //return new ResponseEntity<Positions>(positionService.getSelectedPosition(id),HttpStatus.OK);
     }
@@ -61,6 +79,7 @@ public class CandidateController {
 
         }catch (Exception e){
             return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
+
         }
 
     }

@@ -3,7 +3,9 @@ package com.example.eSmartRecruit.models;
 import com.example.eSmartRecruit.models.enumModel.SessionResult;
 import com.example.eSmartRecruit.models.enumModel.SessionStatus;
 import jakarta.persistence.*;
+
 import lombok.Data;
+
 
 import java.sql.Date;
 
@@ -17,6 +19,7 @@ public class InterviewSession {
     @Column(name = "ID")
     private Integer id;
 
+
 //    @Column(name = "PositionID")
 //    private Integer positionID;
 
@@ -27,6 +30,7 @@ public class InterviewSession {
 //    private Integer candidateID;
 	@Column(name = "ApplicationID")
 	private Integer ApplicationID;
+
 
     @Column(name = "Date")
     private Date date;
@@ -45,6 +49,7 @@ public class InterviewSession {
     @Lob
     @Column(name = "Notes", columnDefinition = "text")
     private String notes;
+
 
     public InterviewSession() {}
 

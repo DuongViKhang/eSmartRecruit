@@ -1,9 +1,11 @@
 package com.example.eSmartRecruit.authentication;
 
 
+
 import com.example.eSmartRecruit.authentication.request_reponse.AuthenticationRequest;
 import com.example.eSmartRecruit.authentication.request_reponse.AuthenticationResponse;
 import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
+
 import com.example.eSmartRecruit.config.JwtService;
 import com.example.eSmartRecruit.models.enumModel.Role;
 import com.example.eSmartRecruit.models.User;
@@ -52,6 +54,7 @@ public class AuthenticationService {
 //                        request.getPassword()
 //                )
 //        );
+
 
         var user = userRepo.findByUsername(request.getUsername()).orElseThrow(RuntimeException::new);
         if (!user.isEnabled()){
