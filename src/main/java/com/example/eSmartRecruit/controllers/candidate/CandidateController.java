@@ -1,68 +1,30 @@
 package com.example.eSmartRecruit.controllers.candidate;
 
-import com.example.eSmartRecruit.models.Application;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-import com.example.eSmartRecruit.models.Position;
-import com.example.eSmartRecruit.repositories.PositionRepos;
-import com.example.eSmartRecruit.services.impl.ApplicationService;
-import com.example.eSmartRecruit.services.IStorageService;
-import com.example.eSmartRecruit.services.impl.PositionService;
 import jakarta.servlet.http.HttpServletRequest;
-
-import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.sql.Date;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("eSmartRecruit/")
-@AllArgsConstructor
+@RequestMapping("eSmartRecruit/candidate")
 public class CandidateController {
-    private PositionService positionService;
-    private ApplicationService applicationService;
-    private IStorageService storageService;
-    private PositionRepos positionRepository;
     @GetMapping("/home")
-    List<Position> getAllCandidate(){
-        return positionRepository.findAll();
+    List<String> getAllCandidate(){
+        return List.of("Hello candidate");
     }
 
-    @GetMapping("/position/{positionID}")
-    ResponseEntity<Position> getDetailPosition(@PathVariable("positionID")Integer id){
-        Position pos = positionService.getSelectedPosition(id);
-        //return new ResponseEntity<String>("hello",HttpStatus.OK);
-        return new ResponseEntity<Position>(pos,HttpStatus.OK);
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        // Đăng xuất người dùng và xóa phiên làm việc
+        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+        logoutHandler.logout(request, response, SecurityContextHolder.getContext().getAuthentication());
 
-        //return new ResponseEntity<Positions>(positionService.getSelectedPosition(id),HttpStatus.OK);
-    }
-
-
-
-
-    //Để candidateID mặc định 1
-    @PostMapping("/application/create/{positionID}")
-    ResponseEntity<String> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv,
-                                                                                                                @RequestParam("updateDate")Date updateDate){
-        try {
-            //
-            String authHeader = request.getHeader("Authorization");
-            System.out.println(authHeader);
-
-            //
-
-            String generatedFileName = storageService.storeFile(cv);
-            int candidateId = 1;
-            Application application = new Application(candidateId, id, generatedFileName, updateDate);
-
-            return new ResponseEntity<String>(applicationService.apply(application),HttpStatus.OK);
-
-        }catch (Exception e){
-            return new ResponseEntity<String>(e.getMessage(),HttpStatus.NOT_IMPLEMENTED);
-        }
-
+        // Chuyển hướng sau khi đăng xuất (ví dụ: về trang đăng nhập)
+        return "redirect:/login"; // Điều này có thể thay đổi tùy thuộc vào cấu hình của bạn
     }
 }
