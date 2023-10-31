@@ -1,6 +1,7 @@
 package com.example.eSmartRecruit.service.impl;
 
 import com.example.eSmartRecruit.models.User;
+import com.example.eSmartRecruit.models.enumModel.UserStatus;
 import com.example.eSmartRecruit.repositories.UserRepos;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,5 +16,8 @@ public class UserService {
 
     public List<User> getAllUser(){
         return userRepository.findAll();
+    }
+    public boolean isEnabled(Integer id){
+        return userRepository.findById(id).get().isEnabled();
     }
 }

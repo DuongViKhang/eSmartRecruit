@@ -4,22 +4,19 @@ import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.models.Application;
 
 import com.example.eSmartRecruit.models.Position;
-import com.example.eSmartRecruit.models.enumModel.Role;
+import com.example.eSmartRecruit.models.enumModel.UserStatus;
 import com.example.eSmartRecruit.service.impl.ApplicationService;
 import com.example.eSmartRecruit.service.IStorageService;
 import com.example.eSmartRecruit.service.impl.PositionService;
-import jakarta.servlet.http.HttpServlet;
+import com.example.eSmartRecruit.service.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -28,6 +25,7 @@ import java.util.List;
 public class CandidateController {
     private PositionService positionService;
     private ApplicationService applicationService;
+    private UserService userService;
     private IStorageService storageService;
     @GetMapping("/home")
     List<String> getAllCandidate(){
@@ -47,11 +45,10 @@ public class CandidateController {
     ResponseEntity<String> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv){
         try {
             String authHeader = request.getHeader("Authorization");
-            ExtractUser userInfo = new ExtractUser(authHeader);
-            if(userInfo.getUserRole()!= Role.Candidate){
-                return new ResponseEntity<String>("Not a candidate",HttpStatus.BAD_REQUEST);
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if(!userInfo.isEnabled()){
+                return new ResponseEntity<String>("Account not active!",HttpStatus.BAD_REQUEST);
             }
-
             String generatedFileName = storageService.storeFile(cv);
             int candidateId = userInfo.getUserId();
 

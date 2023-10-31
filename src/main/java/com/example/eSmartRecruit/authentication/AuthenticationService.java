@@ -51,6 +51,11 @@ public class AuthenticationService {
 //        );
         System.out.println("before user");
         var user = userRepo.findByUsername(request.getUsername()).orElseThrow(RuntimeException::new);
+        if (!user.isEnabled()){
+            return AuthenticationResponse.builder()
+                    .token("Account not active")
+                    .build();
+        }
         System.out.println("after user");
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()

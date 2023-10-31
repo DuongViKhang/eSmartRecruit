@@ -28,14 +28,12 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
     public String extractUserName(String token){
-        return extractClaim(token, Claims::getAudience);
+        return extractClaim(token, Claims::getSubject);
     }
 
     public String extractUserId(String token){
         return extractClaim(token,Claims::getId);
     }
-
-
 
     public String generateToken(User user){
         return generateToken(new HashMap<>(), user);
@@ -61,8 +59,7 @@ public class JwtService {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setAudience(users.getUsername())
-                .setSubject(users.getRoleName().name())
+                .setSubject(users.getUsername())
                 .setId(Integer.toString(users.getId()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+1000*60*60))
