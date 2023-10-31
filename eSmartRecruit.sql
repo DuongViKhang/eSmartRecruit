@@ -68,9 +68,8 @@ CREATE TABLE InterviewSessions (
 	Status ENUM('NotOnSchedule','Yet', 'Already') DEFAULT('NotOnSchedule'),
     Result ENUM('NotYet', 'Good', 'NotGood') DEFAULT('NotYet'),
     Notes TEXT,
-    FOREIGN KEY (PositionID) REFERENCES Positions(ID),
     FOREIGN KEY (InterviewerID) REFERENCES Users(ID),
-    FOREIGN KEY (CandidateID) REFERENCES Users(ID)
+    FOREIGN KEY (ApplicationID) REFERENCES Applications(ID)
 );
 
 -- Tạo bảng Liên lạc
