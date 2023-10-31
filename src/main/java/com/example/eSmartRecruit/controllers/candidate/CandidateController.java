@@ -1,17 +1,38 @@
 package com.example.eSmartRecruit.controllers.candidate;
 
+
+import com.example.eSmartRecruit.config.ExtractUser;
+import com.example.eSmartRecruit.controllers.request_reponse.CandidateApplyResponse;
+import com.example.eSmartRecruit.controllers.request_reponse.OnePositionResponse;
 import com.example.eSmartRecruit.models.Application;
+
 import com.example.eSmartRecruit.models.Position;
-import com.example.eSmartRecruit.service.impl.ApplicationService;
-import com.example.eSmartRecruit.service.IStorageService;
-import com.example.eSmartRecruit.service.impl.PositionService;
-//import com.example.eSmartRecruit.repositories.PositionRepos;
+import com.example.eSmartRecruit.services.impl.ApplicationService;
+import com.example.eSmartRecruit.services.IStorageService;
+import com.example.eSmartRecruit.services.impl.PositionService;
+import com.example.eSmartRecruit.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+
+import com.example.eSmartRecruit.models.Position;
+import com.example.eSmartRecruit.repositories.PositionRepos;
+import com.example.eSmartRecruit.services.impl.ApplicationService;
+import com.example.eSmartRecruit.services.IStorageService;
+import com.example.eSmartRecruit.services.impl.PositionService;
+import jakarta.servlet.http.HttpServletRequest;
+
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.sql.Date;
 import java.util.List;
 
@@ -21,41 +42,45 @@ import java.util.List;
 public class CandidateController {
     private PositionService positionService;
     private ApplicationService applicationService;
-    private IStorageService storageService;
-    //  private PositionRepos positionRepository;
 
+    private UserService userService;
+    private IStorageService storageService;
     @GetMapping("/home")
-    public List<Position> getAllPositions() {
-        return positionService.getAllPositions();
+    List<String> getAllCandidate(){
+        return List.of("Hello candidate","");
     }
 
     @GetMapping("/position/{positionID}")
-    public ResponseEntity<Position> getDetailPosition(@PathVariable("positionID") Integer id) {
+    ResponseEntity<OnePositionResponse> getDetailPosition(@PathVariable("positionID")Integer id){
         Position pos = positionService.getSelectedPosition(id);
-        return new ResponseEntity<>(pos, HttpStatus.OK);
+        //return new ResponseEntity<String>("hello",HttpStatus.OK);
+        return new ResponseEntity<OnePositionResponse>(OnePositionResponse.builder().status("SUCCESS").position(pos).build(),HttpStatus.OK);
+
+
+        //return new ResponseEntity<Positions>(positionService.getSelectedPosition(id),HttpStatus.OK);
     }
 
     @PostMapping("/application/create/{positionID}")
-    public ResponseEntity<String> applyForPosition(@PathVariable("positionID") Integer id, HttpServletRequest request,
-                                                   @RequestParam("cv") MultipartFile cv,
-                                                   @RequestParam("updateDate") Date updateDate) {
+    ResponseEntity<CandidateApplyResponse> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv){
         try {
             String authHeader = request.getHeader("Authorization");
-            System.out.println(authHeader);
-
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if(!userInfo.isEnabled()){
+                return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder()
+                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
+            }
             String generatedFileName = storageService.storeFile(cv);
-            int candidateId = 1;
-            Application application = new Application(candidateId, id, generatedFileName, updateDate);
+            int candidateId = userInfo.getUserId();
 
-            return new ResponseEntity<>(applicationService.apply(application), HttpStatus.OK);
+            Application application = new Application(candidateId, id, generatedFileName);
 
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder()
+                    .message(applicationService.apply(application)).status("SUCCESS").build(),HttpStatus.OK);
+
+        }catch (Exception e){
+            return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
+
         }
-    }
 
-    @GetMapping("/positions")
-    public List<Position> searchPositions(@RequestParam("keyword") String keyword) {
-        return positionService.searchPositions(keyword);
     }
 }
