@@ -31,16 +31,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+@AllArgsConstructor
 @RestController
 @RequestMapping("eSmartRecruit/interviewer")
 public class InterviewerController {
 
     private UserService userService;
 
-    public InterviewerController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/home")
     List<String> getAllInterviewer(){
