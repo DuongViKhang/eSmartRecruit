@@ -34,7 +34,9 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session
                                             .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                             .authenticationProvider(authenticationProvider)
-                                            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                                            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(out ->out.logoutUrl("eSmartRecruit/logout").invalidateHttpSession(true).clearAuthentication(true).deleteCookies("JSESSIONID").permitAll())
+        ;
         return httpSecurity.build();
     }
 }
