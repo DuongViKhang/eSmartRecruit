@@ -6,6 +6,8 @@ import com.example.eSmartRecruit.services.IPositionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class PositionService implements IPositionService {
@@ -14,5 +16,9 @@ public class PositionService implements IPositionService {
 
     public Position getSelectedPosition(int id){
         return positionRepository.findById(id).orElseThrow();
+    }
+
+    public List<Position> getAllPosition() {
+        return  positionRepository.findAll();
     }
 }

@@ -38,6 +38,14 @@ public class CandidateController {
     private UserService userService;
     private IStorageService storageService;
 
+
+    @GetMapping("/home")
+    public ResponseEntity<ResponseObject> home(HttpServletRequest request)
+    {
+        List<Position> data = positionService.getAllPosition();
+        return  new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).message("list position succesfully! :) ").build(), HttpStatus.OK);
+    }
+
     @GetMapping("/application")
     public ResponseEntity<ResponseObject> getMyApplications(HttpServletRequest request) throws JSONException {
         {
