@@ -7,6 +7,9 @@ import com.example.eSmartRecruit.services.IApplicationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class ApplicationService implements IApplicationService {
@@ -18,5 +21,12 @@ public class ApplicationService implements IApplicationService {
         }catch (Exception e){
             return e.toString();
         }
+    }
+
+    public List<Application> getApplicationsByCandidateId(Integer candidateID) {
+        return applicationRepository.findByCandidateID(candidateID);
+    }
+    public Optional<Application> getApplicationByIdAndCandidateId(Integer ID, Integer candidateID) {
+        return applicationRepository.findByIdAndCandidateID(ID, candidateID);
     }
 }
