@@ -25,4 +25,8 @@ public class UserService {
         return userRepository.findById(id).get().isEnabled();
     }
 
+    public User getUserById(Integer id){
+        return userRepository.findById(id).orElse(null);
+    }
+
 }
