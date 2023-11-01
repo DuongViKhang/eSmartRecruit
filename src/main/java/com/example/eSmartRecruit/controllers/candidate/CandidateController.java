@@ -1,5 +1,6 @@
 package com.example.eSmartRecruit.controllers.candidate;
-
+import java.util.HashMap;
+import java.util.Map;
 
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.CandidateApplyResponse;
@@ -9,6 +10,7 @@ import com.example.eSmartRecruit.models.Application;
 
 import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.models.User;
+
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.services.impl.ApplicationService;
 import com.example.eSmartRecruit.services.IStorageService;
@@ -93,5 +95,51 @@ public class CandidateController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().message(e.getMessage()).status("ERROR").build());
         }
+    }
+    //get user info
+    @GetMapping("/profile")
+    ResponseEntity<ResponseObject> getDetailUser(HttpServletRequest request) throws JSONException {
+        String authHeader = request.getHeader("Authorization");
+        //return new ResponseEntity<String>("hello",HttpStatus.OK);
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+        if(!userInfo.isEnabled()){
+            return null;
+        }
+        Integer userId = userInfo.getUserId();
+        User user = userService.getUserById(userId);
+
+        Map<String, String> data = new HashMap<>();
+        data.put("username", user.getUsername());
+        data.put("email", user.getEmail());
+        data.put("phonenumber", user.getPhoneNumber());
+
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Loading data success!").data(data).build(),HttpStatus.OK);
+
+    }
+    //update user
+    @PutMapping("/profile")
+    ResponseEntity<ResponseObject> updateUser(HttpServletRequest request,
+//                                              @RequestParam("email")String email,
+//                                              @RequestParam("phoneNumber")String phoneNumber
+                                              @RequestBody User user0
+                                              ) throws JSONException {
+        String authHeader = request.getHeader("Authorization");
+        //return new ResponseEntity<String>("hello",HttpStatus.OK);
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+        if(!userInfo.isEnabled()){
+            return null;
+        }
+        Integer userId = userInfo.getUserId();
+
+        User user = userService.updateUser(User.builder()
+                .email(user0.getEmail())
+                .phoneNumber(user0.getPhoneNumber()).build(),userId);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", user.getEmail());
+        data.put("phoneNumber",user.getPhoneNumber());
+
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Update infomation succesfully!").data(data).build(),HttpStatus.OK);
+
     }
 }
