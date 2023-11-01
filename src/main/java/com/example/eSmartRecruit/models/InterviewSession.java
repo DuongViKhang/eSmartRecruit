@@ -3,7 +3,9 @@ package com.example.eSmartRecruit.models;
 import com.example.eSmartRecruit.models.enumModel.SessionResult;
 import com.example.eSmartRecruit.models.enumModel.SessionStatus;
 import jakarta.persistence.*;
+
 import lombok.Data;
+
 
 import java.sql.Date;
 
@@ -17,14 +19,18 @@ public class InterviewSession {
     @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "PositionID")
-    private Integer positionID;
+
+//    @Column(name = "PositionID")
+//    private Integer positionID;
 
     @Column(name = "InterviewerID")
     private Integer interviewerID;
 
-    @Column(name = "CandidateID")
-    private Integer candidateID;
+//    @Column(name = "CandidateID")
+//    private Integer candidateID;
+	@Column(name = "ApplicationID")
+	private Integer ApplicationID;
+
 
     @Column(name = "Date")
     private Date date;
@@ -44,34 +50,10 @@ public class InterviewSession {
     @Column(name = "Notes", columnDefinition = "text")
     private String notes;
 
+
     public InterviewSession() {}
 
-	public InterviewSession(Integer positionID, Integer interviewerID, Integer candidateID, Date date, String location,
-			String status, String result, String notes) {
-		super();
-		this.positionID = positionID;
-		this.interviewerID = interviewerID;
-		this.candidateID = candidateID;
-		this.date = date;
-		this.location = location;
-		this.status = SessionStatus.valueOf(status);
-		this.result = SessionResult.valueOf(result);
-		this.notes = notes;
-	}
 
-	public InterviewSession(Integer id, Integer positionID, Integer IntegererviewerID, Integer candidateID, Date date, String location,
-			String status, String result, String notes) {
-		super();
-		this.id = id;
-		this.positionID = positionID;
-		this.interviewerID = interviewerID;
-		this.candidateID = candidateID;
-		this.date = date;
-		this.location = location;
-		this.status = SessionStatus.valueOf(status);
-		this.result = SessionResult.valueOf(result);
-		this.notes = notes;
-	}
 
 //	public Integer getId() {
 //		return id;
