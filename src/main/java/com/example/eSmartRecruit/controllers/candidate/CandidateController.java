@@ -59,11 +59,7 @@ public class CandidateController {
                 applicationMap.put("applicationDate", app.getCreateDate().toString());
                 applicationList.add(applicationMap);
             }
-            Map<String, Object> data = new HashMap<>();
-            data.put("status", "success");
-            data.put("applications", applicationList);
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(data).build(), HttpStatus.OK);
-
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(applicationList).build(), HttpStatus.OK);
         }
     }
 
@@ -82,15 +78,14 @@ public class CandidateController {
             if (application.isPresent()) {
                 Map<String, Object> data = new HashMap<>();
                 Application app = application.get();
-                data.put("status", "SUCCESS");
-                data.put("application", Map.of(
-                        "applicationID", app.getId(),
-                        "candidateName", user.getUsername(),
-                        "positionTitle", positionService.getSelectedPosition(app.getPositionID()).getTitle(),
-                        "status", app.getStatus(),
-                        "cv", "https://example.com/cv/",
-                        "applicationDate", app.getCreateDate().toString())
-                );
+
+                data.put("applicationID", app.getId());
+                data.put("candidateName", user.getUsername());
+                data.put("positionTitle", positionService.getSelectedPosition(app.getPositionID()).getTitle());
+                data.put("status", app.getStatus());
+                data.put("cv", "https://example.com/cv/");
+                data.put("applicationDate", app.getCreateDate().toString());
+
                 return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").data(data).build());
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.builder().status("ERROR").build());
