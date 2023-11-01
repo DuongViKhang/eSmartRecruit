@@ -23,7 +23,10 @@ public class ApplicationConfig {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                return userRepo.findByEmail(username).orElseThrow(()-> new UsernameNotFoundException("User not found"));
+
+                return userRepo.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException("User not found"));
+
+
             }
         };
     }

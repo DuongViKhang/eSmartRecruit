@@ -19,20 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
-import com.example.eSmartRecruit.models.Position;
-import com.example.eSmartRecruit.repositories.PositionRepos;
-import com.example.eSmartRecruit.services.impl.ApplicationService;
-import com.example.eSmartRecruit.services.IStorageService;
-import com.example.eSmartRecruit.services.impl.PositionService;
-import jakarta.servlet.http.HttpServletRequest;
-
-import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.sql.Date;
 import java.util.List;
 

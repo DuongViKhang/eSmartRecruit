@@ -1,8 +1,5 @@
-package com.example.eSmartRecruit.service;
+package com.example.eSmartRecruit.services;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;

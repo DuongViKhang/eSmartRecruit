@@ -1,4 +1,4 @@
-package com.example.eSmartRecruit.service;
+package com.example.eSmartRecruit.services;
 
 import com.example.eSmartRecruit.models.Application;
 
