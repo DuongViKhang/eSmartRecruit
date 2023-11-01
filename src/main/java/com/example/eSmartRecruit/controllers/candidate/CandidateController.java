@@ -102,9 +102,9 @@ public class CandidateController {
         Map<String, String> data = new HashMap<>();
         data.put("username", user.getUsername());
         data.put("email", user.getEmail());
-        data.put("phonename", user.getPhoneNumber());
+        data.put("phonenumber", user.getPhoneNumber());
 
-        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(data).build(),HttpStatus.OK);
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Loading data success!").data(data).build(),HttpStatus.OK);
 
     }
     //update user
@@ -121,10 +121,16 @@ public class CandidateController {
             return null;
         }
         Integer userId = userInfo.getUserId();
+
         User user = userService.updateUser(User.builder()
                 .email(user0.getEmail())
                 .phoneNumber(user0.getPhoneNumber()).build(),userId);
-        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(user).build(),HttpStatus.OK);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("email", user.getEmail());
+        data.put("phoneNumber",user.getPhoneNumber());
+
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Update infomation succesfully!").data(data).build(),HttpStatus.OK);
 
     }
 }
