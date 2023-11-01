@@ -21,6 +21,25 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+//    public User getUserByUsernameAndEmail(String username, String email) {
+//        Optional<User> userOptional = userRepository.findByUsernameAndEmail(username, email);
+//        return userOptional.orElse(null);
+//    }
+    public  String updateUserpassword(String username,String newpassword){
+        User exUser = userRepository.findByUsername(username).orElse(null);
+        if( exUser == null){
+            return "No user";
+        }
+        exUser.setPassword(newpassword);
+        try{
+            userRepository.save(exUser);
+            return "Success";
+        }catch(Exception e){
+            return "Error";
+        }
+
+    }
+
     public boolean isEnabled(Integer id){
         return userRepository.findById(id).get().isEnabled();
     }
