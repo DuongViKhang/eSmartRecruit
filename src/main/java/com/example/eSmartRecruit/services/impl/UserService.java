@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -16,6 +17,9 @@ public class UserService {
     public List<User> getAllUser(){
         return userRepository.findAll();
     }
+    public Optional<User> findByUsername(String username){
+        return userRepository.findByUsername(username);
+    }
 
     public boolean isEnabled(Integer id){
         return userRepository.findById(id).get().isEnabled();
@@ -24,6 +28,7 @@ public class UserService {
     public User getUserById(Integer id){
         return userRepository.findById(id).orElse(null);
     }
+
     public  User updateUser(User user ,Integer id){
         User exUser = userRepository.findById(id).orElse(null);
         if( exUser == null){
@@ -38,5 +43,4 @@ public class UserService {
         }
         return exUser;
     }
-
 }
