@@ -119,7 +119,14 @@ public class CandidateController {
                 return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder()
                         .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
             }
-            return null;
+            String message;
+            if(applicationService.deletejob(id)){
+                message = "Deleted successfully";
+            }
+            else {
+                message = "Delete failed";
+            }
+            return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder().message(message).status("SUCCESS").build(),HttpStatus.OK);
 
 
     }catch (Exception e){
@@ -127,8 +134,5 @@ public class CandidateController {
         }
 
         }
-
-
-
 
     }
