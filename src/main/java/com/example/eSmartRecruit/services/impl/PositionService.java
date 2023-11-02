@@ -21,7 +21,6 @@ public class PositionService implements IPositionService {
     public List<Position> getAllPosition() {
         return  positionRepository.findAll();
     }
-}
 
     public List<Position> searchPositions(String keyword) {
         return positionRepository.findByTitleContaining(keyword);

@@ -47,7 +47,34 @@ public class CandidateController {
         List<Position> data = positionService.getAllPosition();
         return  new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).message("list position succesfully! :) ").build(), HttpStatus.OK);
     }
+    @GetMapping("/position/{positionID}")
+    ResponseEntity<OnePositionResponse> getDetailPosition(@PathVariable("positionID")Integer id){
+        Position pos = positionService.getSelectedPosition(id);
+        return new ResponseEntity<OnePositionResponse>(OnePositionResponse.builder().status("SUCCESS").position(pos).build(),HttpStatus.OK);
+    }
 
+    @PostMapping("/application/create/{positionID}")
+    ResponseEntity<CandidateApplyResponse> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv){
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if(!userInfo.isEnabled()){
+                return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder()
+                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
+            }
+            String generatedFileName = storageService.storeFile(cv);
+            int candidateId = userInfo.getUserId();
+
+            Application application = new Application(candidateId, id, generatedFileName);
+
+            return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder()
+                    .message(applicationService.apply(application)).status("SUCCESS").build(),HttpStatus.OK);
+
+        }catch (Exception e){
+            return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
+
+        }
+    }
     @GetMapping("/application")
     public ResponseEntity<ResponseObject> getMyApplications(HttpServletRequest request) throws JSONException {
         {
