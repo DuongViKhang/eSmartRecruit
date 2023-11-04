@@ -66,71 +66,11 @@ public class User implements UserDetails {
 	}
 
 
-
 	public void setUsername(String username) {
 		this.username = username;
 	}
 
 
-
-//	public String getPassword() {
-//		return password;
-//	}
-//
-//	public void setPassword(String password) {
-//		this.password = password;
-//	}
-//
-//	public String getEmail() {
-//		return email;
-//	}
-//
-//	public void setEmail(String email) {
-//		this.email = email;
-//	}
-//
-//	public String getPhoneNumber() {
-//		return phoneNumber;
-//	}
-//
-//	public void setPhoneNumber(String phoneNumber) {
-//		this.phoneNumber = phoneNumber;
-//	}
-//
-//	public String getRoleName() {
-//		return roleName;
-//	}
-//
-//	public void setRoleName(String roleName) {
-//		this.roleName = roleName;
-//	}
-//
-//	public String getStatus() {
-//		return status;
-//	}
-//
-//	public void setStatus(String status) {
-//		this.status = status;
-//	}
-//
-//	public Date getCreateDate() {
-//		return createDate;
-//	}
-//
-//	public void setCreateDate(Date createDate) {
-//		this.createDate = createDate;
-//	}
-//
-//	public Date getUpdateDate() {
-//		return updateDate;
-//	}
-//
-//	public void setUpdateDate(Date updateDate) {
-//		this.updateDate = updateDate;
-//	}
-    
-//    public User() {}
-//
 	public User(String username, String password, String email, String phoneNumber, String roleName, String status,
 			Date createDate, Date updateDate) {
 		super();
@@ -144,19 +84,7 @@ public class User implements UserDetails {
 		this.updateDate = updateDate;
 	}
 //
-//	public User(Integer id, String username, String password, String email, String phoneNumber, String roleName,
-//			String status, Date createDate, Date updateDate) {
-//		super();
-//		this.id = id;
-//		this.username = username;
-//		this.password = password;
-//		this.email = email;
-//		this.phoneNumber = phoneNumber;
-//		this.roleName = roleName;
-//		this.status = status;
-//		this.createDate = createDate;
-//		this.updateDate = updateDate;
-//	}
+
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
