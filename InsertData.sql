@@ -17,8 +17,8 @@ INSERT INTO `esmartrecruit`.`skills` (`ID`, `CandidateID`, `SkillName`) VALUES (
 INSERT INTO `esmartrecruit`.`skills` (`ID`, `CandidateID`, `SkillName`) VALUES ('3', '1', 'RESTful API');
 INSERT INTO `esmartrecruit`.`skills` (`ID`, `CandidateID`, `SkillName`) VALUES ('4', '1', 'Docker');
 
-INSERT INTO `esmartrecruit`.`interviewsessions` (`ID`, `PositionID`, `InterviewerID`, `CandidateID`, `Date`, `Location`, `Status`, `Result`, `Notes`) VALUES ('1', '1', NULL, '1', '2023-10-29', 'fpt', 'NotOnSchedule', 'NotYet', 'abc');
-INSERT INTO `esmartrecruit`.`interviewsessions` (`ID`, `PositionID`, `InterviewerID`, `CandidateID`, `Date`, `Location`, `Status`, `Result`, `Notes`) VALUES ('2', '2', '3', '1', '2023-10-25', 'fpt', 'Yet', 'Good', 'bcd');
+INSERT INTO `esmartrecruit`.`interviewsessions` (`ID`, `InterviewerID`, `ApplicationID`, `Date`, `Location`, `Status`, `Result`, `Notes`) VALUES ('1', NULL, '1', '2023-10-29', 'fpt', 'NotOnSchedule', 'NotYet', 'abc');
+INSERT INTO `esmartrecruit`.`interviewsessions` (`ID`, `InterviewerID`, `ApplicationID`, `Date`, `Location`, `Status`, `Result`, `Notes`) VALUES ('2', '3', '1', '2023-10-25', 'fpt', 'Yet', 'Good', 'bcd');
 
 INSERT INTO `esmartrecruit`.`communications` (`ID`, `CandidateID`, `Notes`, `DateContacted`, `CreateDate`, `UpdateDate`) VALUES ('1', '1', 'New Dev Front-end', '2023-10-29', '2023-10-25', '2023-10-25');
 INSERT INTO `esmartrecruit`.`communications` (`ID`, `CandidateID`, `Notes`, `DateContacted`, `CreateDate`, `UpdateDate`) VALUES ('2', '1', 'New Dev Back-end', '2023-10-30', '2023-10-24', '2023-10-24');
