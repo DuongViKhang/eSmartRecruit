@@ -4,5 +4,5 @@ import com.example.eSmartRecruit.models.Position;
 
 
 public interface IPositionService {
-    public Position getSelectedPosition(int id);
+    public Position getSelectedPosition(Integer id);
 }

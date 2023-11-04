@@ -13,7 +13,7 @@ import java.util.List;
 public class PositionService implements IPositionService {
     private final PositionRepos positionRepository;
 
-    public Position getSelectedPosition(int id) {
+    public Position getSelectedPosition(Integer id) {
         return positionRepository.findById(id).orElseThrow();
     }
 
