@@ -12,12 +12,19 @@ import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.models.enumModel.UserStatus;
 import com.example.eSmartRecruit.repositories.UserRepos;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -62,11 +69,11 @@ public class AuthenticationService {
                     .message("Account not active")
                     .build();
         }
-
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .message("Success")
                 .token(jwtToken)
                 .build();
     }
+
 }

@@ -1,5 +1,6 @@
 package com.example.eSmartRecruit.services.impl;
 
+import com.example.eSmartRecruit.exception.PositionNotFoundException;
 import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.repositories.PositionRepos;
 import com.example.eSmartRecruit.services.IPositionService;
@@ -13,8 +14,17 @@ import java.util.List;
 public class PositionService implements IPositionService {
     private final PositionRepos positionRepository;
 
-    public Position getSelectedPosition(int id) {
-        return positionRepository.findById(id).orElseThrow();
+    public Position getSelectedPosition(int id) throws PositionNotFoundException {
+        return positionRepository.findById(id).orElseThrow(()->new PositionNotFoundException("The required position not found"));
+    }
+
+    public boolean isPresent(int id) throws PositionNotFoundException{
+        try {
+            Position pos = positionRepository.findById(id).orElseThrow(()->new PositionNotFoundException("The required position not found"));
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 
 

@@ -8,8 +8,11 @@ import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.services.impl.UserService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/eSmartRecruit")
 @RequiredArgsConstructor
-public class Authentication {
+public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final UserService userService;
 
@@ -30,9 +33,13 @@ public class Authentication {
 
     @PostMapping("/auth")
     public ResponseEntity<AuthenticationResponse> authentication(
-            @RequestBody AuthenticationRequest request
+            @RequestBody @Valid @Validated AuthenticationRequest request
     ){
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+        try{
+            return ResponseEntity.ok(authenticationService.authenticate(request));
+        }catch (Exception exception){
+            return new ResponseEntity<AuthenticationResponse>(AuthenticationResponse.builder().message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/hello")
