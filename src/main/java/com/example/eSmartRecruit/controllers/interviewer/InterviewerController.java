@@ -24,6 +24,8 @@ import java.util.Map;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 
+import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
+import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.InterviewSession;
 import com.example.eSmartRecruit.models.Report;
 import com.example.eSmartRecruit.models.User;
@@ -91,7 +93,7 @@ public class InterviewerController {
 
 //get userInterviewer info
     @GetMapping("/profile")
-    ResponseEntity<ResponseObject> getDetailUserInterviewer(HttpServletRequest request) throws JSONException {
+    ResponseEntity<ResponseObject> getDetailUserInterviewer(HttpServletRequest request) throws JSONException, UserException {
         String authHeader = request.getHeader("Authorization");
         //return new ResponseEntity<String>("hello",HttpStatus.OK);
         ExtractUser userInfo = new ExtractUser(authHeader, userService);
@@ -114,8 +116,8 @@ public class InterviewerController {
     ResponseEntity<ResponseObject> updateUserInterviewer(HttpServletRequest request,
     //                                              @RequestParam("email")String email,
     //                                              @RequestParam("phoneNumber")String phoneNumber
-                                              @RequestBody User user0
-    ) throws JSONException {
+                                              @RequestBody UserRequest user0
+    ) throws JSONException, UserException {
         String authHeader = request.getHeader("Authorization");
         //return new ResponseEntity<String>("hello",HttpStatus.OK);
         ExtractUser userInfo = new ExtractUser(authHeader, userService);
@@ -123,9 +125,7 @@ public class InterviewerController {
             return null;
         }
         Integer userId = userInfo.getUserId();
-        User user = userService.updateUser(User.builder()
-                .email(user0.getEmail())
-                .phoneNumber(user0.getPhoneNumber()).build(),userId);
+        User user = userService.updateUser(user0,userId);
         return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(user).build(),HttpStatus.OK);
 
     }

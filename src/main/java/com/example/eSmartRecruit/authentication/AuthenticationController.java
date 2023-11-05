@@ -5,13 +5,18 @@ import com.example.eSmartRecruit.authentication.request_reponse.AuthenticationRe
 import com.example.eSmartRecruit.authentication.request_reponse.AuthenticationResponse;
 import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 
+import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.services.impl.UserService;
 
+import jakarta.validation.Valid;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,22 +25,26 @@ import java.util.List;
 @RestController
 @RequestMapping("/eSmartRecruit")
 @RequiredArgsConstructor
-public class Authentication {
+public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request
-    ){
+    public ResponseEntity<ResponseObject> register(
+            @RequestBody @Valid RegisterRequest request
+    ) throws UserException {
         return ResponseEntity.ok(authenticationService.register(request));
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<AuthenticationResponse> authentication(
-            @RequestBody AuthenticationRequest request
+    public ResponseEntity<ResponseObject> authentication(
+            @RequestBody @Valid @Validated AuthenticationRequest request
     ){
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+        try{
+            return ResponseEntity.ok(authenticationService.authenticate(request));
+        }catch (Exception exception){
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/logout")
