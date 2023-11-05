@@ -3,9 +3,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.example.eSmartRecruit.config.ExtractUser;
-import com.example.eSmartRecruit.controllers.request_reponse.CandidateApplyResponse;
-import com.example.eSmartRecruit.controllers.request_reponse.OnePositionResponse;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
+import com.example.eSmartRecruit.exception.PositionException;
+import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.Application;
 
 import com.example.eSmartRecruit.models.Position;
@@ -19,6 +20,7 @@ import com.example.eSmartRecruit.services.impl.PositionService;
 import com.example.eSmartRecruit.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.json.JSONException;
 import org.springframework.http.HttpStatus;
@@ -48,35 +50,47 @@ public class CandidateController {
         return  new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).message("list position succesfully! :) ").build(), HttpStatus.OK);
     }
     @GetMapping("/position/{positionID}")
-    ResponseEntity<OnePositionResponse> getDetailPosition(@PathVariable("positionID")Integer id){
-        Position pos = positionService.getSelectedPosition(id);
-        return new ResponseEntity<OnePositionResponse>(OnePositionResponse.builder().status("SUCCESS").position(pos).build(),HttpStatus.OK);
+    ResponseEntity<ResponseObject> getDetailPosition(@PathVariable("positionID")Integer id){
+        try{
+            Position pos = positionService.getSelectedPosition(id);
+            if(pos == null){
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message("Position not found").build(),HttpStatus.OK);
+            }
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(pos).build(),HttpStatus.OK);
+
+        }catch (Exception exception){
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(),HttpStatus.OK);
+        }
     }
 
     @PostMapping("/application/create/{positionID}")
-    ResponseEntity<CandidateApplyResponse> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv){
+    ResponseEntity<ResponseObject> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv){
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             if(!userInfo.isEnabled()){
-                return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder()
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                         .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
             }
+
             String generatedFileName = storageService.storeFile(cv);
             int candidateId = userInfo.getUserId();
-
+            if(!positionService.isPresent(id)){
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Position not open!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
+            }
             Application application = new Application(candidateId, id, generatedFileName);
 
-            return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder()
-                    .message(applicationService.apply(application)).status("SUCCESS").build(),HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message(applicationService.apply(application)).status("SUCCESS").message("Successfully applied!").build(),HttpStatus.OK);
 
         }catch (Exception e){
-            return new ResponseEntity<CandidateApplyResponse>(CandidateApplyResponse.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
 
         }
     }
     @GetMapping("/application")
-    public ResponseEntity<ResponseObject> getMyApplications(HttpServletRequest request) throws JSONException {
+    public ResponseEntity<ResponseObject> getMyApplications(HttpServletRequest request) throws JSONException, PositionException, UserException {
         {
             String authHeader = request.getHeader("Authorization");
             //return new ResponseEntity<String>("hello",HttpStatus.OK);
@@ -135,7 +149,7 @@ public class CandidateController {
     }
     //get user info
     @GetMapping("/profile")
-    ResponseEntity<ResponseObject> getDetailUser(HttpServletRequest request) throws JSONException {
+    ResponseEntity<ResponseObject> getDetailUser(HttpServletRequest request) throws JSONException, UserException {
         String authHeader = request.getHeader("Authorization");
         //return new ResponseEntity<String>("hello",HttpStatus.OK);
         ExtractUser userInfo = new ExtractUser(authHeader, userService);
@@ -158,8 +172,8 @@ public class CandidateController {
     ResponseEntity<ResponseObject> updateUser(HttpServletRequest request,
 //                                              @RequestParam("email")String email,
 //                                              @RequestParam("phoneNumber")String phoneNumber
-                                              @RequestBody User user0
-                                              ) throws JSONException {
+                                              @RequestBody @Valid UserRequest user0
+                                              ) throws JSONException, UserException {
         String authHeader = request.getHeader("Authorization");
         //return new ResponseEntity<String>("hello",HttpStatus.OK);
         ExtractUser userInfo = new ExtractUser(authHeader, userService);
@@ -168,9 +182,7 @@ public class CandidateController {
         }
         Integer userId = userInfo.getUserId();
 
-        User user = userService.updateUser(User.builder()
-                .email(user0.getEmail())
-                .phoneNumber(user0.getPhoneNumber()).build(),userId);
+        User user = userService.updateUser(user0,userId);
 
         Map<String, Object> data = new HashMap<>();
         data.put("email", user.getEmail());
