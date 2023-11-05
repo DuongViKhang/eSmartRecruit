@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface ApplicationRepos extends JpaRepository<Application, Integer>{
     List<Application> findByCandidateID(Integer candidateID);
     Optional<Application> findByIdAndCandidateID(Integer ID, Integer candidateID);
+    Optional<Application> findByCandidateIDAndPositionID(Integer candidateId, Integer positionId);
 }

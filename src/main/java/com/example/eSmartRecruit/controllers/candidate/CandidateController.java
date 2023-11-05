@@ -82,7 +82,7 @@ public class CandidateController {
             Application application = new Application(candidateId, id, generatedFileName);
 
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message(applicationService.apply(application)).status("SUCCESS").message("Successfully applied!").build(),HttpStatus.OK);
+                    .message(applicationService.apply(application)).status("SUCCESS").build(),HttpStatus.OK);
 
         }catch (Exception e){
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
