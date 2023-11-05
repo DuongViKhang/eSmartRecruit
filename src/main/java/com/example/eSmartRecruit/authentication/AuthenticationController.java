@@ -5,6 +5,8 @@ import com.example.eSmartRecruit.authentication.request_reponse.AuthenticationRe
 import com.example.eSmartRecruit.authentication.request_reponse.AuthenticationResponse;
 import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 
+import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.services.impl.UserService;
 
@@ -25,20 +27,20 @@ public class AuthenticationController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegisterRequest request
-    ){
+    public ResponseEntity<ResponseObject> register(
+            @RequestBody @Valid RegisterRequest request
+    ) throws UserException {
         return ResponseEntity.ok(authenticationService.register(request));
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<AuthenticationResponse> authentication(
+    public ResponseEntity<ResponseObject> authentication(
             @RequestBody @Valid @Validated AuthenticationRequest request
     ){
         try{
             return ResponseEntity.ok(authenticationService.authenticate(request));
         }catch (Exception exception){
-            return new ResponseEntity<AuthenticationResponse>(AuthenticationResponse.builder().message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 

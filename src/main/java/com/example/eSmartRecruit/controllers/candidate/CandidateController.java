@@ -5,7 +5,8 @@ import java.util.Map;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
-import com.example.eSmartRecruit.exception.PositionNotFoundException;
+import com.example.eSmartRecruit.exception.PositionException;
+import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.Application;
 
 import com.example.eSmartRecruit.models.Position;
@@ -89,7 +90,7 @@ public class CandidateController {
         }
     }
     @GetMapping("/application")
-    public ResponseEntity<ResponseObject> getMyApplications(HttpServletRequest request) throws JSONException, PositionNotFoundException {
+    public ResponseEntity<ResponseObject> getMyApplications(HttpServletRequest request) throws JSONException, PositionException, UserException {
         {
             String authHeader = request.getHeader("Authorization");
             //return new ResponseEntity<String>("hello",HttpStatus.OK);
@@ -148,7 +149,7 @@ public class CandidateController {
     }
     //get user info
     @GetMapping("/profile")
-    ResponseEntity<ResponseObject> getDetailUser(HttpServletRequest request) throws JSONException {
+    ResponseEntity<ResponseObject> getDetailUser(HttpServletRequest request) throws JSONException, UserException {
         String authHeader = request.getHeader("Authorization");
         //return new ResponseEntity<String>("hello",HttpStatus.OK);
         ExtractUser userInfo = new ExtractUser(authHeader, userService);
@@ -172,7 +173,7 @@ public class CandidateController {
 //                                              @RequestParam("email")String email,
 //                                              @RequestParam("phoneNumber")String phoneNumber
                                               @RequestBody @Valid UserRequest user0
-                                              ) throws JSONException {
+                                              ) throws JSONException, UserException {
         String authHeader = request.getHeader("Authorization");
         //return new ResponseEntity<String>("hello",HttpStatus.OK);
         ExtractUser userInfo = new ExtractUser(authHeader, userService);
@@ -181,9 +182,7 @@ public class CandidateController {
         }
         Integer userId = userInfo.getUserId();
 
-        User user = userService.updateUser(User.builder()
-                .email(user0.getEmail())
-                .phoneNumber(user0.getPhoneNumber()).build(),userId);
+        User user = userService.updateUser(user0,userId);
 
         Map<String, Object> data = new HashMap<>();
         data.put("email", user.getEmail());
