@@ -31,7 +31,7 @@ public class GuestController {
         try {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message(userService.updateUserpassword(user.getUsername(), user.getNewPassword())).build(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Error").message(userService.updateUserpassword(user.getUsername(), user.getNewPassword())).build(), HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Error").message(e.getMessage()).build(), HttpStatus.NOT_IMPLEMENTED);
         }
 
     }
