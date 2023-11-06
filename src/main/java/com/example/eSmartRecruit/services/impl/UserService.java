@@ -42,6 +42,23 @@ public class UserService {
 
     }
 
+    public String checkDuplicateEmailPhone(User user){
+        if(userRepository.findByEmail(user.getEmail()).isPresent()){
+            return "This email is already used by another user!";
+        }
+        if(userRepository.findByPhoneNumber(user.getPhoneNumber()).isPresent()){
+            return "This phone number is already used by another user!";
+        }
+        return null;
+    }
+
+    public String checkDuplicate(User user){
+        if(userRepository.findByUsername(user.getUsername()).isPresent()){
+            return "This name already exist!";
+        }
+        return checkDuplicateEmailPhone(user);
+    }
+
     public boolean isEnabled(Integer id) throws UserException {
         return getUserById(id).isEnabled();
     }

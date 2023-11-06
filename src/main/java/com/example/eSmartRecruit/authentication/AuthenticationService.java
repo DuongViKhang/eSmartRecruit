@@ -13,9 +13,11 @@ import com.example.eSmartRecruit.models.enumModel.Role;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.models.enumModel.UserStatus;
 import com.example.eSmartRecruit.repositories.UserRepos;
+import com.example.eSmartRecruit.services.impl.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.FieldError;
@@ -33,6 +35,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepos userRepo;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -54,28 +57,49 @@ public class AuthenticationService {
                 .createDate(Date.valueOf(LocalDate.now()))
                 .updateDate(Date.valueOf(LocalDate.now()))
                 .build();
-        userRepo.save(user);
+        String checkDuplication = userService.checkDuplicate(user);
+        if(checkDuplication!=null){
+            throw new UserException(checkDuplication);
+        }
+        try {
+            userRepo.save(user);
+        }catch (Exception e){
+            return ResponseObject.builder().status("ERROR").message(e.getMessage()).build();
+        }
         var jwtToken = jwtService.generateToken(user);
 
         return ResponseObject.builder()
+                .status("SUCCESS")
                 .message(jwtToken)
                 .build();
     }
 
     public ResponseObject authenticate(AuthenticationRequest request) throws UserException {
 
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword())
 
-        var user = userRepo.findByUsername(request.getUsername()).orElseThrow(()-> new UserException("UserNotFound"));
-        if (!user.isEnabled()){
+            );
+
+            var user = userRepo.findByUsername(request.getUsername()).orElseThrow(()->new UserException("User not found!"));
+            if (!user.isEnabled()){
+                return ResponseObject.builder()
+                        .message("Account not active")
+                        .build();
+            }
+            var jwtToken = jwtService.generateToken(user);
             return ResponseObject.builder()
-                    .message("Account not active")
+                    .message(jwtToken)
+                    .status("SUCCESS")
                     .build();
+        }catch (Exception exception){
+            throw new UserException("User name or password is wrong");
         }
-        var jwtToken = jwtService.generateToken(user);
-        return ResponseObject.builder()
-                .message(jwtToken)
-                .status("SUCCESS")
-                .build();
+
+
     }
 
 }
