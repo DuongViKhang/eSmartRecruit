@@ -93,3 +93,10 @@ CREATE TABLE Reports (
     UpdateDate Date,
     FOREIGN KEY (SessionID) REFERENCES InterviewSessions(ID)
 );
+
+-- Create table tokens
+CREATE TABLE tokens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+);
