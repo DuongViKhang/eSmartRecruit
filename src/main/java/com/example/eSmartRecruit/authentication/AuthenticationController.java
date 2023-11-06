@@ -8,6 +8,7 @@ import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.User;
+import com.example.eSmartRecruit.services.impl.TokenService;
 import com.example.eSmartRecruit.services.impl.UserService;
 
 import jakarta.validation.Valid;
@@ -28,6 +29,7 @@ import java.util.List;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final UserService userService;
+    private final TokenService tokenService;
 
     @PostMapping("/register")
     public ResponseEntity<ResponseObject> register(
@@ -56,8 +58,11 @@ public class AuthenticationController {
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.Authentication authentication) {
         // Đăng xuất người dùng và xóa phiên làm việc
-        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
-        logoutHandler.logout(request, response, authentication);
+        if(authentication != null){
+            SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+            logoutHandler.logout(request, response, authentication);
+            tokenService.deleteToken(authentication.getName());
+        }
         return ResponseEntity.ok("{\"status\": \"SUCCESS\", \"message\": \"Sign out successfully!\"}");
     }
     @GetMapping("/hello")

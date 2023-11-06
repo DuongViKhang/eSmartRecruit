@@ -13,6 +13,7 @@ import com.example.eSmartRecruit.models.enumModel.Role;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.models.enumModel.UserStatus;
 import com.example.eSmartRecruit.repositories.UserRepos;
+import com.example.eSmartRecruit.services.impl.TokenService;
 import com.example.eSmartRecruit.services.impl.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,7 @@ public class AuthenticationService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
     public ResponseObject register(RegisterRequest request) throws UserException {
         //Role role = Role.valueOf(request.getRoleName());
@@ -68,6 +70,9 @@ public class AuthenticationService {
         }
         var jwtToken = jwtService.generateToken(user);
 
+        // Lưu token vào cơ sở dữ liệu
+        tokenService.saveToken(user.getUsername(), jwtToken);
+
         return ResponseObject.builder()
                 .status("SUCCESS")
                 .message(jwtToken)
@@ -91,6 +96,10 @@ public class AuthenticationService {
                         .build();
             }
             var jwtToken = jwtService.generateToken(user);
+
+            // Lưu token vào cơ sở dữ liệu
+            tokenService.saveToken(user.getUsername(), jwtToken);
+
             return ResponseObject.builder()
                     .message(jwtToken)
                     .status("SUCCESS")
@@ -98,8 +107,6 @@ public class AuthenticationService {
         }catch (Exception exception){
             throw new UserException("User name or password is wrong");
         }
-
-
     }
 
 }
