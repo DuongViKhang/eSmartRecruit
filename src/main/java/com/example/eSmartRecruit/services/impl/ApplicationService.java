@@ -19,11 +19,22 @@ public class ApplicationService implements IApplicationService {
     ApplicationRepos applicationRepository;
     public String apply(@Valid Application application){
         try{
+            if(isApplied(application.getCandidateID(),application.getPositionID())){
+                throw new ApplicationException("You have already applied to this position!");
+            }
             applicationRepository.save(application);
             return "Successfully applied";
         }catch (Exception e){
-            return e.toString();
+            return e.getMessage();
         }
+    }
+
+    public boolean isApplied(Integer candidateID, Integer positionID){
+        Application application = applicationRepository.findByCandidateIDAndPositionID(candidateID, positionID).orElse(null);
+        if(application==null){
+            return false;
+        }
+        return true;
     }
 
     public List<Application> getApplicationsByCandidateId(Integer candidateID) {

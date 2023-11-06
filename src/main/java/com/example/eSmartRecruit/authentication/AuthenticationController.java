@@ -33,7 +33,13 @@ public class AuthenticationController {
     public ResponseEntity<ResponseObject> register(
             @RequestBody @Valid RegisterRequest request
     ) throws UserException {
-        return ResponseEntity.ok(authenticationService.register(request));
+        try {
+            return ResponseEntity.ok(authenticationService.register(request));
+        }
+        catch (Exception exception){
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @PostMapping("/auth")
@@ -43,7 +49,7 @@ public class AuthenticationController {
         try{
             return ResponseEntity.ok(authenticationService.authenticate(request));
         }catch (Exception exception){
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
