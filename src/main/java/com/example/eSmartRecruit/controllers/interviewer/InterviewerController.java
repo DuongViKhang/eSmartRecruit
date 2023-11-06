@@ -24,6 +24,7 @@ import java.util.Map;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 
+import com.example.eSmartRecruit.controllers.request_reponse.request.ReportRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
 import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.InterviewSession;
@@ -50,45 +51,60 @@ public class InterviewerController {
     private ReportService reportService;
 
     @GetMapping("/home")
-    ResponseEntity<ResponseObject> getInterviewerSession(HttpServletRequest request) throws JSONException {
-        String authHeader = request.getHeader("Authorization");
-        //return new ResponseEntity<String>("hello",HttpStatus.OK);
-        ExtractUser userInfo = new ExtractUser(authHeader, userService);
-        if(!userInfo.isEnabled()){
-            return null;
+    ResponseEntity<ResponseObject> getInterviewerSession(HttpServletRequest request){
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if(!userInfo.isEnabled()){
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
+            }
+            Integer interviewerId = userInfo.getUserId();
+            List<InterviewSession> interviewSessionList = interviewSessionService.findByInterviewerID(interviewerId);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message("").status("SUCCESS").data(interviewSessionList).build(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
         }
-        Integer userId = userInfo.getUserId();
-        List<InterviewSession> interviewSessionList = interviewSessionService.findByInterviewerID(userId);
-        return new ResponseEntity<ResponseObject>(ResponseObject.builder().message("").status("Success").data(interviewSessionList).build(), HttpStatus.OK);
 
     }
     @GetMapping("/{interviewersessionID}")
-    ResponseEntity<ResponseObject> findByInterviewSessionID(@PathVariable("interviewersessionID")Integer interviewersessionID, HttpServletRequest request) throws JSONException {
-        String authHeader = request.getHeader("Authorization");
-        //return new ResponseEntity<String>("hello",HttpStatus.OK);
-        ExtractUser userInfo = new ExtractUser(authHeader, userService);
-        if(!userInfo.isEnabled()){
-            return null;
+    ResponseEntity<ResponseObject> findByInterviewSessionID(@PathVariable("interviewersessionID")Integer interviewersessionID, HttpServletRequest request){
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if(!userInfo.isEnabled()){
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
+            }
+            InterviewSession interviewSession = interviewSessionService.findByID(interviewersessionID);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message("").status("SUCCESS").data(interviewSession).build(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
         }
-        InterviewSession interviewSession = interviewSessionService.findByID(interviewersessionID);
-        return new ResponseEntity<ResponseObject>(ResponseObject.builder().message("").status("Success").data(interviewSession).build(), HttpStatus.OK);
     }
 
     @PostMapping("/report/create/{interviewersessionID}")
-    ResponseEntity<ResponseObject> reportInterviewSession(@PathVariable("interviewersessionID")Integer interviewersessionID, HttpServletRequest request, @RequestBody Report report) throws JSONException {
-        String authHeader = request.getHeader("Authorization");
-        //return new ResponseEntity<String>("hello",HttpStatus.OK);
-        ExtractUser userInfo = new ExtractUser(authHeader, userService);
-        if(!userInfo.isEnabled()){
-            return null;
-        }
-        Report report1 = Report.builder().reportName(report.getReportName()).reportData(report.getReportData()).sessionID(interviewersessionID).createDate(Date.valueOf(LocalDate.now())).updateDate(Date.valueOf(LocalDate.now())).build();
+    ResponseEntity<ResponseObject> reportInterviewSession(@PathVariable("interviewersessionID")Integer interviewersessionID, HttpServletRequest request, @RequestBody ReportRequest reportRequest){
         try {
-            Report _report = reportService.reportInterviewSession(report1);
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").message("Report successfully!").build(), HttpStatus.CREATED);
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if(!userInfo.isEnabled()){
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
+            }
+
+            if(!interviewSessionService.isAlready(interviewersessionID)){
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Interview Session not already done!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
+            }
+
+            Report report = Report.builder().reportName(reportRequest.getReportName()).reportData(reportRequest.getReportData()).sessionID(interviewersessionID).createDate(Date.valueOf(LocalDate.now())).updateDate(Date.valueOf(LocalDate.now())).build();
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").message(reportService.reportInterviewSession(report)).build(), HttpStatus.CREATED);
+
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("FAILED").message("Report FAILED!").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
         }
+
     }
 
 //get userInterviewer info

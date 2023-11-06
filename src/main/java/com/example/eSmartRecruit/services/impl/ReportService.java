@@ -9,11 +9,12 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class ReportService {
     private  ReportRepos reportRepos;
-    public Report reportInterviewSession(Report report) {
+    public String reportInterviewSession(Report report) {
         try{
-            return reportRepos.save(report);
+            reportRepos.save(report);
+            return "Report Successfully!";
         }catch (Exception e){
-            return null;
+            return e.getMessage();
         }
     }
 }

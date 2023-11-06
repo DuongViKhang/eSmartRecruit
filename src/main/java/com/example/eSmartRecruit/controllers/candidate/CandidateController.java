@@ -46,8 +46,12 @@ public class CandidateController {
     @GetMapping("/home")
     public ResponseEntity<ResponseObject> home()
     {
-        List<Position> data = positionService.getAllPosition();
-        return  new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).message("list position succesfully! :) ").build(), HttpStatus.OK);
+        try{
+            List<Position> data = positionService.getAllPosition();
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).message("list position succesfully! :) ").build(), HttpStatus.OK);
+        } catch (Exception exception) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(),HttpStatus.NOT_IMPLEMENTED);
+        }
     }
     @GetMapping("/position/{positionID}")
     ResponseEntity<ResponseObject> getDetailPosition(@PathVariable("positionID")Integer id){
