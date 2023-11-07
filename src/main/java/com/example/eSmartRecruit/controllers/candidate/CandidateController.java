@@ -209,11 +209,11 @@ public class CandidateController {
             String generatedFileName = storageService.storeFile(cv);
             int candidateId = userInfo.getUserId();
 
-            Application application = new Application(candidateId, id,generatedFileName);
+            Application application = new Application(generatedFileName);
             //Application application = new Application(candidateId, id, generatedFileName);
 
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message(applicationService.update(application,id)).status("SUCCESS").build(),HttpStatus.OK);
+                    .message(applicationService.update(candidateId,application,id)).status("SUCCESS").build(),HttpStatus.OK);
 
         }catch (Exception e){
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
@@ -223,7 +223,7 @@ public class CandidateController {
     }
 
     @DeleteMapping("/application/{applicationID}")
-    ResponseEntity<ResponseObject> updateApplyPosition(@PathVariable("applicationID")Integer id, HttpServletRequest request){
+    ResponseEntity<ResponseObject> deleteApplyPosition(@PathVariable("applicationID")Integer id, HttpServletRequest request){
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
@@ -231,18 +231,13 @@ public class CandidateController {
                 return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                         .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
             }
-            String message;
-            if(applicationService.deletejob(id)){
-                message = "Deleted successfully";
-            }
-            else {
-                message = "Delete failed";
-            }
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(message).status("SUCCESS").build(),HttpStatus.OK);
+            Integer candidateId = userInfo.getUserId();
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(applicationService.deletejob(candidateId, id)).status("SUCCESS").build(),HttpStatus.OK);
 
 
     }catch (Exception e){
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message("Error").status("error").build(),HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message("Error").status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
         }
 
         }

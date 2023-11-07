@@ -23,20 +23,16 @@ public class Application {
     private Integer id;
 
     @Column(name = "CandidateID")
-	@NotBlank(message = "Please fill this field")
     private Integer candidateID;
 
     @Column(name = "PositionID")
-	@NotBlank(message = "Please fill this field")
 	private Integer positionID;
 
     @Column(name = "Status")
 	@Enumerated(EnumType.STRING)
-	@NotBlank(message = "Please fill this field")
 	private ApplicationStatus status;
 
     @Column(name = "CV", length = 255)
-	@NotBlank(message = "Please fill this field")
 	private String cv;
 
     @Temporal(TemporalType.DATE)

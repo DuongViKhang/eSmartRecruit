@@ -5,6 +5,7 @@ import com.example.eSmartRecruit.models.Application;
 
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.services.IApplicationService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationContextException;
@@ -20,7 +21,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ApplicationService implements IApplicationService {
     ApplicationRepos applicationRepository;
-    public String apply(@Valid Application application){
+    public String apply(Application application){
         try{
             if(isApplied(application.getCandidateID(),application.getPositionID())){
                 throw new ApplicationException("You have already applied to this position!");
@@ -48,22 +49,25 @@ public class ApplicationService implements IApplicationService {
     }
 
 
-    public String update(Application applications, Integer id) {
+    public String update(Integer candidateId, Application applications, Integer id) {
         try{
-            Application exApplication = applicationRepository.findById(id).orElse(null);
+            Application exApplication = applicationRepository.findById(id).orElseThrow(()->new ApplicationException("Application not found!"));
+            if(!candidateId.equals(exApplication.getCandidateID())){
+                throw new ApplicationException("This is not your application!");
+            }
             exApplication.setCv(applications.getCv());
             exApplication.setUpdateDate(Date.valueOf(LocalDate.now()));
             applicationRepository.save(exApplication);
             return "update Success";
         }catch (Exception e){
-            return e.getMessage();
+            return e.toString();
         }
 
     }
 
     public Boolean isPresent(Integer jobid){
         try{
-            Application application = applicationRepository.findById(jobid).orElse(null);
+            Application application = applicationRepository.findById(jobid).orElseThrow(()->new ApplicationException("Cant find this application!"));
             if(application == null){
                 return false;
             }
@@ -73,15 +77,19 @@ public class ApplicationService implements IApplicationService {
             return false;
         }
     }
-    public Boolean deletejob(Integer jobid){
+    public String deletejob(Integer candidateId, Integer jobid){
         try{
+            Application application = applicationRepository.findById(jobid).orElseThrow(()->new ApplicationException("Cant find this application!"));
             if(!isPresent(jobid)){
-                return false;
+                throw new ApplicationException("Cant find this application!");
+            }
+            if(!candidateId.equals(application.getCandidateID())){
+                throw new ApplicationException("This is not your application!");
             }
             applicationRepository.deleteById(jobid);
-            return true;
+            return "Successfully deleted!";
         }catch (Exception e){
-            return false;
+            return e.getMessage();
         }
     }
 
