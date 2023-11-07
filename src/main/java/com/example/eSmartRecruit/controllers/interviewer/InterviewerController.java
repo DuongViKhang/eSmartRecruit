@@ -30,11 +30,13 @@ import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.InterviewSession;
 import com.example.eSmartRecruit.models.Report;
 import com.example.eSmartRecruit.models.User;
+import com.example.eSmartRecruit.models.enumModel.Role;
 import com.example.eSmartRecruit.services.impl.InterviewSessionService;
 import com.example.eSmartRecruit.services.impl.ReportService;
 import com.example.eSmartRecruit.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
+import jakarta.validation.Valid;
 import org.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -113,7 +115,8 @@ public class InterviewerController {
         String authHeader = request.getHeader("Authorization");
         //return new ResponseEntity<String>("hello",HttpStatus.OK);
         ExtractUser userInfo = new ExtractUser(authHeader, userService);
-        if(!userInfo.isEnabled()){
+        if(!userInfo.isEnabled())
+        {
             return null;
         }
         Integer userId = userInfo.getUserId();
@@ -122,7 +125,8 @@ public class InterviewerController {
         Map<String, String> data = new HashMap<>();
         data.put("username", user.getUsername());
         data.put("email", user.getEmail());
-        data.put("phonename", user.getPhoneNumber());
+        data.put("phonenumber", user.getPhoneNumber());
+        data.put("roleName", user.getRoleName().name());
 
         return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(data).build(), HttpStatus.OK);
 
@@ -132,17 +136,52 @@ public class InterviewerController {
     ResponseEntity<ResponseObject> updateUserInterviewer(HttpServletRequest request,
     //                                              @RequestParam("email")String email,
     //                                              @RequestParam("phoneNumber")String phoneNumber
-                                              @RequestBody UserRequest user0
+                                              @RequestBody @Valid UserRequest user0
     ) throws JSONException, UserException {
-        String authHeader = request.getHeader("Authorization");
-        //return new ResponseEntity<String>("hello",HttpStatus.OK);
-        ExtractUser userInfo = new ExtractUser(authHeader, userService);
-        if(!userInfo.isEnabled()){
-            return null;
+        try {
+            String authHeader = request.getHeader("Authorization");
+            //return new ResponseEntity<String>("hello",HttpStatus.OK);
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if (!userInfo.isEnabled()) {
+                return null;
+            }
+            Integer userId = userInfo.getUserId();
+            User user = userService.updateUser(user0, userId);
+            Map<String, Object> data = new HashMap<>();
+            data.put("username", user.getUsername());
+            data.put("email", user.getEmail());
+            data.put("phoneNumber",user.getPhoneNumber());
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(data).build(), HttpStatus.OK);
         }
-        Integer userId = userInfo.getUserId();
-        User user = userService.updateUser(user0,userId);
-        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(user).build(),HttpStatus.OK);
-
+        catch (Exception exception){
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(), HttpStatus.OK);
+        }
     }
+    @GetMapping("/candidate/{candidateId}")
+    ResponseEntity<ResponseObject> getCandidateInformation(@PathVariable("candidateId") Integer candidateId, HttpServletRequest request) throws JSONException, UserException {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            //return new ResponseEntity<String>("hello",HttpStatus.OK);
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if (!userInfo.isEnabled()) {
+                return null;
+            }
+
+            User user = userService.getUserById(candidateId);
+            if (!user.getRoleName().equals(Role.Candidate)) {
+                throw new UserException("Not a candidate");
+            }
+            Map<String, String> data = new HashMap<>();
+            data.put("username", user.getUsername());
+            data.put("email", user.getEmail());
+            data.put("phonenumber", user.getPhoneNumber());
+            data.put("roleName", user.getRoleName().name());
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(data).build(), HttpStatus.OK);
+        }
+        catch (Exception exception){
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message(exception.getMessage()).build(), HttpStatus.OK);
+        }
+    }
+
 }

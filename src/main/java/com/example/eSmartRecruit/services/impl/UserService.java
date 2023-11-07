@@ -42,10 +42,13 @@ public class UserService {
 
     }
 
-    public String checkDuplicateEmailPhone(User user){
+    public String checkDuplicateEmail(User user){
         if(userRepository.findByEmail(user.getEmail()).isPresent()){
             return "This email is already used by another user!";
         }
+        return null;
+    }
+    public String checkDuplicatePhone(User user){
         if(userRepository.findByPhoneNumber(user.getPhoneNumber()).isPresent()){
             return "This phone number is already used by another user!";
         }
@@ -56,7 +59,13 @@ public class UserService {
         if(userRepository.findByUsername(user.getUsername()).isPresent()){
             return "This name already exist!";
         }
-        return checkDuplicateEmailPhone(user);
+        if(checkDuplicateEmail(user)!=null){
+            return checkDuplicateEmail(user);
+        }
+        if(checkDuplicatePhone(user)!=null){
+            return checkDuplicatePhone(user);
+        }
+        return null;
     }
 
     public boolean isEnabled(Integer id) throws UserException {
@@ -69,11 +78,22 @@ public class UserService {
 
     public  User updateUser(UserRequest user , Integer id) throws UserException {
         User exUser = getUserById(id);
-        if( exUser == null){
-
-        }
+        String oldMail = exUser.getEmail();
+        String oldPhone = exUser.getPhoneNumber();
         exUser.setEmail(user.getEmail());
         exUser.setPhoneNumber(user.getPhoneNumber());
+
+        String checkDuplicationEmail = checkDuplicateEmail(exUser);
+        String checkDuplicationPhone = checkDuplicatePhone(exUser);
+//        if(checkDuplication!=null && (!user.getEmail().equals(oldMail)||!user.getPhoneNumber().equals(oldPhone))){
+//            throw new UserException(checkDuplication);
+//        }
+        if(checkDuplicationEmail!=null && !user.getEmail().equals(oldMail)){
+            throw new UserException(checkDuplicationEmail);
+        }
+        if(checkDuplicationPhone!=null && !user.getPhoneNumber().equals(oldPhone)){
+            throw new UserException(checkDuplicationPhone);
+        }
         try{
             userRepository.save(exUser);
         }catch(Exception e){
