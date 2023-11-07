@@ -1,5 +1,5 @@
 package com.example.eSmartRecruit.controllers.candidate;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.example.eSmartRecruit.config.ExtractUser;
@@ -49,7 +49,7 @@ public class CandidateController {
     {
         try{
             List<Position> data = positionService.getAllPosition();
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).message("list position succesfully! :) ").build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).message("List position successfully!").build(), HttpStatus.OK);
         } catch (Exception exception) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(),HttpStatus.NOT_IMPLEMENTED);
         }
@@ -91,7 +91,6 @@ public class CandidateController {
 
         }catch (Exception e){
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
-
         }
     }
     @GetMapping("/application")
@@ -110,7 +109,7 @@ public class CandidateController {
             List<Map<String, Object>> applicationList = new ArrayList<>();
 
             for (Application app : applications) {
-                Map<String, Object> applicationMap = new HashMap<>();
+                Map<String, Object> applicationMap = new LinkedHashMap<>();
                 applicationMap.put("applicationID", app.getId());
                 applicationMap.put("positionTitle", positionService.getSelectedPosition(app.getPositionID()).getTitle());
                 applicationMap.put("status", app.getStatus());
@@ -134,7 +133,7 @@ public class CandidateController {
 
             Optional<Application> application = applicationRepository.findByIdAndCandidateID(id, user.getId());
             if (application.isPresent()) {
-                Map<String, Object> data = new HashMap<>();
+                Map<String, Object> data = new LinkedHashMap<>();
                 Application app = application.get();
 
                 data.put("applicationID", app.getId());
@@ -164,7 +163,7 @@ public class CandidateController {
         Integer userId = userInfo.getUserId();
         User user = userService.getUserById(userId);
 
-        Map<String, String> data = new HashMap<>();
+        Map<String, String> data = new LinkedHashMap<>();
         data.put("username", user.getUsername());
         data.put("email", user.getEmail());
         data.put("phonenumber", user.getPhoneNumber());
@@ -189,7 +188,7 @@ public class CandidateController {
 
         User user = userService.updateUser(user0,userId);
 
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = new LinkedHashMap<>();
         data.put("email", user.getEmail());
         data.put("phoneNumber",user.getPhoneNumber());
 
