@@ -164,7 +164,7 @@ public class CandidateController {
         User user = userService.getUserById(userId);
 
         Map<String, String> data = new HashMap<>();
-        data.put("username", user.getUsername());
+//        data.put("username", user.getUsername());
         data.put("email", user.getEmail());
         data.put("phonenumber", user.getPhoneNumber());
 

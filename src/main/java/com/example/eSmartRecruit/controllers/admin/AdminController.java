@@ -2,6 +2,7 @@ package com.example.eSmartRecruit.controllers.admin;
 
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +27,25 @@ public class AdminController {
     @GetMapping("/home")
     List<String> getAllAdmin(){
         return List.of("Hello admin");
+    }
+    @GetMapping("/profile")
+    ResponseEntity<ResponseObject> getDetailUser(HttpServletRequest request) throws JSONException, UserException {
+        String authHeader = request.getHeader("Authorization");
+        //return new ResponseEntity<String>("hello",HttpStatus.OK);
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+        if(!userInfo.isEnabled()){
+            return null;
+        }
+        Integer userId = userInfo.getUserId();
+        User user = userService.getUserById(userId);
+
+        Map<String, String> data = new HashMap<>();
+//        data.put("username", user.getUsername());
+        data.put("email", user.getEmail());
+        data.put("phonenumber", user.getPhoneNumber());
+
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Loading data success!").data(data).build(),HttpStatus.OK);
+
     }
 
 }
