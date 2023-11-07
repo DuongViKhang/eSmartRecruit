@@ -153,47 +153,49 @@ public class CandidateController {
     }
     //get user info
     @GetMapping("/profile")
-    ResponseEntity<ResponseObject> getDetailUser(HttpServletRequest request) throws JSONException, UserException {
-        String authHeader = request.getHeader("Authorization");
-        //return new ResponseEntity<String>("hello",HttpStatus.OK);
-        ExtractUser userInfo = new ExtractUser(authHeader, userService);
-        if(!userInfo.isEnabled()){
-            return null;
+    ResponseEntity<ResponseObject> getDetailUser(HttpServletRequest request) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if(!userInfo.isEnabled()){
+                return null;
+            }
+            Integer userId = userInfo.getUserId();
+            User user = userService.getUserById(userId);
+
+            Map<String, String> data = new LinkedHashMap<>();
+            data.put("username", user.getUsername());
+            data.put("email", user.getEmail());
+            data.put("phonenumber", user.getPhoneNumber());
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Loading data success!").data(data).build(),HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(e.getMessage()).build(),HttpStatus.NOT_IMPLEMENTED);
         }
-        Integer userId = userInfo.getUserId();
-        User user = userService.getUserById(userId);
-
-        Map<String, String> data = new LinkedHashMap<>();
-        data.put("username", user.getUsername());
-        data.put("email", user.getEmail());
-        data.put("phonenumber", user.getPhoneNumber());
-
-        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Loading data success!").data(data).build(),HttpStatus.OK);
-
     }
     //update user
     @PutMapping("/profile")
     ResponseEntity<ResponseObject> updateUser(HttpServletRequest request,
-//                                              @RequestParam("email")String email,
-//                                              @RequestParam("phoneNumber")String phoneNumber
                                               @RequestBody @Valid UserRequest user0
                                               ) throws JSONException, UserException {
-        String authHeader = request.getHeader("Authorization");
-        //return new ResponseEntity<String>("hello",HttpStatus.OK);
-        ExtractUser userInfo = new ExtractUser(authHeader, userService);
-        if(!userInfo.isEnabled()){
-            return null;
+        try {
+            String authHeader = request.getHeader("Authorization");
+            //return new ResponseEntity<String>("hello",HttpStatus.OK);
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if (!userInfo.isEnabled()) {
+                return null;
+            }
+            Integer userId = userInfo.getUserId();
+            User user = userService.updateUser(user0, userId);
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("email", user.getEmail());
+            data.put("phoneNumber", user.getPhoneNumber());
+
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Update information successfully!").data(data).build(),HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(e.getMessage()).build(),HttpStatus.NOT_IMPLEMENTED);
+
         }
-        Integer userId = userInfo.getUserId();
-
-        User user = userService.updateUser(user0,userId);
-
-        Map<String, Object> data = new LinkedHashMap<>();
-        data.put("email", user.getEmail());
-        data.put("phoneNumber",user.getPhoneNumber());
-
-        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Update infomation succesfully!").data(data).build(),HttpStatus.OK);
-
     }
 
     @PutMapping("/application/{applicationID}")
