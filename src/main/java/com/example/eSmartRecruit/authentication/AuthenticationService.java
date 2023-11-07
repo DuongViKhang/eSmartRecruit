@@ -28,7 +28,9 @@ import org.yaml.snakeyaml.util.EnumUtils;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -41,12 +43,13 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     public ResponseObject register(RegisterRequest request) throws UserException {
         //Role role = Role.valueOf(request.getRoleName());
-        for (Role value:Role.values()) {
-            if(value.toString().equals(request.getRoleName())){
-                break;
-            }
-            return ResponseObject.builder().message("Wrong Role name").build();
+
+        try{
+            Role.valueOf(request.getRoleName());
+        }catch (Exception e){
+            throw new UserException("Wrong Role name");
         }
+
         var user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
