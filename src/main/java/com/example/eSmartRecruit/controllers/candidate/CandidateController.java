@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
 import com.example.eSmartRecruit.exception.PositionException;
 import com.example.eSmartRecruit.exception.UserException;
@@ -195,4 +196,55 @@ public class CandidateController {
         return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Update infomation succesfully!").data(data).build(),HttpStatus.OK);
 
     }
-}
+
+    @PutMapping("/application/{applicationID}")
+    ResponseEntity<ResponseObject> updateApplyPosition(@PathVariable("applicationID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv){
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if(!userInfo.isEnabled()){
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
+            }
+            String generatedFileName = storageService.storeFile(cv);
+            int candidateId = userInfo.getUserId();
+
+            Application application = new Application(candidateId, id,generatedFileName);
+            //Application application = new Application(candidateId, id, generatedFileName);
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message(applicationService.update(application,id)).status("SUCCESS").build(),HttpStatus.OK);
+
+        }catch (Exception e){
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
+
+        }
+
+    }
+
+    @DeleteMapping("/application/{applicationID}")
+    ResponseEntity<ResponseObject> updateApplyPosition(@PathVariable("applicationID")Integer id, HttpServletRequest request){
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if(!userInfo.isEnabled()){
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
+            }
+            String message;
+            if(applicationService.deletejob(id)){
+                message = "Deleted successfully";
+            }
+            else {
+                message = "Delete failed";
+            }
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(message).status("SUCCESS").build(),HttpStatus.OK);
+
+
+    }catch (Exception e){
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message("Error").status("error").build(),HttpStatus.NOT_IMPLEMENTED);
+        }
+
+        }
+
+    }
