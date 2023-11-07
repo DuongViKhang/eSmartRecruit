@@ -77,7 +77,7 @@ class CandidateControllerTest {
 
     private JwtService jwtService;
     @Test
-    void home() {
+    void home() throws PositionException {
         List<Position> mockPositions = new ArrayList<>();
 
         Position position1 = new Position();
@@ -174,6 +174,7 @@ class CandidateControllerTest {
         lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
         lenient().when(mockUserInfo.getUserId()).thenReturn(4);
         lenient().when(userService.isEnabled(4)).thenReturn(true);
+
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
         lenient().when(storageService.storeFile(mockFile)).thenReturn("generatedFileName");

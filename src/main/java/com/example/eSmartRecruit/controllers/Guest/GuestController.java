@@ -25,9 +25,7 @@ public class GuestController {
     private PositionService positionService;
 
     @PutMapping("/resetpassword")
-    public ResponseEntity<ResponseObject> forgotPassword(//@RequestBody String username,@RequestBody String newpassword,
-                                                         @RequestBody @Valid ChangePasswordRequest user,
-                                                         HttpServletRequest request, HttpServletResponse response) throws UserException {
+    public ResponseEntity<ResponseObject> forgotPassword(@RequestBody @Valid ChangePasswordRequest user) throws UserException {
         try {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message(userService.updateUserpassword(user.getUsername(), user.getNewPassword())).build(), HttpStatus.OK);
         } catch (Exception e) {
@@ -38,12 +36,12 @@ public class GuestController {
 
 
     @GetMapping("/search/{keyword}")
-    public ResponseEntity<ResponseObject> searchJob(@PathVariable("keyword") String keyword, HttpServletRequest request)
+    public ResponseEntity<ResponseObject> searchJob(@PathVariable("keyword") String keyword)
     {
         try{
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Search succesfully!").data(positionService.searchPositions(keyword)).build(), HttpStatus.OK);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Error").message(e.getMessage()).build(), HttpStatus.NOT_IMPLEMENTED);
         }
 
     }
