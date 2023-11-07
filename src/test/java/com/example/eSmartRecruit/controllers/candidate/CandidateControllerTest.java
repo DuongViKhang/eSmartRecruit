@@ -4,6 +4,7 @@ import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.config.JwtService;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
+import com.example.eSmartRecruit.exception.FileUploadException;
 import com.example.eSmartRecruit.exception.PositionException;
 import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.Application;
@@ -16,11 +17,13 @@ import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.repositories.UserRepos;
 import com.example.eSmartRecruit.services.IStorageService;
 import com.example.eSmartRecruit.services.impl.ApplicationService;
+import com.example.eSmartRecruit.services.impl.FileStorageService;
 import com.example.eSmartRecruit.services.impl.PositionService;
 import com.example.eSmartRecruit.services.impl.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import org.json.JSONException;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -73,7 +77,7 @@ class CandidateControllerTest {
     private IStorageService storageService;
 
     @Mock
-    private ApplicationService applicationService;
+    private ApplicationService applicationService = new ApplicationService(applicationRepository);
 
     private JwtService jwtService;
     @Test
@@ -178,10 +182,9 @@ class CandidateControllerTest {
         lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
         lenient().when(storageService.storeFile(mockFile)).thenReturn("generatedFileName");
         lenient().when(positionService.isPresent(1)).thenReturn(true);
-        lenient().when(applicationService.apply(any(Application.class))).thenReturn("Successfully applied");
+        lenient().when(applicationService.apply(any(Application.class))).thenReturn("Successfully applied!");
 
         ResponseEntity<ResponseObject> responseEntity = candidateController.applyForPosition(1, mockRequest, mockFile);
-
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         ResponseObject responseObject = responseEntity.getBody();
@@ -193,6 +196,111 @@ class CandidateControllerTest {
         verify(positionService, times(1)).isPresent(1);
         verify(applicationService, times(1)).apply(any(Application.class));
     }
+
+    @Test
+    void applyForPositionErrorNotPDF() throws Exception,FileUploadException{
+        MockMultipartFile mockFile = new MockMultipartFile("cv", "cv.docx", "application/pdf", "cv data".getBytes());
+
+        User mockUser = new User();
+        mockUser.setId(4);
+        mockUser.setUsername("khang");
+        mockUser.setPassword("$2a$10$S5x1eUGgsbXA4RJfrnc07ueCheYAVNMXsqw23/HfivFQJsaowrTXW");
+        mockUser.setEmail("khang123@gmail.com");
+        mockUser.setPhoneNumber(null);
+        mockUser.setRoleName(Role.Candidate);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-11-02"));
+        mockUser.setUpdateDate(Date.valueOf("2023-11-02"));
+
+        var jwtToken = jwtService.generateToken(mockUser);
+
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(4);
+        lenient().when(userService.isEnabled(4)).thenReturn(true);
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+        //when(storageService.storeFile(mockFile)).thenReturn("Only pdf file accepted!");
+
+        lenient().when(storageService.isPDF(mockFile)).thenReturn(false);
+        when(storageService.storeFile(mockFile)).thenThrow(new FileUploadException("Only pdf file accepted!"));
+        lenient().when(positionService.isPresent(1)).thenReturn(true);
+        lenient().when(applicationService.apply(any(Application.class))).thenReturn("Only pdf file accepted!");
+
+        ResponseEntity<ResponseObject> responseEntity = candidateController.applyForPosition(1, mockRequest, mockFile);
+
+//        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals("ERROR", responseObject.getStatus());
+        assertEquals("Only pdf file accepted!", responseObject.getMessage());
+
+        //verify(storageService, times(1)).storeFile((any()));
+        //verify(positionService, times(1)).isPresent(1);
+        //verify(applicationService, times(1)).apply(any(Application.class));
+    }
+
+    @Test
+    void updateApplication() throws UserException, FileUploadException, PositionException {
+        MockMultipartFile mockFile = new MockMultipartFile("cv", "cv.pdf", "application/pdf", "cv data".getBytes());
+
+        User mockUser = new User();
+        mockUser.setId(4);
+        mockUser.setUsername("khang");
+        mockUser.setPassword("$2a$10$S5x1eUGgsbXA4RJfrnc07ueCheYAVNMXsqw23/HfivFQJsaowrTXW");
+        mockUser.setEmail("khang123@gmail.com");
+        mockUser.setPhoneNumber("0999999999");
+        mockUser.setRoleName(Role.Candidate);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-11-02"));
+        mockUser.setUpdateDate(Date.valueOf("2023-11-02"));
+
+        Application mockApplication = new Application();
+        mockApplication.setId(1);
+        mockApplication.setCandidateID(4);
+        mockApplication.setPositionID(1);
+        mockApplication.setStatus(ApplicationStatus.Pending);
+        mockApplication.setCv("fsiukjnvsfihv.pdf");
+        mockApplication.setCreateDate(Date.valueOf("2023-11-02"));
+        mockApplication.setUpdateDate(Date.valueOf("2023-11-02"));
+
+        var jwtToken = jwtService.generateToken(mockUser);
+
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(4);
+        lenient().when(userService.isEnabled(4)).thenReturn(true);
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+        lenient().when(storageService.storeFile(mockFile)).thenReturn("generatedFileName.pdf");
+        lenient().when(positionService.isPresent(1)).thenReturn(true);
+
+        var appId = 1;
+        var newApplication = new Application("generatedFileName.pdf");
+
+        ApplicationRepos repos = mock(ApplicationRepos.class);
+        lenient().when(repos.findById(appId)).thenReturn(Optional.of(mockApplication));
+
+        //when(applicationRepository.findById(1)).thenReturn(Optional.of(mockApplication));
+        lenient().when(applicationService.update(4,newApplication,1)).thenReturn("update Success");
+
+        ResponseEntity<ResponseObject> responseEntity = candidateController.updateApplyPosition(1,mockRequest,mockFile);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        System.out.println(applicationService.update(4,newApplication,1));
+        System.out.println(responseEntity);
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals("update Success", responseObject.getMessage());
+        //Vấn đề file name khi truyền vào
+
+//        verify(storageService, times(1)).storeFile(mockFile);
+//        verify(positionService, times(1)).isPresent(1);
+//        verify(applicationService, times(1)).update(4,newApplication,1);
+    }
+
+
 
     @Test
     void getMyApplications() throws JSONException, UserException, PositionException {

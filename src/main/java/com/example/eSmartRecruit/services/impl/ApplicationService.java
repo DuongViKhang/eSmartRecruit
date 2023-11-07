@@ -8,6 +8,7 @@ import com.example.eSmartRecruit.services.IApplicationService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +21,14 @@ import java.time.LocalDate;
 @Service
 @AllArgsConstructor
 public class ApplicationService implements IApplicationService {
-    ApplicationRepos applicationRepository;
+    @Autowired
+    private final ApplicationRepos applicationRepository;
     public String apply(Application application){
         try{
             if(isApplied(application.getCandidateID(),application.getPositionID())){
                 throw new ApplicationException("You have already applied to this position!");
             }
+
             applicationRepository.save(application);
             return "Successfully applied";
         }catch (Exception e){
@@ -55,6 +58,7 @@ public class ApplicationService implements IApplicationService {
             if(!candidateId.equals(exApplication.getCandidateID())){
                 throw new ApplicationException("This is not your application!");
             }
+
             exApplication.setCv(applications.getCv());
             exApplication.setUpdateDate(Date.valueOf(LocalDate.now()));
             applicationRepository.save(exApplication);
