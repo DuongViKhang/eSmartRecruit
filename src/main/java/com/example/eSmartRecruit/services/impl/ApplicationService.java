@@ -1,64 +1,46 @@
 package com.example.eSmartRecruit.services.impl;
 
+import com.example.eSmartRecruit.exception.ApplicationException;
 import com.example.eSmartRecruit.models.Application;
 
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.services.IApplicationService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationContextException;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class ApplicationService implements IApplicationService {
     ApplicationRepos applicationRepository;
-    public String apply(Application application){
+    public String apply(@Valid Application application){
         try{
+            if(isApplied(application.getCandidateID(),application.getPositionID())){
+                throw new ApplicationException("You have already applied to this position!");
+            }
             applicationRepository.save(application);
             return "Successfully applied";
         }catch (Exception e){
-            return e.toString();
-        }
-    }
-
-
-    public String update(Application applications, Integer id) {
-        try{
-            Application exApplication = applicationRepository.findById(id).orElse(null);
-            exApplication.setCv(applications.getCv());
-            exApplication.setUpdateDate(Date.valueOf(LocalDate.now()));
-            applicationRepository.save(exApplication);
-            return "update Success";
-        }catch (Exception e){
             return e.getMessage();
         }
-
     }
 
-    public Boolean isPresent(Integer jobid){
-        try{
-            Application application = applicationRepository.findById(jobid).orElse(null);
-            if(application == null){
-                return false;
-            }
-            return true;
-
-        }catch (Exception e){
+    public boolean isApplied(Integer candidateID, Integer positionID){
+        Application application = applicationRepository.findByCandidateIDAndPositionID(candidateID, positionID).orElse(null);
+        if(application==null){
             return false;
         }
-    }
-    public Boolean deletejob(Integer jobid){
-        try{
-            if(!isPresent(jobid)){
-                return false;
-            }
-            applicationRepository.deleteById(jobid);
-            return true;
-        }catch (Exception e){
-            return false;
-        }
+        return true;
     }
 
+    public List<Application> getApplicationsByCandidateId(Integer candidateID) {
+        return applicationRepository.findByCandidateID(candidateID);
+    }
+    public Application getApplicationByIdAndCandidateId(Integer ID, Integer candidateID) throws ApplicationException {
+        return applicationRepository.findByIdAndCandidateID(ID, candidateID).orElseThrow(()->new ApplicationException("Cant find the required application!"));
+    }
 }
