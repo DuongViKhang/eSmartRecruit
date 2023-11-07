@@ -1,5 +1,6 @@
 package com.example.eSmartRecruit.config;
 
+import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.services.impl.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class ExtractUser {
     private static String decode(String encodedString){
         return new String(Base64.getUrlDecoder().decode(encodedString));
     }
-    public ExtractUser(String token, UserService userService) throws JSONException {
+    public ExtractUser(String token, UserService userService) throws JSONException, UserException {
         this.userService = userService;
 
         String jwt = token.substring(7);
