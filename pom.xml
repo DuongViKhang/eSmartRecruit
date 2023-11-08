@@ -94,13 +94,53 @@
 			<version>0.11.5</version>
 		</dependency>
 
+<!--		Validation-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
 			<version>2.0</version><!-- Phiên bản an toàn -->
 		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>5.3.1</version>
+			<scope>test</scope>
+		</dependency>
 
-	</dependencies>
+		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito2 -->
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito2</artifactId>
+			<version>2.0.9</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4 -->
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>2.0.9</version>
+			<scope>test</scope>
+		</dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.9.3</version>
+            <scope>test</scope>
+        </dependency>
+
+
+    </dependencies>
 
 	<build>
 		<plugins>

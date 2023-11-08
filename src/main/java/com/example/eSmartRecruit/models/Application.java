@@ -2,6 +2,8 @@ package com.example.eSmartRecruit.models;
 
 import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,14 +26,14 @@ public class Application {
     private Integer candidateID;
 
     @Column(name = "PositionID")
-    private Integer positionID;
+	private Integer positionID;
 
     @Column(name = "Status")
 	@Enumerated(EnumType.STRING)
-    private ApplicationStatus status;
+	private ApplicationStatus status;
 
     @Column(name = "CV", length = 255)
-    private String cv;
+	private String cv;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "CreateDate")
@@ -41,7 +43,9 @@ public class Application {
     @Column(name = "UpdateDate")
     private Date updateDate;
 
-//    public Application() {}
+   public Application(String cv) {
+	   this.cv = cv;
+   }
 
 
 	public Application(Integer candidateID, Integer positionID, String cv, Date updateDate) {

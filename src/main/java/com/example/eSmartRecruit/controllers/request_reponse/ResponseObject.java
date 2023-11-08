@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-//@JsonPropertyOrder({ "status", "message", "data" })
+@JsonPropertyOrder({ "status", "message", "data" })
 public class ResponseObject {
     private String status;
     private String message;

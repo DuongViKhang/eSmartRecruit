@@ -1,9 +1,14 @@
 package com.example.eSmartRecruit.models;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.sql.Date;
 
+
+@Builder
+@Data
 @Entity
 @Table(name = "Reports")
 public class Report {
