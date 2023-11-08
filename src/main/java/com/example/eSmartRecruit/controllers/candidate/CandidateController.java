@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ import java.util.*;
 @RestController
 @RequestMapping("eSmartRecruit/")
 @AllArgsConstructor
+@NoArgsConstructor
 public class CandidateController {
     private PositionService positionService;
     private ApplicationService applicationService;

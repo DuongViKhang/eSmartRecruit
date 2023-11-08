@@ -31,7 +31,7 @@ public class FileStorageService implements IStorageService {
         }
     }
 
-    private boolean isPDF(MultipartFile file){
+    public boolean isPDF(MultipartFile file){
         String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
         return Arrays.asList(new String[]{"pdf"})
                 .contains(fileExtension.trim().toLowerCase());
@@ -43,6 +43,7 @@ public class FileStorageService implements IStorageService {
                 throw new FileUploadException("File not found");
             }
             if(!isPDF(file)){
+                //return "Only pdf file accepted!";
                 throw new FileUploadException("Only pdf file accepted!");
             }
             float fileSizeInMegabytes = file.getSize()/1000000;
