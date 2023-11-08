@@ -34,7 +34,7 @@ import java.util.*;
 
 
 @RestController
-@RequestMapping("eSmartRecruit/")
+@RequestMapping("eSmartRecruit/candidate")
 @AllArgsConstructor
 @NoArgsConstructor
 public class CandidateController {
