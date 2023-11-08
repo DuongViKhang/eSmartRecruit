@@ -131,7 +131,7 @@ public class CandidateController {
             Integer userId = userInfo.getUserId();
             User user = userService.getUserById(userId);
 
-            Optional<Application> application = applicationRepository.findByIdAndCandidateID(id, user.getId());
+            Optional<Application> application = applicationRepository.findById(id);
             if (application.isPresent()) {
                 Map<String, Object> data = new LinkedHashMap<>();
                 Application app = application.get();
@@ -140,7 +140,7 @@ public class CandidateController {
                 data.put("candidateName", user.getUsername());
                 data.put("positionTitle", positionService.getSelectedPosition(app.getPositionID()).getTitle());
                 data.put("status", app.getStatus());
-                data.put("cv", "https://example.com/cv/");
+                data.put("cv", app.getCv());
                 data.put("applicationDate", app.getCreateDate().toString());
 
                 return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").data(data).build());
