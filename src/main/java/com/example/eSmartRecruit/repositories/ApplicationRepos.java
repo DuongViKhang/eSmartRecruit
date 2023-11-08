@@ -1,7 +1,9 @@
 package com.example.eSmartRecruit.repositories;
 
 import com.example.eSmartRecruit.models.Application;
+import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.models.User;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +14,6 @@ import java.util.Optional;
 public interface ApplicationRepos extends JpaRepository<Application, Integer>{
     List<Application> findByCandidateID(Integer candidateID);
     Optional<Application> findByIdAndCandidateID(Integer ID, Integer candidateID);
+
+
 }

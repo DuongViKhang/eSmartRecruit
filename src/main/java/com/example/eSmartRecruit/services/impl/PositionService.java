@@ -13,6 +13,7 @@ import java.util.List;
 public class PositionService implements IPositionService {
     private final PositionRepos positionRepository;
 
+
     public Position getSelectedPosition(int id) {
         return positionRepository.findById(id).orElseThrow();
     }
@@ -21,7 +22,13 @@ public class PositionService implements IPositionService {
     public List<Position> getAllPosition() {
         return  positionRepository.findAll();
     }
-}
+
+    public long getcountPosition(){
+        return positionRepository.count();
+    }
+    public Position createPost(Position post) {
+        return positionRepository.save(post);
+    }
 
     public List<Position> searchPositions(String keyword) {
         return positionRepository.findByTitleContaining(keyword);

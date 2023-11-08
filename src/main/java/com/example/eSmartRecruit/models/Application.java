@@ -76,6 +76,7 @@ public class Application {
 		this.updateDate = updateDate;
 	}
 
+
 //	public Application(Integer id, Integer candidateID, Integer positionID, String status, String cv, Date createDate,
 //			Date updateDate) {
 //		super();

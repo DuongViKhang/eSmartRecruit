@@ -29,4 +29,14 @@ public class ApplicationService implements IApplicationService {
     public Optional<Application> getApplicationByIdAndCandidateId(Integer ID, Integer candidateID) {
         return applicationRepository.findByIdAndCandidateID(ID, candidateID);
     }
+//    public List<Application> getAllApplication() {
+//        return  applicationRepository.findAll();
+//    }
+    public Optional<Application> getApplicationById(Integer id){
+        return applicationRepository.findById(id);
+    }
+
+    public long getcountApplication(){
+        return applicationRepository.count();
+    }
 }

@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import lombok.AllArgsConstructor;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +34,15 @@ import java.util.*;
 @RequestMapping("eSmartRecruit/")
 @AllArgsConstructor
 public class CandidateController {
+    @Autowired
     private PositionService positionService;
+    @Autowired
     private ApplicationService applicationService;
+    @Autowired
     private ApplicationRepos applicationRepository;
-
+    @Autowired
     private UserService userService;
+    @Autowired
     private IStorageService storageService;
 
 

@@ -1,10 +1,8 @@
 package com.example.eSmartRecruit.models;
 
+
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -21,11 +19,13 @@ public class Position {
     @Column(name = "ID")
     private Integer id;
 
+
     @Column(name = "Title", length = 255)
     private String title;
 
     @Lob
     @Column(name = "JobDescription", columnDefinition = "text")
+
     private String jobDescription;
 
     @Lob
