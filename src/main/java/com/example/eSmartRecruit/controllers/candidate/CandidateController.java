@@ -33,7 +33,7 @@ import java.util.*;
 
 
 @RestController
-@RequestMapping("eSmartRecruit/")
+@RequestMapping("eSmartRecruit/candidate")
 @AllArgsConstructor
 public class CandidateController {
     private PositionService positionService;
