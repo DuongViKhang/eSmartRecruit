@@ -34,19 +34,34 @@ public class AdminController {
     private ApplicationRepos applicationRepository;
 
     @GetMapping("/position")
-    public ResponseEntity<ResponseObject> PositionAdmin()
-    {
+    public ResponseEntity<ResponseObject> PositionAdmin(HttpServletRequest request) {
         try{
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            Integer userId = userInfo.getUserId();
+            User user = userService.getUserById(userId);
+            if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
             List<Position> data = positionService.getAllPosition();
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).message("Loading position successfully").build(), HttpStatus.OK);
         } catch (Exception exception) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(),HttpStatus.NOT_IMPLEMENTED);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build());
         }
     }
 
     @GetMapping("/position/{positionID}")
-    ResponseEntity<ResponseObject> getDetailPositionAdmin(@PathVariable("positionID")Integer id){
+    ResponseEntity<ResponseObject> getDetailPositionAdmin(@PathVariable("positionID")Integer id,HttpServletRequest request){
         try{
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            Integer userId = userInfo.getUserId();
+            User user = userService.getUserById(userId);
+            if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
             Position positions = positionService.getSelectedPosition(id);
 
             if(positions == null){
