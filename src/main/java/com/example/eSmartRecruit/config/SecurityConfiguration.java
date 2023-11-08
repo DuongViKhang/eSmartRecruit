@@ -27,7 +27,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth->auth
                                             .requestMatchers("/eSmartRecruit/register","/eSmartRecruit/auth")
                                             .permitAll() //let all request pass to the above URL, no authen yet
-                                            .requestMatchers("/eSmartRecruit/application/candidate")
+                                            .requestMatchers("/eSmartRecruit/candidate/**")
                                             .hasAnyAuthority(Role.Candidate.name())//only candidate can get access to the link above
                         .requestMatchers("/eSmartRecruit/interviewer/**")
                         .hasAnyAuthority(Role.Interviewer.name())//only for interviewer
