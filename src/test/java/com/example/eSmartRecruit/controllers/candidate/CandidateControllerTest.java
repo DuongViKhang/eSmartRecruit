@@ -44,10 +44,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -293,10 +290,49 @@ class CandidateControllerTest {
     }
 
     @Test
-    void getDetailUser() {
+    void getDetailUser() throws UserException {
+
+        User mockUser = new User();
+        mockUser.setId(4);
+        mockUser.setUsername("khang");
+        mockUser.setPassword("$2a$10$S5x1eUGgsbXA4RJfrnc07ueCheYAVNMXsqw23/HfivFQJsaowrTXW");
+        mockUser.setEmail("khang123@gmail.com");
+        mockUser.setPhoneNumber(null);
+        mockUser.setRoleName(Role.Candidate);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-11-02"));
+        mockUser.setUpdateDate(Date.valueOf("2023-11-02"));
+
+        var jwtToken = jwtService.generateToken(mockUser);
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(4);
+        when(userService.isEnabled(4)).thenReturn(true);
+        when(userService.getUserById(4)).thenReturn(mockUser);
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        ResponseEntity<ResponseObject> responseEntity = candidateController.getDetailUser(mockRequest);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        ResponseObject responseObject = responseEntity.getBody();
+        Map<String, String> data = new LinkedHashMap<>();
+        data.put("username", "khang");
+        data.put("email", "khang123@gmail.com");
+        data.put("phonenumber", null);
+        assertEquals("Success", responseObject.getStatus());
+        assertEquals("Loading data success!", responseObject.getMessage());
+        assertEquals(data, responseObject.getData());
     }
 
     @Test
     void updateUser() {
+    }
+
+    @Test
+    void updateApplyPosition() {
+    }
+
+    @Test
+    void deleteApplyPosition() {
     }
 }
