@@ -196,95 +196,96 @@ class CandidateControllerTest {
 
     @Test
     void getMyApplications() throws JSONException, UserException, PositionException {
-//
-//        User mockUser = new User();
-//        mockUser.setId(4);
-//        mockUser.setUsername("khang");
-//        mockUser.setPassword("$2a$10$S5x1eUGgsbXA4RJfrnc07ueCheYAVNMXsqw23/HfivFQJsaowrTXW");
-//        mockUser.setEmail("khang123@gmail.com");
-//        mockUser.setPhoneNumber(null);
-//        mockUser.setRoleName(Role.Candidate);
-//        mockUser.setStatus(UserStatus.Active);
-//        mockUser.setCreateDate(Date.valueOf("2023-11-02"));
-//        mockUser.setUpdateDate(Date.valueOf("2023-11-02"));
-//
-//        var jwtToken = jwtService.generateToken(mockUser);
-//
-//        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
-//        when(mockRequest.getHeader("Authorization")).thenReturn(jwtToken);
-//
-//        ExtractUser mockUserInfo = mock(ExtractUser.class);
-//
-//        when(mockUserInfo.isEnabled()).thenReturn(true);
-//        when(mockUserInfo.getUserId()).thenReturn(4);
-//        List<Application> mockApplications = new ArrayList<>();
-//        Application mockApp1 = new Application();
-//        mockApp1.setId(1);
-//        mockApp1.setCandidateID(4);
-//        mockApp1.setPositionID(1);
-//        mockApp1.setStatus(ApplicationStatus.Pending);
-//        mockApp1.setCv("abc");
-//        mockApp1.setCreateDate(Date.valueOf("2023-11-5"));
-//        mockApp1.setUpdateDate(Date.valueOf("2023-11-5"));
-//        mockApplications.add(mockApp1);
-//
-//        Application mockApp2 = new Application();
-//        mockApp2.setId(1);
-//        mockApp2.setCandidateID(4);
-//        mockApp2.setPositionID(2);
-//        mockApp2.setStatus(ApplicationStatus.Pending);
-//        mockApp2.setCv("abc");
-//        mockApp2.setCreateDate(Date.valueOf("2023-11-5"));
-//        mockApp2.setUpdateDate(Date.valueOf("2023-11-5"));
-//        mockApplications.add(mockApp2);
-//
-//        List<Position> mockPositions = new ArrayList<>();
-//        Position mockPos1 = new Position();
-//        mockPos1.setId(1);
-//        mockPos1.setTitle("Software Engineer");
-//        mockPos1.setJobDescription("Abc");
-//        mockPos1.setJobRequirements("Abc");
-//        mockPos1.setSalary(BigDecimal.valueOf(5000));
-//        mockPos1.setPostDate(Date.valueOf("2023-11-5"));
-//        mockPos1.setExpireDate(Date.valueOf("2023-11-15"));
-//        mockPos1.setLocation("FTP");
-//        mockPositions.add(mockPos1);
-//
-//        Position mockPos2 = new Position();
-//        mockPos2.setId(2);
-//        mockPos2.setTitle("Security Engineer");
-//        mockPos2.setJobDescription("Abc");
-//        mockPos2.setJobRequirements("Abc");
-//        mockPos2.setSalary(BigDecimal.valueOf(5000));
-//        mockPos2.setPostDate(Date.valueOf("2023-11-5"));
-//        mockPos2.setExpireDate(Date.valueOf("2023-11-15"));
-//        mockPos2.setLocation("FTP");
-//        mockPositions.add(mockPos2);
-//
-//        when(userService.getUserById(4)).thenReturn(mockUser);
-//        when(applicationRepository.findByCandidateID(4)).thenReturn(mockApplications);
-//        when(positionService.getSelectedPosition(2)).thenReturn(mockPos2);
-//        when(positionService.isPresent(2)).thenReturn(true);
-//
-//        ResponseEntity<ResponseObject> responseEntity = candidateController.getMyApplications(mockRequest);
-//
-//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//
-//        ResponseObject responseObject = responseEntity.getBody();
-//        assertNotNull(responseObject);
-//        assertEquals("Success", responseObject.getStatus());
-//
-//        List<Map<String, Object>> applicationList = (List<Map<String, Object>>) responseObject.getData();
-//        assertNotNull(applicationList);
-//        assertEquals(2, applicationList.size());
-//
-//        Map<String, Object> applicationMap = applicationList.get(0);
-//        assertNotNull(applicationMap);
-//        assertEquals(1, applicationMap.get("applicationID"));
-//        assertEquals("Software Engineer", applicationMap.get("positionTitle"));
-//        assertEquals("Pending", applicationMap.get("status"));
-//        assertNotNull(applicationMap.get("applicationDate"));
 
+        List<Application> mockApplications = new ArrayList<>();
+        Application mockApp1 = new Application();
+        mockApp1.setId(1);
+        mockApp1.setCandidateID(4);
+        mockApp1.setPositionID(1);
+        mockApp1.setStatus(ApplicationStatus.Pending);
+        mockApp1.setCv("abc");
+        mockApp1.setCreateDate(Date.valueOf("2023-11-5"));
+        mockApp1.setUpdateDate(Date.valueOf("2023-11-5"));
+        mockApplications.add(mockApp1);
+
+        Application mockApp2 = new Application();
+        mockApp2.setId(1);
+        mockApp2.setCandidateID(4);
+        mockApp2.setPositionID(2);
+        mockApp2.setStatus(ApplicationStatus.Pending);
+        mockApp2.setCv("abc");
+        mockApp2.setCreateDate(Date.valueOf("2023-11-5"));
+        mockApp2.setUpdateDate(Date.valueOf("2023-11-5"));
+        mockApplications.add(mockApp2);
+
+        List<Position> mockPositions = new ArrayList<>();
+        Position mockPos1 = new Position();
+        mockPos1.setId(1);
+        mockPos1.setTitle("Software Engineer");
+        mockPos1.setJobDescription("Abc");
+        mockPos1.setJobRequirements("Abc");
+        mockPos1.setSalary(BigDecimal.valueOf(5000));
+        mockPos1.setPostDate(Date.valueOf("2023-11-5"));
+        mockPos1.setExpireDate(Date.valueOf("2023-11-15"));
+        mockPos1.setLocation("FTP");
+        mockPositions.add(mockPos1);
+
+        Position mockPos2 = new Position();
+        mockPos2.setId(2);
+        mockPos2.setTitle("Security Engineer");
+        mockPos2.setJobDescription("Abc");
+        mockPos2.setJobRequirements("Abc");
+        mockPos2.setSalary(BigDecimal.valueOf(5000));
+        mockPos2.setPostDate(Date.valueOf("2023-11-5"));
+        mockPos2.setExpireDate(Date.valueOf("2023-11-15"));
+        mockPos2.setLocation("FTP");
+        mockPositions.add(mockPos2);
+
+        User mockUser = new User();
+        mockUser.setId(4);
+        mockUser.setUsername("khang");
+        mockUser.setPassword("$2a$10$S5x1eUGgsbXA4RJfrnc07ueCheYAVNMXsqw23/HfivFQJsaowrTXW");
+        mockUser.setEmail("khang123@gmail.com");
+        mockUser.setPhoneNumber(null);
+        mockUser.setRoleName(Role.Candidate);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-11-02"));
+        mockUser.setUpdateDate(Date.valueOf("2023-11-02"));
+
+        var jwtToken = jwtService.generateToken(mockUser);
+
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(4);
+        lenient().when(userService.isEnabled(4)).thenReturn(true);
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        when(userService.getUserById(4)).thenReturn(mockUser);
+        when(applicationRepository.findByCandidateID(4)).thenReturn(mockApplications);
+        when(positionService.getSelectedPosition(2)).thenReturn(mockPos2);
+        lenient().when(positionService.isPresent(2)).thenReturn(true);
+        when(positionService.getSelectedPosition(1)).thenReturn(mockPos1);
+        when(positionService.getSelectedPosition(2)).thenReturn(mockPos2);
+
+        ResponseEntity<ResponseObject> responseEntity = candidateController.getMyApplications(mockRequest);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals("Success", responseObject.getStatus());
+
+        List<Map<String, Object>> applicationList = (List<Map<String, Object>>) responseObject.getData();
+        assertNotNull(applicationList);
+        assertEquals(2, applicationList.size());
+
+        Map<String, Object> applicationMap = applicationList.get(0);
+        assertNotNull(applicationMap);
+        assertEquals(1, applicationMap.get("applicationID"));
+        assertEquals("Software Engineer", applicationMap.get("positionTitle"));
+        assertEquals(ApplicationStatus.Pending, applicationMap.get("status"));
+        assertNotNull(applicationMap.get("applicationDate"));
     }
 
     @Test
