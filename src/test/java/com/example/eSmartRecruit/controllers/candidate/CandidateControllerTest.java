@@ -78,7 +78,7 @@ class CandidateControllerTest {
 
     private JwtService jwtService;
     @Test
-    void home() {
+    void home() throws PositionException {
         List<Position> mockPositions = new ArrayList<>();
 
         Position position1 = new Position();
@@ -175,6 +175,7 @@ class CandidateControllerTest {
         lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
         lenient().when(mockUserInfo.getUserId()).thenReturn(4);
         lenient().when(userService.isEnabled(4)).thenReturn(true);
+
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
         lenient().when(storageService.storeFile(mockFile)).thenReturn("generatedFileName");
@@ -499,10 +500,6 @@ class CandidateControllerTest {
     }
 
     @Test
-    void getApplicationDetails() {
-    }
-
-    @Test
     void getDetailUser() throws UserException {
 
         User mockUser = new User();
@@ -535,17 +532,5 @@ class CandidateControllerTest {
         assertEquals("Success", responseObject.getStatus());
         assertEquals("Loading data success!", responseObject.getMessage());
         assertEquals(data, responseObject.getData());
-    }
-
-    @Test
-    void updateUser() {
-    }
-
-    @Test
-    void updateApplyPosition() {
-    }
-
-    @Test
-    void deleteApplyPosition() {
     }
 }
