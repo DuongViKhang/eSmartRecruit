@@ -31,6 +31,7 @@ public class AdminController {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(),HttpStatus.NOT_IMPLEMENTED);
         }
     }
+
     @GetMapping("/position/{positionID}")
     ResponseEntity<ResponseObject> getDetailPositionAdmin(@PathVariable("positionID")Integer id){
         try{
