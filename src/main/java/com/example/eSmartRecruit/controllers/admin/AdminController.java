@@ -2,6 +2,8 @@ package com.example.eSmartRecruit.controllers.admin;
 
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+
+import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.models.Application;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
@@ -9,6 +11,7 @@ import com.example.eSmartRecruit.services.impl.ApplicationService;
 import com.example.eSmartRecruit.services.impl.PositionService;
 import com.example.eSmartRecruit.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,8 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("eSmartRecruit/admin")
 public class AdminController {
+
     private UserService userService;
     @Autowired
     private PositionService positionService;
@@ -28,14 +33,30 @@ public class AdminController {
     @Autowired
     private ApplicationRepos applicationRepository;
 
-
-    public AdminController(UserService userService) {
-        this.userService = userService;
+    @GetMapping("/position")
+    public ResponseEntity<ResponseObject> PositionAdmin()
+    {
+        try{
+            List<Position> data = positionService.getAllPosition();
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).message("Loading position successfully").build(), HttpStatus.OK);
+        } catch (Exception exception) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(),HttpStatus.NOT_IMPLEMENTED);
+        }
     }
 
-    @GetMapping("/home")
-    List<String> getAllAdmin(){
-        return List.of("Hello admin");
+    @GetMapping("/position/{positionID}")
+    ResponseEntity<ResponseObject> getDetailPositionAdmin(@PathVariable("positionID")Integer id){
+        try{
+            Position positions = positionService.getSelectedPosition(id);
+
+            if(positions == null){
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message("Position not found").build(),HttpStatus.OK);
+            }
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").message("Loading position successfully").data(positions).build(),HttpStatus.OK);
+
+        }catch (Exception exception){
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(),HttpStatus.OK);
+        }
     }
 
     @GetMapping("/application")
