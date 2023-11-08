@@ -11,6 +11,7 @@ import com.example.eSmartRecruit.models.Application;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.services.impl.ApplicationService;
+import com.example.eSmartRecruit.services.impl.InterviewSessionService;
 import com.example.eSmartRecruit.services.impl.PositionService;
 import com.example.eSmartRecruit.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,6 +36,51 @@ public class AdminController {
     private ApplicationService applicationService;
     @Autowired
     private ApplicationRepos applicationRepository;
+    private InterviewSessionService interviewSessionService;
+
+    @GetMapping("/home")
+    public ResponseEntity<ResponseObject> home(HttpServletRequest request) throws JSONException, UserException {
+
+        String authHeader = request.getHeader("Authorization");
+        //return new ResponseEntity<String>("hello",HttpStatus.OK);
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+        if (!userInfo.isEnabled()) {
+            return null;
+        }
+        Map<String, Object> homeList = new LinkedHashMap<>();
+        homeList.put("no_user", userService.getcountUser() );
+        homeList.put("no_position", positionService.getcountPosition());
+        homeList.put("no_application", applicationService.getcountApplication());
+        homeList.put("no_interview_session",interviewSessionService.getCountInterview() );
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(homeList).build(), HttpStatus.OK);
+
+    }
+
+    @PostMapping("/position/create")
+    public ResponseEntity<ResponseObject> createPost(@RequestBody Position position, HttpServletRequest request) throws JSONException, UserException {
+
+        String authHeader = request.getHeader("Authorization");
+        //return new ResponseEntity<String>("hello",HttpStatus.OK);
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+        if (!userInfo.isEnabled()) {
+            return null;
+        }
+        // System.out.println("đã chạy create post");
+        Position createPosition = positionService.createPost(position);
+        Map<String, Object> datapost = new LinkedHashMap<>();
+        datapost.put("title", createPosition.getTitle());
+        datapost.put("jobDescription", createPosition.getJobDescription());
+        datapost.put("jobRequirements", createPosition.getJobRequirements());
+        datapost.put("salary", createPosition.getSalary());
+        datapost.put("expireDate", createPosition.getExpireDate());
+        datapost.put("location", createPosition.getLocation());
+
+        ResponseObject response = ResponseObject.builder()
+                .status("Success")
+                .data(datapost)
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
     @GetMapping("/position")
     public ResponseEntity<ResponseObject> PositionAdmin(HttpServletRequest request) {

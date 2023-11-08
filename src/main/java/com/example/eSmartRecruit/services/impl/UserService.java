@@ -103,4 +103,8 @@ public class UserService {
         }
         return exUser;
     }
+
+    public Long getcountUser() {
+        return userRepository.count();
+    }
 }

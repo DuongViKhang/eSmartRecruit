@@ -60,4 +60,11 @@ public class PositionService implements IPositionService
         positionRepository.delete(existingPosition);
     }
 
+    public Long getcountPosition() {
+        return positionRepository.count();
+    }
+
+    public Position createPost(Position position) {
+        return positionRepository.save(position);
+    }
 }

@@ -9,6 +9,8 @@ import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.models.enumModel.Role;
 import com.example.eSmartRecruit.models.enumModel.UserStatus;
 import com.example.eSmartRecruit.services.IStorageService;
+import com.example.eSmartRecruit.services.impl.ApplicationService;
+import com.example.eSmartRecruit.services.impl.InterviewSessionService;
 import com.example.eSmartRecruit.services.impl.PositionService;
 import com.example.eSmartRecruit.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,10 +47,23 @@ class AdminControllerTest {
     private IStorageService storageService;
     @Mock
     private UserService userService;
+
+    @Mock
+    private ApplicationService applicationService;
+
+
     @Mock
     private PositionService positionService;
+
+    @Mock
+    InterviewSessionService interviewSessionService;
+
+    @BeforeEach
+    void setUp() {
+        jwtService = new JwtService();
+    }
     @Test
-    void PositionAdmin() throws  UserException{
+    void PositionAdmin() throws UserException, PositionException {
         List<Position> mockPositions = new ArrayList<>();
 
         Position pos = new Position();
@@ -160,11 +175,48 @@ class AdminControllerTest {
 
         verify(positionService, times(1)).getSelectedPosition(1);
     }
-    @BeforeEach
-    void setUp() {
-        jwtService = new JwtService();
-    }
+    @Test
+    void home() throws UserException, JSONException {
+        User mockUser = new User();
+        mockUser.setId(2);
+        mockUser.setUsername("bcd");
+        mockUser.setPassword("$2a$10$SgZX47bsE057V9z4n1NeG.y0hJkv1scG07pmPjPmBovIAnw4RhB7y");
+        mockUser.setEmail("b123@gmail.com");
+        mockUser.setPhoneNumber("0988888888");
+        mockUser.setRoleName(Role.Admin);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-10-23"));
+        mockUser.setUpdateDate(Date.valueOf("2023-10-23"));
 
+        var jwtToken = jwtService.generateToken(mockUser);
+
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(2);
+        lenient().when(userService.isEnabled(2)).thenReturn(true);
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        // Giả lập ExtractUser
+
+        // Giả lập các giá trị trả về từ các service
+        when(userService.getcountUser()).thenReturn(Long.valueOf(10));
+        when(positionService.getcountPosition()).thenReturn(Long.valueOf(5));
+        when(applicationService.getcountApplication()).thenReturn(Long.valueOf(20));
+        when(interviewSessionService.getCountInterview()).thenReturn(Long.valueOf(3));
+
+        // Gọi hàm home()
+        ResponseEntity<ResponseObject> response = adminController.home(mockRequest);
+
+        // Kiểm tra kết quả
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Success", response.getBody().getStatus());
+
+        verify(userService).getcountUser();
+        verify(positionService).getcountPosition();
+        verify(applicationService).getcountApplication();
+        verify(interviewSessionService).getCountInterview();
+    }
 }
 
 
