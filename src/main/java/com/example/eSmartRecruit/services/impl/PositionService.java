@@ -29,11 +29,11 @@ public class PositionService implements IPositionService
     }
 
 
-    public List<Position> getAllPosition() {
+    public List<Position> getAllPosition() throws PositionException {
         return  positionRepository.findAll();
     }
 
-    public List<Position> searchPositions(String keyword) {
+    public List<Position> searchPositions(String keyword) throws Exception {
         return positionRepository.findByTitleContaining(keyword);
     }
 }
