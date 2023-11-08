@@ -48,10 +48,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -352,6 +349,60 @@ class CandidateControllerTest {
         assertEquals("Successfully deleted!", responseObject.getMessage());
     }
 
+    @Test
+    void editProfile() throws UserException, JSONException {
+        User mockUser = new User();
+        mockUser.setId(4);
+        mockUser.setUsername("khang");
+        mockUser.setPassword("$2a$10$S5x1eUGgsbXA4RJfrnc07ueCheYAVNMXsqw23/HfivFQJsaowrTXW");
+        mockUser.setEmail("khang123@gmail.com");
+        mockUser.setPhoneNumber(null);
+        mockUser.setRoleName(Role.Candidate);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-11-02"));
+        mockUser.setUpdateDate(Date.valueOf("2023-11-02"));
+
+        User updateMockUser = new User();
+        updateMockUser.setId(4);
+        updateMockUser.setUsername("khang");
+        updateMockUser.setPassword("$2a$10$S5x1eUGgsbXA4RJfrnc07ueCheYAVNMXsqw23/HfivFQJsaowrTXW");
+        updateMockUser.setEmail("khang@gmail.com");
+        updateMockUser.setPhoneNumber("0999999999");
+        updateMockUser.setRoleName(Role.Candidate);
+        updateMockUser.setStatus(UserStatus.Active);
+        updateMockUser.setCreateDate(Date.valueOf("2023-11-02"));
+        updateMockUser.setUpdateDate(Date.valueOf("2023-11-02"));
+
+        var jwtToken = jwtService.generateToken(mockUser);
+
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(4);
+        lenient().when(userService.isEnabled(4)).thenReturn(true);
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+        //lenient().when(storageService.storeFile(mockFile)).thenReturn("generatedFileName");
+        //lenient().when(positionService.isPresent(1)).thenReturn(true);
+        //lenient().when(applicationService.apply(any(Application.class))).thenReturn("Successfully applied!");
+        var userId = mockUserInfo.getUserId();
+        var userRequest = new UserRequest("khang@gmail.com","0999999999");
+        lenient().when(userService.updateUser(userRequest,userId)).thenReturn(updateMockUser);
+        ResponseEntity<ResponseObject> responseEntity = candidateController.updateUser(mockRequest,userRequest);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("email", updateMockUser.getEmail());
+        data.put("phoneNumber",updateMockUser.getPhoneNumber());
+
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals("Success", responseObject.getStatus());
+        assertEquals(data, responseObject.getData());
+
+//        verify(storageService, times(1)).storeFile(mockFile);
+//        verify(positionService, times(1)).isPresent(1);
+//        verify(applicationService, times(1)).apply(any(Application.class));
+    }
 
     @Test
     void getMyApplications() throws JSONException, UserException, PositionException {
