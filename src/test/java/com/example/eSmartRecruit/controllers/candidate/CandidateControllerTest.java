@@ -300,6 +300,57 @@ class CandidateControllerTest {
 //        verify(applicationService, times(1)).update(4,newApplication,1);
     }
 
+    @Test
+    void deleteApplication() throws UserException, PositionException {
+        User mockUser = new User();
+        mockUser.setId(4);
+        mockUser.setUsername("khang");
+        mockUser.setPassword("$2a$10$S5x1eUGgsbXA4RJfrnc07ueCheYAVNMXsqw23/HfivFQJsaowrTXW");
+        mockUser.setEmail("khang123@gmail.com");
+        mockUser.setPhoneNumber("0999999999");
+        mockUser.setRoleName(Role.Candidate);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-11-02"));
+        mockUser.setUpdateDate(Date.valueOf("2023-11-02"));
+
+        Application mockApplication = new Application();
+        mockApplication.setId(1);
+        mockApplication.setCandidateID(4);
+        mockApplication.setPositionID(1);
+        mockApplication.setStatus(ApplicationStatus.Pending);
+        mockApplication.setCv("fsiukjnvsfihv.pdf");
+        mockApplication.setCreateDate(Date.valueOf("2023-11-02"));
+        mockApplication.setUpdateDate(Date.valueOf("2023-11-02"));
+
+        var jwtToken = jwtService.generateToken(mockUser);
+
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(4);
+        lenient().when(userService.isEnabled(4)).thenReturn(true);
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+        //lenient().when(storageService.storeFile(mockFile)).thenReturn("generatedFileName.pdf");
+        lenient().when(positionService.isPresent(1)).thenReturn(true);
+
+        var appId = 1;
+        //var newApplication = new Application("generatedFileName.pdf");
+
+        ApplicationRepos repos = mock(ApplicationRepos.class);
+        lenient().when(repos.findById(appId)).thenReturn(Optional.of(mockApplication));
+
+        //when(applicationRepository.findById(1)).thenReturn(Optional.of(mockApplication));
+        lenient().when(applicationService.deletejob(4,1)).thenReturn("Successfully deleted!");
+
+        ResponseEntity<ResponseObject> responseEntity = candidateController.deleteApplyPosition(1,mockRequest);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        System.out.println(applicationService.deletejob(4,1));
+        System.out.println(responseEntity);
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals("Successfully deleted!", responseObject.getMessage());
+    }
 
 
     @Test
