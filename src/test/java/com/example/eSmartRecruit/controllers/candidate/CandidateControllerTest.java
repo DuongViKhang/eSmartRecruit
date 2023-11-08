@@ -499,10 +499,6 @@ class CandidateControllerTest {
     }
 
     @Test
-    void getApplicationDetails() {
-    }
-
-    @Test
     void getDetailUser() throws UserException {
 
         User mockUser = new User();
@@ -535,17 +531,5 @@ class CandidateControllerTest {
         assertEquals("Success", responseObject.getStatus());
         assertEquals("Loading data success!", responseObject.getMessage());
         assertEquals(data, responseObject.getData());
-    }
-
-    @Test
-    void updateUser() {
-    }
-
-    @Test
-    void updateApplyPosition() {
-    }
-
-    @Test
-    void deleteApplyPosition() {
     }
 }
