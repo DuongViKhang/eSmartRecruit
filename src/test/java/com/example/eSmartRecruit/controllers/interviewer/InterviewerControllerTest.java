@@ -6,7 +6,10 @@ import com.example.eSmartRecruit.controllers.candidate.CandidateController;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
 import com.example.eSmartRecruit.exception.UserException;
+import com.example.eSmartRecruit.models.Application;
+import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.models.User;
+import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
 import com.example.eSmartRecruit.models.enumModel.Role;
 import com.example.eSmartRecruit.models.enumModel.UserStatus;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
@@ -26,13 +29,16 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 @PrepareForTest({ExtractUser.class})
 class InterviewerControllerTest {
@@ -62,7 +68,38 @@ class InterviewerControllerTest {
     }
 
     @Test
-    void getDetailUserInterviewer() {
+    void getDetailUserInterviewer() throws UserException , JSONException{
+        User mockUser = new User();
+        mockUser.setId(4);
+        mockUser.setUsername("thang");
+        mockUser.setPassword("$2a$10$UlDZ./Oc2vM.mhpQ/zYPF.r3OKFahBNqe5MekYaCeLdqMrElTgtAO");
+        mockUser.setEmail("abc123@gmail.com");
+        mockUser.setPhoneNumber("0988888889");
+        mockUser.setRoleName(Role.Interviewer);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-11-07"));
+        mockUser.setUpdateDate(Date.valueOf("2023-11-07"));
+
+        var jwtToken = jwtService.generateToken(mockUser);
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(4);
+        when(userService.isEnabled(4)).thenReturn(true);
+        when(userService.getUserById(4)).thenReturn(mockUser);
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        ResponseEntity<ResponseObject> responseEntity = interviewerController.getDetailUserInterviewer(mockRequest);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        ResponseObject responseObject = responseEntity.getBody();
+        Map<String, String> data = new LinkedHashMap<>();
+        data.put("username", "thang");
+        data.put("email", "abc123@gmail.com");
+        data.put("phonenumber", "0988888889");
+        data.put("roleName", "Interviewer");
+        assertEquals("Success", responseObject.getStatus());
+//        assertEquals("Loading data success!", responseObject.getMessage());
+        assertEquals(data, responseObject.getData());
     }
 
     @Test
@@ -115,6 +152,39 @@ class InterviewerControllerTest {
     }
 
     @Test
-    void getCandidateInformation() {
+    void getCandidateInformation() throws UserException, JSONException{
+
+        User mockUser = new User();
+        mockUser.setId(5);
+        mockUser.setUsername("thang1");
+        mockUser.setPassword("$2a$10$T7/ttTcvqqo3pFkqztnTmODYJvpPeHIjyUPmeKlkjwW8XSRG6q/CK");
+        mockUser.setEmail("thang1234@gmail.com");
+        mockUser.setPhoneNumber("0999996789");
+        mockUser.setRoleName(Role.Candidate);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-11-08"));
+        mockUser.setUpdateDate(Date.valueOf("2023-11-08"));
+
+        var jwtToken = jwtService.generateToken(mockUser);
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(4);
+        when(userService.isEnabled(5)).thenReturn(true);
+        when(userService.getUserById(5)).thenReturn(mockUser);
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        ResponseEntity<ResponseObject> responseEntity = interviewerController.getCandidateInformation(5,mockRequest);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        ResponseObject responseObject = responseEntity.getBody();
+        Map<String, String> data = new LinkedHashMap<>();
+        data.put("username", "thang1");
+        data.put("email", "thang1234@gmail.com");
+        data.put("phonenumber", "0999996789");
+        data.put("roleName",Role.Candidate.toString());
+
+        assertEquals("Success", responseObject.getStatus());
+        assertEquals(data, responseObject.getData());
+
     }
 }
