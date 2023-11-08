@@ -48,4 +48,28 @@ public class PositionService implements IPositionService
     public List<Position> searchPositions(String keyword) throws Exception {
         return positionRepository.findByTitleContaining(keyword);
     }
+    public String editPosition(Integer positionID, Position position) {
+        try {
+            Position existingPosition = positionRepository.findById(positionID)
+                    .orElseThrow(() -> new PositionException("The required position not found"));
+
+            existingPosition.setTitle(position.getTitle());
+            existingPosition.setJobDescription(position.getJobDescription());
+            existingPosition.setJobRequirements(position.getJobRequirements());
+            existingPosition.setSalary(position.getSalary());
+            existingPosition.setExpireDate(position.getExpireDate());
+            existingPosition.setLocation(position.getLocation());
+            positionRepository.save(existingPosition);
+
+            return "Position updated successfully";
+        } catch (PositionException e) {
+            return "Error updating position: " + e.getMessage();
+        }
+    }
+
+    public void deletePosition(Integer positionID) throws PositionException {
+        Position existingPosition = positionRepository.findById(positionID).orElseThrow(() -> new PositionException("Position not found"));
+        positionRepository.delete(existingPosition);
+    }
+
 }

@@ -36,7 +36,6 @@ import java.util.*;
 @RestController
 @RequestMapping("eSmartRecruit/")
 @AllArgsConstructor
-@NoArgsConstructor
 public class CandidateController {
     @Autowired
     private PositionService positionService;

@@ -5,6 +5,9 @@ import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.services.impl.ApplicationService;
 import com.example.eSmartRecruit.services.impl.InterviewSessionService;
+import com.example.eSmartRecruit.controllers.request_reponse.request.PositionRequest;
+import com.example.eSmartRecruit.exception.PositionException;
+import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.models.Application;
 import com.example.eSmartRecruit.models.User;
@@ -182,5 +185,53 @@ public class AdminController {
                 .data(datapost)
                 .build();
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    @PutMapping("/position/{positionID}")
+    public ResponseEntity<ResponseObject> editPosition(@PathVariable Integer positionID, @RequestBody PositionRequest positionRequest, HttpServletRequest request) throws JSONException, UserException, PositionException {
+        String authHeader = request.getHeader("Authorization");
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
+        if (!userInfo.isEnabled()) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+        }
+        try {
+            Position existingPosition = positionService.getSelectedPosition(positionID);
+            Position updatedPosition = Position.builder()
+                    .title(positionRequest.getTitle())
+                    .jobDescription(positionRequest.getJobDescription())
+                    .jobRequirements(positionRequest.getJobRequirements())
+                    .salary(positionRequest.getSalary())
+                    .expireDate(positionRequest.getExpireDate())
+                    .location(positionRequest.getLocation())
+                    .build();positionService.editPosition(positionID, updatedPosition);
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .status("SUCCESS").message("Position updated successfully").build(), HttpStatus.OK);
+        } catch (PositionException e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Error editing position: " + e.getMessage()).status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/position/{positionID}")
+    public ResponseEntity<ResponseObject> deletePosition(@PathVariable Integer positionID, HttpServletRequest request) throws JSONException, UserException, PositionException {
+        String authHeader = request.getHeader("Authorization");
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
+        if (!userInfo.isEnabled()) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+        }
+        Position existingPosition = positionService.getSelectedPosition(positionID);
+
+        try {
+            positionService.deletePosition(positionID);
+        } catch (PositionException e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Error deleting position: " + e.getMessage()).status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                .status("SUCCESS").message("Position deleted successfully").build(), HttpStatus.OK);
     }
 }
