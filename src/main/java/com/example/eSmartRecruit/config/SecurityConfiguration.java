@@ -25,7 +25,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests(auth->auth
-                                            .requestMatchers("/eSmartRecruit/register","/eSmartRecruit/auth")
+                                            .requestMatchers("/eSmartRecruit/register","/eSmartRecruit/auth","/eSmartRecruit/candidate/home")
                                             .permitAll() //let all request pass to the above URL, no authen yet
                                             .requestMatchers("/eSmartRecruit/candidate/**")
                                             .hasAnyAuthority(Role.Candidate.name())//only candidate can get access to the link above
