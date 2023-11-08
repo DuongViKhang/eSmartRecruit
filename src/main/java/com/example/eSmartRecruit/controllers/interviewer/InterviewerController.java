@@ -121,7 +121,7 @@ public class InterviewerController {
                     .updateDate(Date.valueOf(LocalDate.now())).build();
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                     .status("SUCCESS")
-                    .message(reportService.reportInterviewSession(report)).build(), HttpStatus.CREATED);
+                    .message(reportService.reportInterviewSession(report)).build(), HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
