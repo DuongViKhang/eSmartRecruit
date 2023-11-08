@@ -14,6 +14,6 @@ public class ReportRequest {
     @Pattern(message = "Please filled right format!",regexp = "^[a-zA-Z0-9]+$")
     private String ReportName;
     @NotBlank(message = "This must be filled!")
-    @Pattern(message = "Please filled right format!",regexp = "^[a-zA-Z0-9]+$")
+    @Pattern(message = "Please filled right format!",regexp = "^[a-zA-Z0-9 ]+$")
     private String ReportData; 
 }

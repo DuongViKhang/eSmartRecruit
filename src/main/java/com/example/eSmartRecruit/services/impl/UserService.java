@@ -42,7 +42,6 @@ public class UserService {
         }catch(Exception e){
             return "Could not save";
         }
-
     }
 
     public String checkDuplicateEmail(User user){

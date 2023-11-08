@@ -28,7 +28,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class InterviewSessionService implements IInterviewSessionService {
     private final InterviewSessionRepos interviewSessionRepos;
-    public List<InterviewSession> findByInterviewerID(Integer userId) {
+    public List<InterviewSession> findByInterviewerID(Integer userId) throws InterviewSessionException {
         return  interviewSessionRepos.findByInterviewerID(userId);
     }
     public  InterviewSession findByID(Integer ID) throws InterviewSessionException {
