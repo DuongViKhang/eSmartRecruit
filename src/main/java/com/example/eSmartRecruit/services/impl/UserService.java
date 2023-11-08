@@ -24,6 +24,9 @@ public class UserService {
     public User findByUsername(String username) throws UserException {
         return userRepository.findByUsername(username).orElseThrow(()->new UserException("Username not found!"));
     }
+    public String getUserRole(Integer id){
+        return userRepository.findById(id).get().getRoleName().toString().trim();
+    }
 
 //    public User getUserByUsernameAndEmail(String username, String email) {
 //        Optional<User> userOptional = userRepository.findByUsernameAndEmail(username, email);
