@@ -81,9 +81,7 @@ class AdminControllerTest {
         assertEquals(2, returnedData.size());
 
         verify(positionService, times(1)).getAllPosition();
-
     }
-
     @Test
     void getDetailPositionAdmin() throws PositionException{
         Position mockPosition = new Position();
