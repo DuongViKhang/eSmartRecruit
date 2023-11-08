@@ -12,7 +12,8 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class PositionService implements IPositionService {
+public class PositionService implements IPositionService
+{
     private final PositionRepos positionRepository;
 
     public Position getSelectedPosition(int id) throws PositionException {
