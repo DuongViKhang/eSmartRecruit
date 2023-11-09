@@ -25,11 +25,15 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests(auth->auth
-                                            .requestMatchers("/eSmartRecruit/**")
+                                            .requestMatchers("/eSmartRecruit/register","/eSmartRecruit/auth","/eSmartRecruit/candidate/home")
                                             .permitAll() //let all request pass to the above URL, no authen yet
-                                            .requestMatchers("/eSmartRecruit/application/create/**")
+                                            .requestMatchers("/eSmartRecruit/candidate/**")
                                             .hasAnyAuthority(Role.Candidate.name())//only candidate can get access to the link above
-                                            .anyRequest()
+                        .requestMatchers("/eSmartRecruit/interviewer/**")
+                        .hasAnyAuthority(Role.Interviewer.name())//only for interviewer
+                        .requestMatchers("/eSmartRecruit/admin/**")
+                        .hasAnyAuthority(Role.Admin.name())//only for admin
+                        .anyRequest()
                                             .authenticated())
                 .sessionManagement(session -> session
                                             .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

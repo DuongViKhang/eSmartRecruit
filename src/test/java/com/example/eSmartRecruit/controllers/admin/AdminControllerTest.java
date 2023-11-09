@@ -13,6 +13,13 @@ import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.services.impl.PositionService;
 import com.example.eSmartRecruit.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import com.example.eSmartRecruit.exception.PositionException;
+import com.example.eSmartRecruit.exception.UserException;
+import com.example.eSmartRecruit.models.Position;
+import com.example.eSmartRecruit.services.IStorageService;
+import com.example.eSmartRecruit.services.impl.ApplicationService;
+import com.example.eSmartRecruit.services.impl.InterviewSessionService;
+import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +45,6 @@ import static org.mockito.Mockito.mock;
 class AdminControllerTest {
     @InjectMocks
     private AdminController adminController;
-
     @Mock
     private ApplicationRepos applicationRepository;
 
@@ -396,6 +402,162 @@ public void testGetApplicationsSuccess() throws Exception {
     assertNotNull(responseObject);
     assertEquals("SUCCESS", responseEntity.getBody().getStatus());
     assertEquals("Applications retrieved successfully.", responseEntity.getBody().getMessage());
+
+    @Test
+    void PositionAdmin() throws UserException, PositionException {
+        List<Position> mockPositions = new ArrayList<>();
+
+        Position pos = new Position();
+        pos.setId(1);
+        pos.setTitle("Front-end Dev");
+        pos.setJobDescription("abc");
+        pos.setJobRequirements("abc");
+        pos.setSalary(BigDecimal.valueOf(1000.00));
+        pos.setPostDate(Date.valueOf("2023-10-26"));
+        pos.setExpireDate(Date.valueOf("2023-10-26"));
+        pos.setUpdateDate(null);
+        pos.setLocation("fpt");
+        mockPositions.add(pos);
+
+        Position poss = new Position();
+        poss.setId(2);
+        poss.setTitle("Back-end Dev");
+        poss.setJobDescription("bcd");
+        poss.setJobRequirements("bcd");
+        poss.setSalary(BigDecimal.valueOf(2000.00));
+        poss.setPostDate(Date.valueOf("2023-10-25"));
+        poss.setExpireDate(Date.valueOf("2023-10-25"));
+        poss.setUpdateDate(null);
+        poss.setLocation("fpt");
+        mockPositions.add(poss);
+//
+        //mock user
+        User mockUser = new User();
+        mockUser.setId(5);
+        mockUser.setUsername("admin");
+        mockUser.setPassword("$10$/nCR/hYK8RJFwvHCxCwBQOirAhm9jdcxaSSKCBFJCgCLimHFTWUuy");
+        mockUser.setEmail("admin1@gmail.com");
+        mockUser.setPhoneNumber("987654321");
+        mockUser.setRoleName(Role.Admin);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-10-31"));
+        mockUser.setUpdateDate(Date.valueOf("2023-10-31"));
+
+        var jwtToken = jwtService.generateToken(mockUser);
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(5);
+        lenient().when(userService.isEnabled(5)).thenReturn(true);
+        lenient().when(userService.getUserRole(5)).thenReturn("Admin");
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        ResponseEntity<ResponseObject> responseEntity = adminController.PositionAdmin(mockRequest);
+//
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals("Loading position successfully", responseObject.getMessage());
+
+        List<Position> returnedData = (List<Position>) responseObject.getData();
+        assertNotNull(returnedData);
+
+        verify(positionService, times(1)).getAllPosition();
+    }
+    @Test
+    void getDetailPositionAdmin() throws PositionException,  UserException{
+        Position mockPosition = new Position();
+        mockPosition.setId(1);
+        mockPosition.setTitle("Front-end Dev");
+        mockPosition.setJobDescription("abc");
+        mockPosition.setJobRequirements("abc");
+        mockPosition.setSalary(BigDecimal.valueOf(1000.00));
+        mockPosition.setPostDate(Date.valueOf("2023-10-26"));
+        mockPosition.setExpireDate(Date.valueOf("2023-10-26"));
+        mockPosition.setUpdateDate(null);
+        mockPosition.setLocation("fpt");
+
+        //mock user
+        User mockUser = new User();
+        mockUser.setId(5);
+        mockUser.setUsername("admin");
+        mockUser.setPassword("$10$/nCR/hYK8RJFwvHCxCwBQOirAhm9jdcxaSSKCBFJCgCLimHFTWUuy");
+        mockUser.setEmail("admin1@gmail.com");
+        mockUser.setPhoneNumber("987654321");
+        mockUser.setRoleName(Role.Admin);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-10-31"));
+        mockUser.setUpdateDate(Date.valueOf("2023-10-31"));
+
+        var jwtToken = jwtService.generateToken(mockUser);
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(5);
+        lenient().when(userService.isEnabled(5)).thenReturn(true);
+        lenient().when(userService.getUserRole(5)).thenReturn("Admin");
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+
+        when(positionService.getSelectedPosition(1)).thenReturn(mockPosition);
+        ResponseEntity<ResponseObject> responseEntity = adminController.getDetailPositionAdmin(1,mockRequest);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals("Loading position successfully", responseObject.getMessage());
+
+        Position returnedPosition = (Position) responseObject.getData();
+        assertNotNull(returnedPosition);
+        assertEquals(1, returnedPosition.getId());
+        assertEquals("Front-end Dev", returnedPosition.getTitle());
+
+        verify(positionService, times(1)).getSelectedPosition(1);
+    }
+    @Test
+    void home() throws UserException, JSONException {
+        User mockUser = new User();
+        mockUser.setId(2);
+        mockUser.setUsername("bcd");
+        mockUser.setPassword("$2a$10$SgZX47bsE057V9z4n1NeG.y0hJkv1scG07pmPjPmBovIAnw4RhB7y");
+        mockUser.setEmail("b123@gmail.com");
+        mockUser.setPhoneNumber("0988888888");
+        mockUser.setRoleName(Role.Admin);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-10-23"));
+        mockUser.setUpdateDate(Date.valueOf("2023-10-23"));
+
+        var jwtToken = jwtService.generateToken(mockUser);
+
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(2);
+        lenient().when(userService.isEnabled(2)).thenReturn(true);
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        // Giả lập ExtractUser
+
+        // Giả lập các giá trị trả về từ các service
+        when(userService.getcountUser()).thenReturn(Long.valueOf(10));
+        when(positionService.getcountPosition()).thenReturn(Long.valueOf(5));
+        when(applicationService.getcountApplication()).thenReturn(Long.valueOf(20));
+        when(interviewSessionService.getCountInterview()).thenReturn(Long.valueOf(3));
+
+        // Gọi hàm home()
+        ResponseEntity<ResponseObject> response = adminController.home(mockRequest);
+
+        // Kiểm tra kết quả
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Success", response.getBody().getStatus());
+
+        verify(userService).getcountUser();
+        verify(positionService).getcountPosition();
+        verify(applicationService).getcountApplication();
+        verify(interviewSessionService).getCountInterview();
+    }
 }
 
     @Test

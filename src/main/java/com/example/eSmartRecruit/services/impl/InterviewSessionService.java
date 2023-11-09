@@ -40,4 +40,8 @@ public class InterviewSessionService implements IInterviewSessionService {
         }
         return true;
     }
+
+    public Long getCountInterview() {
+        return interviewSessionRepos.count();
+    }
 }

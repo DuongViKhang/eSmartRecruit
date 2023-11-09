@@ -2,12 +2,16 @@ package com.example.eSmartRecruit.controllers.admin;
 
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.controllers.request_reponse.request.PositionRequest;
+import com.example.eSmartRecruit.exception.PositionException;
+import com.example.eSmartRecruit.exception.UserException;
 
 import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.models.Application;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.services.impl.ApplicationService;
+import com.example.eSmartRecruit.services.impl.InterviewSessionService;
 import com.example.eSmartRecruit.services.impl.PositionService;
 import com.example.eSmartRecruit.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,21 +37,81 @@ public class AdminController {
     private ApplicationService applicationService;
     @Autowired
     private ApplicationRepos applicationRepository;
+    private InterviewSessionService interviewSessionService;
+
+    @GetMapping("/home")
+    public ResponseEntity<ResponseObject> home(HttpServletRequest request) throws JSONException, UserException {
+
+        String authHeader = request.getHeader("Authorization");
+        //return new ResponseEntity<String>("hello",HttpStatus.OK);
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+        if (!userInfo.isEnabled()) {
+            return null;
+        }
+        Map<String, Object> homeList = new LinkedHashMap<>();
+        homeList.put("no_user", userService.getcountUser() );
+        homeList.put("no_position", positionService.getcountPosition());
+        homeList.put("no_application", applicationService.getcountApplication());
+        homeList.put("no_interview_session",interviewSessionService.getCountInterview() );
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(homeList).build(), HttpStatus.OK);
+
+    }
+
+    @PostMapping("/position/create")
+    public ResponseEntity<ResponseObject> createPost(@RequestBody Position position, HttpServletRequest request) throws JSONException, UserException {
+
+        String authHeader = request.getHeader("Authorization");
+        //return new ResponseEntity<String>("hello",HttpStatus.OK);
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+        if (!userInfo.isEnabled()) {
+            return null;
+        }
+        // System.out.println("đã chạy create post");
+        Position createPosition = positionService.createPost(position);
+        Map<String, Object> datapost = new LinkedHashMap<>();
+        datapost.put("title", createPosition.getTitle());
+        datapost.put("jobDescription", createPosition.getJobDescription());
+        datapost.put("jobRequirements", createPosition.getJobRequirements());
+        datapost.put("salary", createPosition.getSalary());
+        datapost.put("expireDate", createPosition.getExpireDate());
+        datapost.put("location", createPosition.getLocation());
+
+        ResponseObject response = ResponseObject.builder()
+                .status("Success")
+                .data(datapost)
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
     @GetMapping("/position")
-    public ResponseEntity<ResponseObject> PositionAdmin()
-    {
+    public ResponseEntity<ResponseObject> PositionAdmin(HttpServletRequest request) {
         try{
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            Integer userId = userInfo.getUserId();
+            User user = userService.getUserById(userId);
+            if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
             List<Position> data = positionService.getAllPosition();
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).message("Loading position successfully").build(), HttpStatus.OK);
         } catch (Exception exception) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(),HttpStatus.NOT_IMPLEMENTED);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build());
         }
     }
 
     @GetMapping("/position/{positionID}")
-    ResponseEntity<ResponseObject> getDetailPositionAdmin(@PathVariable("positionID")Integer id){
+    ResponseEntity<ResponseObject> getDetailPositionAdmin(@PathVariable("positionID")Integer id,HttpServletRequest request){
         try{
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            Integer userId = userInfo.getUserId();
+            User user = userService.getUserById(userId);
+            if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
             Position positions = positionService.getSelectedPosition(id);
 
             if(positions == null){
@@ -120,5 +184,53 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message("Internal server error").build());
         }
     }
+    @PutMapping("/position/{positionID}")
+    public ResponseEntity<ResponseObject> editPosition(@PathVariable Integer positionID, @RequestBody PositionRequest positionRequest, HttpServletRequest request) throws JSONException, UserException, PositionException {
+        String authHeader = request.getHeader("Authorization");
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
 
+        if (!userInfo.isEnabled()) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+        }
+        try {
+            Position existingPosition = positionService.getSelectedPosition(positionID);
+            Position updatedPosition = Position.builder()
+                    .title(positionRequest.getTitle())
+                    .jobDescription(positionRequest.getJobDescription())
+                    .jobRequirements(positionRequest.getJobRequirements())
+                    .salary(positionRequest.getSalary())
+                    .expireDate(positionRequest.getExpireDate())
+                    .location(positionRequest.getLocation())
+                    .build();positionService.editPosition(positionID, updatedPosition);
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .status("SUCCESS").message("Position updated successfully").build(), HttpStatus.OK);
+        } catch (PositionException e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Error editing position: " + e.getMessage()).status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/position/{positionID}")
+    public ResponseEntity<ResponseObject> deletePosition(@PathVariable Integer positionID, HttpServletRequest request) throws JSONException, UserException, PositionException {
+        String authHeader = request.getHeader("Authorization");
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
+        if (!userInfo.isEnabled()) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+        }
+        Position existingPosition = positionService.getSelectedPosition(positionID);
+
+        try {
+            positionService.deletePosition(positionID);
+        } catch (PositionException e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Error deleting position: " + e.getMessage()).status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                .status("SUCCESS").message("Position deleted successfully").build(), HttpStatus.OK);
+    }
 }

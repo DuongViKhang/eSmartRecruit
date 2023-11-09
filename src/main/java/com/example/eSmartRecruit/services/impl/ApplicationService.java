@@ -97,4 +97,7 @@ public class ApplicationService implements IApplicationService {
         }
     }
 
+    public Long getcountApplication() {
+        return applicationRepository.count();
+    }
 }
