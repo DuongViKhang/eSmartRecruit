@@ -1,13 +1,17 @@
 package com.example.eSmartRecruit.controllers.admin;
 
+import com.example.eSmartRecruit.authentication.AuthenticationService;
+import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.PositionRequest;
+import com.example.eSmartRecruit.controllers.request_reponse.request.ReportRequest;
 import com.example.eSmartRecruit.exception.PositionException;
 import com.example.eSmartRecruit.exception.UserException;
 
 import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.models.Application;
+import com.example.eSmartRecruit.models.Report;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.services.impl.ApplicationService;
@@ -15,13 +19,18 @@ import com.example.eSmartRecruit.services.impl.InterviewSessionService;
 import com.example.eSmartRecruit.services.impl.PositionService;
 import com.example.eSmartRecruit.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -37,6 +46,8 @@ public class AdminController {
     @Autowired
     private ApplicationRepos applicationRepository;
     private InterviewSessionService interviewSessionService;
+    private AuthenticationService authenticationService;
+    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @GetMapping("/home")
     public ResponseEntity<ResponseObject> home(HttpServletRequest request) throws JSONException, UserException {
@@ -216,7 +227,6 @@ public class AdminController {
     public ResponseEntity<ResponseObject> deletePosition(@PathVariable Integer positionID, HttpServletRequest request) throws JSONException, UserException, PositionException {
         String authHeader = request.getHeader("Authorization");
         ExtractUser userInfo = new ExtractUser(authHeader, userService);
-
         if (!userInfo.isEnabled()) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                     .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
@@ -232,5 +242,61 @@ public class AdminController {
 
         return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                 .status("SUCCESS").message("Position deleted successfully").build(), HttpStatus.OK);
+    }
+    @GetMapping("/user")
+    public ResponseEntity<ResponseObject> getUsers(HttpServletRequest request) throws JSONException {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            logger.info("Received request to get users. Authorization header: {}", authHeader);
+
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            Integer userId = userInfo.getUserId();
+            if (!userInfo.isEnabled() || !userService.getUserRole(userId).equalsIgnoreCase("admin")) {
+                logger.warn("Unauthorized access. User ID: {}", userId);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            List<User> userList = userService.getAllUser();
+            List<Map<String, Object>> dataList = new ArrayList<>();
+            for (User user : userList) {
+                Map<String, Object> data = new LinkedHashMap<>();
+                data.put("id", user.getId());
+                data.put("username", user.getUsername());
+                data.put("email", user.getEmail());
+                data.put("phonenumber", user.getPhoneNumber());
+                data.put("rolename", user.getRoleName());
+                data.put("status", user.getStatus());
+                data.put("create_date", user.getCreateDate());
+                data.put("update_date", user.getUpdateDate());
+                dataList.add(data);
+            }
+
+            logger.info("Returning user list. Total users: {}", userList.size());
+            return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").message("List all users successfully!").data(dataList).build());
+        } catch (UserException e) {
+            logger.error("Internal Server Error: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message(e.getMessage()).build());
+        }
+    }
+    @PostMapping("/user/create")
+    ResponseEntity<ResponseObject> createUser(HttpServletRequest request,
+                                              @RequestBody @Valid RegisterRequest registerRequest) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            logger.info("Received request to get users. Authorization header: {}", authHeader);
+
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            Integer userId = userInfo.getUserId();
+            if (!userInfo.isEnabled() || !userService.getUserRole(userId).equalsIgnoreCase("admin")) {
+                logger.warn("Unauthorized access. User ID: {}", userId);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            return ResponseEntity.ok(userService.saveUser(registerRequest));
+        } catch (UserException | JSONException e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message(e.getMessage())
+                    .status("ERROR").build(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }
