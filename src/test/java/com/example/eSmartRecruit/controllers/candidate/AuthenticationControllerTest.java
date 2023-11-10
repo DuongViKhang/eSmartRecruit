@@ -128,4 +128,11 @@ class AuthenticationControllerTest {
         assertEquals("SUCCESS", responseObject.getStatus());
         assertEquals(jwtToken, responseObject.getMessage());
     }
+
+    @Test
+    void enumTest(){
+        System.out.println(Role.Candidate.getValue());
+        System.out.println(Role.valueOf("Candidate").getValue());
+        System.out.println(Role.findRole(1));
+    }
 }
