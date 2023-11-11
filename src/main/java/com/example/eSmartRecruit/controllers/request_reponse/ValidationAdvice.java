@@ -1,6 +1,7 @@
 package com.example.eSmartRecruit.controllers.request_reponse;
 
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.exception.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -15,7 +16,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class ValidationAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ResponseObject> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -26,4 +27,14 @@ public class ValidationAdvice {
         });
         return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(errors.toString()).status("ERROR").build(), HttpStatus.BAD_REQUEST);
     }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ResponseObject> handleAuthenticationExceptions(
+            AuthenticationException ex) {
+
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(ex.getMessage()).status("ERROR").build(), HttpStatus.BAD_REQUEST);
+    }
+
+
 }

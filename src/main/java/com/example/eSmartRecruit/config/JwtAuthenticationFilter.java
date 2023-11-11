@@ -1,10 +1,14 @@
 package com.example.eSmartRecruit.config;
 
+import com.example.eSmartRecruit.exception.AuthenticationException;
+import com.example.eSmartRecruit.exception.UserException;
+import com.example.eSmartRecruit.repositories.redis.TokenRepos;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +26,9 @@ import java.util.Date;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final TokenRepos tokenRepos;
+
+    @SneakyThrows
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
@@ -32,13 +39,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String username;
 
         if(authHeader == null || !authHeader.startsWith("Bearer")){
-
             filterChain.doFilter(request,response);
             return;
         }
         jwt = authHeader.substring(7);
-
         username = jwtService.extractUserName(jwt);
+
+        String storedToken = tokenRepos.findTokenByUsername(username);
+        if(!jwt.equals(storedToken)){
+            throw new AuthenticationException("Invalid token");
+            //return;
+        }
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 

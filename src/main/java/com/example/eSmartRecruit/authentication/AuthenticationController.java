@@ -54,11 +54,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.Authentication authentication) {
-        // Đăng xuất người dùng và xóa phiên làm việc
-        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
-        logoutHandler.logout(request, response, authentication);
-        return ResponseEntity.ok("{\"status\": \"SUCCESS\", \"message\": \"Sign out successfully!\"}");
+    public ResponseEntity<ResponseObject> logout(HttpServletRequest request) {
+
+        String jwt = request.getHeader("Authorization").substring(7);
+        ResponseObject message = authenticationService.logout(jwt);
+        return ResponseEntity.ok(message);
     }
     @GetMapping("/hello")
     public List<User> sayHello(){

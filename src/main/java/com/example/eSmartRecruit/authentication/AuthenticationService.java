@@ -12,10 +12,13 @@ import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.enumModel.Role;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.models.enumModel.UserStatus;
+import com.example.eSmartRecruit.models.redis.Token;
 import com.example.eSmartRecruit.repositories.UserRepos;
+import com.example.eSmartRecruit.repositories.redis.TokenRepos;
 import com.example.eSmartRecruit.services.impl.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,6 +44,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final TokenRepos tokenRepos;
     public ResponseObject register(RegisterRequest request) throws UserException {
         //Role role = Role.valueOf(request.getRoleName());
 
@@ -70,10 +74,14 @@ public class AuthenticationService {
             return ResponseObject.builder().status("ERROR").message(e.getMessage()).build();
         }
         var jwtToken = jwtService.generateToken(user);
+        Token token = new Token(user.getUsername(),jwtToken);
+
+        tokenRepos.save(token);
 
         return ResponseObject.builder()
                 .status("SUCCESS")
-                .message(jwtToken)
+                .data(jwtToken)
+                .message("Registered successfully!")
                 .build();
     }
 
@@ -93,16 +101,38 @@ public class AuthenticationService {
                         .message("Account not active")
                         .build();
             }
+
             var jwtToken = jwtService.generateToken(user);
+
+            try{
+                String tokenS = tokenRepos.findTokenByUsername(user.getUsername());
+            if(tokenS!=null){
+                System.out.println(tokenS);
+                tokenRepos.deleteToken(user.getUsername());
+            }
+            Token token = new Token(user.getUsername(),jwtToken);
+            tokenRepos.save(token);}
+            catch (Exception e){
+                throw new UserException(e.toString());
+            }
+
             return ResponseObject.builder()
-                    .message(jwtToken)
+                    .data(jwtToken)
                     .status("SUCCESS")
+                    .message("Authenticated!")
                     .build();
         }catch (Exception exception){
-            throw new UserException("User name or password is wrong");
+            //throw new UserException("User name or password is wrong");
+            throw new UserException(exception.toString());
+
         }
 
 
+    }
+    public ResponseObject logout(String token){
+        String username = jwtService.extractUserName(token);
+        String message = tokenRepos.deleteToken(username);
+        return ResponseObject.builder().status("SUCCESS").message(message).build();
     }
 
 }

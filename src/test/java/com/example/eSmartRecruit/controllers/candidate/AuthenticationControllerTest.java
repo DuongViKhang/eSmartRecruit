@@ -11,7 +11,9 @@ import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.models.enumModel.Role;
 import com.example.eSmartRecruit.models.enumModel.UserStatus;
+import com.example.eSmartRecruit.models.redis.Token;
 import com.example.eSmartRecruit.repositories.UserRepos;
+import com.example.eSmartRecruit.repositories.redis.TokenRepos;
 import com.example.eSmartRecruit.services.impl.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,6 +30,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -50,11 +54,13 @@ class AuthenticationControllerTest {
     private PasswordEncoder passwordEncoder;
 
     private JwtService jwtService;
+    private TokenRepos tokenRepos;
 
     @BeforeEach
     void setUp() {
         jwtService = new JwtService();
         passwordEncoder = new BCryptPasswordEncoder();
+        tokenRepos = new TokenRepos(new RedisTemplate<>());
     }
 
     @Test
@@ -134,5 +140,11 @@ class AuthenticationControllerTest {
         System.out.println(Role.Candidate.getValue());
         System.out.println(Role.valueOf("Candidate").getValue());
         System.out.println(Role.findRole(1));
+    }
+
+    @Test
+    void redis(){
+//        List<Token> token = tokenRepos.findAll();
+//        System.out.println(token);
     }
 }
