@@ -1,36 +1,43 @@
 package com.example.eSmartRecruit.controllers.admin;
 
+import com.example.eSmartRecruit.authentication.AuthenticationService;
+import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.controllers.request_reponse.request.PositionRequest;
+import com.example.eSmartRecruit.controllers.request_reponse.request.ReportRequest;
+import com.example.eSmartRecruit.exception.PositionException;
+import com.example.eSmartRecruit.exception.UserException;
 
-import com.example.eSmartRecruit.controllers.request_reponse.request.ApplicationResultRequest;
 import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.models.Application;
-import com.example.eSmartRecruit.exception.UserException;
+import com.example.eSmartRecruit.models.Report;
 import com.example.eSmartRecruit.models.User;
-import com.example.eSmartRecruit.models.enumModel.Role;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
-import com.example.eSmartRecruit.services.IStorageService;
 import com.example.eSmartRecruit.services.impl.ApplicationService;
+import com.example.eSmartRecruit.services.impl.InterviewSessionService;
 import com.example.eSmartRecruit.services.impl.PositionService;
 import com.example.eSmartRecruit.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("eSmartRecruit/admin")
 public class AdminController {
-    private IStorageService storageService;
+
     private UserService userService;
     @Autowired
     private PositionService positionService;
@@ -38,21 +45,83 @@ public class AdminController {
     private ApplicationService applicationService;
     @Autowired
     private ApplicationRepos applicationRepository;
+    private InterviewSessionService interviewSessionService;
+    private AuthenticationService authenticationService;
+    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+
+    @GetMapping("/home")
+    public ResponseEntity<ResponseObject> home(HttpServletRequest request) throws JSONException, UserException {
+
+        String authHeader = request.getHeader("Authorization");
+        //return new ResponseEntity<String>("hello",HttpStatus.OK);
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+        if (!userInfo.isEnabled()) {
+            return null;
+        }
+        Map<String, Object> homeList = new LinkedHashMap<>();
+        homeList.put("no_user", userService.getcountUser() );
+        homeList.put("no_position", positionService.getcountPosition());
+        homeList.put("no_application", applicationService.getcountApplication());
+        homeList.put("no_interview_session",interviewSessionService.getCountInterview() );
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(homeList).build(), HttpStatus.OK);
+
+    }
+
+    @PostMapping("/position/create")
+    public ResponseEntity<ResponseObject> createPost(@RequestBody Position position, HttpServletRequest request) throws JSONException, UserException {
+
+        String authHeader = request.getHeader("Authorization");
+        //return new ResponseEntity<String>("hello",HttpStatus.OK);
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+        if (!userInfo.isEnabled()) {
+            return null;
+        }
+        // System.out.println("đã chạy create post");
+        Position createPosition = positionService.createPost(position);
+        Map<String, Object> datapost = new LinkedHashMap<>();
+        datapost.put("title", createPosition.getTitle());
+        datapost.put("jobDescription", createPosition.getJobDescription());
+        datapost.put("jobRequirements", createPosition.getJobRequirements());
+        datapost.put("salary", createPosition.getSalary());
+        datapost.put("expireDate", createPosition.getExpireDate());
+        datapost.put("location", createPosition.getLocation());
+
+        ResponseObject response = ResponseObject.builder()
+                .status("Success")
+                .data(datapost)
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
     @GetMapping("/position")
-    public ResponseEntity<ResponseObject> PositionAdmin()
-    {
+    public ResponseEntity<ResponseObject> PositionAdmin(HttpServletRequest request) {
         try{
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            Integer userId = userInfo.getUserId();
+            User user = userService.getUserById(userId);
+            if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
             List<Position> data = positionService.getAllPosition();
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).message("Loading position successfully").build(), HttpStatus.OK);
         } catch (Exception exception) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(),HttpStatus.NOT_IMPLEMENTED);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build());
         }
     }
 
     @GetMapping("/position/{positionID}")
-    ResponseEntity<ResponseObject> getDetailPositionAdmin(@PathVariable("positionID")Integer id){
+    ResponseEntity<ResponseObject> getDetailPositionAdmin(@PathVariable("positionID")Integer id,HttpServletRequest request){
         try{
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            Integer userId = userInfo.getUserId();
+            User user = userService.getUserById(userId);
+            if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
             Position positions = positionService.getSelectedPosition(id);
 
             if(positions == null){
@@ -126,71 +195,108 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message("Internal server error").build());
         }
     }
-    @GetMapping("/candidate/{candidateId}")
-    ResponseEntity<ResponseObject> getCandidateInformation(@PathVariable("candidateId") Integer candidateId, HttpServletRequest request) throws JSONException, UserException {
-        try {
-            String authHeader = request.getHeader("Authorization");
-            //return new ResponseEntity<String>("hello",HttpStatus.OK);
-            ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return null;
-            }
+    @PutMapping("/position/{positionID}")
+    public ResponseEntity<ResponseObject> editPosition(@PathVariable Integer positionID, @RequestBody PositionRequest positionRequest, HttpServletRequest request) throws JSONException, UserException, PositionException {
+        String authHeader = request.getHeader("Authorization");
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
 
-            User user = userService.getUserById(candidateId);
-            if (!user.getRoleName().equals(Role.Candidate)) {
-                throw new UserException("Not a candidate");
-            }
-            Map<String, String> data = new LinkedHashMap<>();
-            data.put("username", user.getUsername());
-            data.put("email", user.getEmail());
-            data.put("phonenumber", user.getPhoneNumber());
-            data.put("roleName", user.getRoleName().name());
-
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(data).build(), HttpStatus.OK);
+        if (!userInfo.isEnabled()) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
         }
-        catch (Exception exception){
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message(exception.getMessage()).build(), HttpStatus.OK);
-        }
-    }
-    @PutMapping ("/application/{applicationID}")
-    public ResponseEntity<ResponseObject> updateApplicationStatus(@PathVariable("applicationID") Integer id, HttpServletRequest request, @RequestBody ApplicationResultRequest applicationResultRequest) {
         try {
-            String authHeader = request.getHeader("Authorization");
-            ExtractUser userInfo = new ExtractUser(authHeader, userService);
-
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
-
-            try {
-                ApplicationStatus.valueOf(applicationResultRequest.getStatus());
-            } catch (IllegalArgumentException e) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Invalid status").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
-
-            ApplicationStatus status1 = ApplicationStatus.valueOf(applicationResultRequest.getStatus());
+            Position existingPosition = positionService.getSelectedPosition(positionID);
+            Position updatedPosition = Position.builder()
+                    .title(positionRequest.getTitle())
+                    .jobDescription(positionRequest.getJobDescription())
+                    .jobRequirements(positionRequest.getJobRequirements())
+                    .salary(positionRequest.getSalary())
+                    .expireDate(positionRequest.getExpireDate())
+                    .location(positionRequest.getLocation())
+                    .build();positionService.editPosition(positionID, updatedPosition);
 
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                 .message(applicationService.adminUpdate(id, status1)).status("SUCCESS").data(applicationService.findById(id)).build(), HttpStatus.OK);
-
-//            if (status1 == ApplicationStatus.Approved) {
-//                // Xử lý hồ sơ được duyệt
-//                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-//                        .message(applicationService.adminUpdate(id, status1)).status("SUCCESS").data(applicationService.findById(id)).build(), HttpStatus.OK);
-//            }
-//            else if (status1 == ApplicationStatus.Declined) {
-//                // Xử lý hồ sơ bị từ chối
-//                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-//                        .message(applicationService.adminUpdate(id, status1)).status("SUCCESS").data(applicationService.findById(id)).build(), HttpStatus.OK);
-//            } else {
-//                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-//                        .message("Invalid status").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-//            }
-        } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(), HttpStatus.NOT_IMPLEMENTED);
+                    .status("SUCCESS").message("Position updated successfully").build(), HttpStatus.OK);
+        } catch (PositionException e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Error editing position: " + e.getMessage()).status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @DeleteMapping("/position/{positionID}")
+    public ResponseEntity<ResponseObject> deletePosition(@PathVariable Integer positionID, HttpServletRequest request) throws JSONException, UserException, PositionException {
+        String authHeader = request.getHeader("Authorization");
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+        if (!userInfo.isEnabled()) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+        }
+        Position existingPosition = positionService.getSelectedPosition(positionID);
+
+        try {
+            positionService.deletePosition(positionID);
+        } catch (PositionException e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Error deleting position: " + e.getMessage()).status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                .status("SUCCESS").message("Position deleted successfully").build(), HttpStatus.OK);
+    }
+    @GetMapping("/user")
+    public ResponseEntity<ResponseObject> getUsers(HttpServletRequest request) throws JSONException {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            logger.info("Received request to get users. Authorization header: {}", authHeader);
+
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            Integer userId = userInfo.getUserId();
+            if (!userInfo.isEnabled() || !userService.getUserRole(userId).equalsIgnoreCase("admin")) {
+                logger.warn("Unauthorized access. User ID: {}", userId);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            List<User> userList = userService.getAllUser();
+            List<Map<String, Object>> dataList = new ArrayList<>();
+            for (User user : userList) {
+                Map<String, Object> data = new LinkedHashMap<>();
+                data.put("id", user.getId());
+                data.put("username", user.getUsername());
+                data.put("email", user.getEmail());
+                data.put("phonenumber", user.getPhoneNumber());
+                data.put("rolename", user.getRoleName());
+                data.put("status", user.getStatus());
+                data.put("create_date", user.getCreateDate());
+                data.put("update_date", user.getUpdateDate());
+                dataList.add(data);
+            }
+
+            logger.info("Returning user list. Total users: {}", userList.size());
+            return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").message("List all users successfully!").data(dataList).build());
+        } catch (UserException e) {
+            logger.error("Internal Server Error: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message(e.getMessage()).build());
+        }
+    }
+    @PostMapping("/user/create")
+    ResponseEntity<ResponseObject> createUser(HttpServletRequest request,
+                                              @RequestBody @Valid RegisterRequest registerRequest) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            logger.info("Received request to get users. Authorization header: {}", authHeader);
+
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            Integer userId = userInfo.getUserId();
+            if (!userInfo.isEnabled() || !userService.getUserRole(userId).equalsIgnoreCase("admin")) {
+                logger.warn("Unauthorized access. User ID: {}", userId);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            return ResponseEntity.ok(userService.saveUser(registerRequest));
+        } catch (UserException | JSONException e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message(e.getMessage())
+                    .status("ERROR").build(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 }
