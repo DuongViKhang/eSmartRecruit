@@ -71,12 +71,11 @@ public class AdminController {
     public ResponseEntity<ResponseObject> createPost(@RequestBody Position position, HttpServletRequest request) throws JSONException, UserException {
 
         String authHeader = request.getHeader("Authorization");
-        //return new ResponseEntity<String>("hello",HttpStatus.OK);
         ExtractUser userInfo = new ExtractUser(authHeader, userService);
         if (!userInfo.isEnabled()) {
             return null;
         }
-        // System.out.println("đã chạy create post");
+
         Position createPosition = positionService.createPost(position);
         Map<String, Object> datapost = new LinkedHashMap<>();
         datapost.put("title", createPosition.getTitle());
@@ -98,10 +97,9 @@ public class AdminController {
         try{
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            Integer userId = userInfo.getUserId();
-            User user = userService.getUserById(userId);
-            if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            if (!userInfo.isEnabled() ) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
             }
 
             List<Position> data = positionService.getAllPosition();
@@ -116,10 +114,9 @@ public class AdminController {
         try{
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            Integer userId = userInfo.getUserId();
-            User user = userService.getUserById(userId);
-            if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            if (!userInfo.isEnabled() ) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
             }
 
             Position positions = positionService.getSelectedPosition(id);
@@ -139,10 +136,9 @@ public class AdminController {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            Integer userId = userInfo.getUserId();
-            User user = userService.getUserById(userId);
-            if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            if (!userInfo.isEnabled() ) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
             }
 
             List<Application> applications = applicationRepository.findAll();
@@ -167,10 +163,10 @@ public class AdminController {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            Integer userId = userInfo.getUserId();
 
-            if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            if (!userInfo.isEnabled() ) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
             }
 
             Optional<Application> application = applicationRepository.findById(Id);
