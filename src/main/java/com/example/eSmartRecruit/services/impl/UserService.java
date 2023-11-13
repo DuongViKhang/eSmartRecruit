@@ -3,6 +3,9 @@ package com.example.eSmartRecruit.services.impl;
 import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
+import com.example.eSmartRecruit.dto.EditUserDto;
+import com.example.eSmartRecruit.dto.EditUserResponse;
+import com.example.eSmartRecruit.exception.NotFoundException;
 import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.models.enumModel.Role;
@@ -14,8 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -82,6 +85,28 @@ public class UserService {
 
     public User getUserById(Integer id) throws UserException {
         return userRepository.findById(id).orElseThrow(()->new UserException("UserNotFound!"));
+    }
+
+
+    public EditUserResponse editUserInformation(EditUserDto editUserDto) {
+        try{
+            var findUser = userRepository.findByUsername(editUserDto.getUsername());
+            if(findUser.isEmpty()){
+                throw new NotFoundException("Can't found user");
+            }
+            var editUser = userRepository.save(
+                    User.builder()
+                            .id(findUser.get().getId())
+                            .username(editUserDto.getUsername())
+                            .email(editUserDto.getEmail())
+                            .phoneNumber(editUserDto.getPhoneNumber())
+                            .updateDate((Date) Calendar.getInstance().getTime())
+                            .build()
+            );
+            return new EditUserResponse(editUser);
+        } catch (Exception e){
+            throw  new RuntimeException(e);
+        }
     }
 
     public  User updateUser(UserRequest user , Integer id) throws UserException {
