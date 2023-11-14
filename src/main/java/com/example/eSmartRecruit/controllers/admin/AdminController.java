@@ -4,14 +4,13 @@ import com.example.eSmartRecruit.authentication.AuthenticationService;
 import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.controllers.request_reponse.request.InterviewSessionRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.request.PositionRequest;
-import com.example.eSmartRecruit.controllers.request_reponse.request.ReportRequest;
 import com.example.eSmartRecruit.exception.PositionException;
 import com.example.eSmartRecruit.exception.UserException;
 
 import com.example.eSmartRecruit.models.*;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
-import com.example.eSmartRecruit.repositories.ReportRepos;
 import com.example.eSmartRecruit.services.impl.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -24,8 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -325,6 +322,26 @@ public class AdminController {
         } catch (Exception e) {
             logger.error("Error in getReport", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message("Internal server error").build());
+        }
+    }
+    @PutMapping ("/interviewsession/{interviewsessionid}")
+    public ResponseEntity<ResponseObject> scheduleInterview(@PathVariable("interviewsessionid") Integer id, HttpServletRequest request,
+                                                            @RequestBody @Valid InterviewSessionRequest interviewSessionRequest) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
+            if (!userInfo.isEnabled()) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+            }
+
+            interviewSessionService.scheduleInterview(id, interviewSessionRequest);
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Schedule successfully!").status("SUCCESS").data(interviewSessionService.scheduleInterview(id, interviewSessionRequest)).build(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(), HttpStatus.NOT_IMPLEMENTED);
         }
     }
 }
