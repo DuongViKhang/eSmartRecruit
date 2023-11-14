@@ -9,15 +9,10 @@ import com.example.eSmartRecruit.controllers.request_reponse.request.ReportReque
 import com.example.eSmartRecruit.exception.PositionException;
 import com.example.eSmartRecruit.exception.UserException;
 
-import com.example.eSmartRecruit.models.Position;
-import com.example.eSmartRecruit.models.Application;
-import com.example.eSmartRecruit.models.Report;
-import com.example.eSmartRecruit.models.User;
+import com.example.eSmartRecruit.models.*;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
-import com.example.eSmartRecruit.services.impl.ApplicationService;
-import com.example.eSmartRecruit.services.impl.InterviewSessionService;
-import com.example.eSmartRecruit.services.impl.PositionService;
-import com.example.eSmartRecruit.services.impl.UserService;
+import com.example.eSmartRecruit.repositories.ReportRepos;
+import com.example.eSmartRecruit.services.impl.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -47,6 +42,8 @@ public class AdminController {
     private ApplicationRepos applicationRepository;
     private InterviewSessionService interviewSessionService;
     private AuthenticationService authenticationService;
+    @Autowired
+    private ReportService reportService;
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @GetMapping("/home")
@@ -298,5 +295,36 @@ public class AdminController {
                     .status("ERROR").build(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+    @GetMapping("/report/{interviewsessionid}")
+    public ResponseEntity<ResponseObject> getReport(@PathVariable("interviewsessionid") Integer sessionId, HttpServletRequest request) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            Integer userId = userInfo.getUserId();
+
+            if (!userInfo.isEnabled() ) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            Report reportObject = reportService.getReportBySessionId(sessionId); // Sử dụng sessionId thay vì userId
+            if (reportObject != null) {
+
+                Map<String, Object> data = new LinkedHashMap<>();
+                data.put("id", reportObject.getId());
+                data.put("report_name", reportObject.getReportName());
+                data.put("report_data", reportObject.getReportData());
+                data.put("createDate", reportObject.getCreateDate() != null ? reportObject.getCreateDate().toString() : null);
+                data.put("updateDate", reportObject.getUpdateDate() != null ? reportObject.getUpdateDate().toString() : null);
+
+                return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").message("Report").data(data).build());
+            }
+        else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.builder().status("ERROR").message("Report not found").build());
+            }
+        } catch (Exception e) {
+            logger.error("Error in getReport", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message("Internal server error").build());
+        }
     }
 }
