@@ -16,7 +16,7 @@ import java.sql.Date;
 @NoArgsConstructor
 public class InterviewSessionRequest {
     @NotNull(message = "This must be filled!")
-    int interviewerId;
+    Integer interviewerId;
     @NotNull(message = "This must be filled!")
     @Future(message = "Please fill a date in the future!")
     Date date;

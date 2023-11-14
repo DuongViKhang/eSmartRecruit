@@ -2,6 +2,7 @@ package com.example.eSmartRecruit.services.impl;
 
 import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.controllers.request_reponse.request.EditUserRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
 import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.User;
@@ -49,7 +50,12 @@ public class UserService {
             return "Could not save";
         }
     }
-
+    public String checkDuplicateUsername(User user){
+        if(userRepository.findByUsername(user.getUsername()).isPresent()){
+            return "This username is already used by another user!";
+        }
+        return null;
+    }
     public String checkDuplicateEmail(User user){
         if(userRepository.findByEmail(user.getEmail()).isPresent()){
             return "This email is already used by another user!";
@@ -134,6 +140,36 @@ public class UserService {
                     .message("Create user successfully!").build();
         }catch (Exception e){
             return ResponseObject.builder().status("ERROR").message(e.getMessage()).build();
+        }
+    }
+    public User findById(int id) throws UserException{
+        return userRepository.findById(id).orElseThrow(()->new UserException("User not found!"));
+    }
+    public User editUser(int userId, EditUserRequest editUserRequest) throws UserException {
+        User user = findById(userId);
+        String checkDuplicationUsername = checkDuplicateUsername(user);
+        String checkDuplicationEmail = checkDuplicateEmail(user);
+        String checkDuplicationPhone = checkDuplicatePhone(user);
+        if (checkDuplicationUsername != null && user.getUsername().equals(editUserRequest.getUsername())){
+            throw new UserException(checkDuplicationUsername);
+        }
+        if(checkDuplicationEmail!=null && !user.getEmail().equals(editUserRequest.getEmail())){
+            throw new UserException(checkDuplicationEmail);
+        }
+        if(checkDuplicationPhone!=null && !user.getPhoneNumber().equals(editUserRequest.getPhonenumber())){
+            throw new UserException(checkDuplicationPhone);
+        }
+        try{
+            user.setUsername(editUserRequest.getUsername());
+            user.setPassword(passwordEncoder.encode(editUserRequest.getPassword()));
+            user.setEmail(editUserRequest.getEmail());
+            user.setPhoneNumber(editUserRequest.getPhonenumber());
+            user.setStatus(UserStatus.valueOf(editUserRequest.getStatus()));
+            user.setUpdateDate(Date.valueOf(LocalDate.now()));
+            userRepository.save(user);
+            return user;
+        }catch(Exception e) {
+            return null;
         }
     }
 }
