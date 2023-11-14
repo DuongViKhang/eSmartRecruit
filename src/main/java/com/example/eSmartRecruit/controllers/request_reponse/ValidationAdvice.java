@@ -7,8 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +31,12 @@ public class ValidationAdvice {
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(AuthenticationException.class)
+    @ResponseBody
+    @ExceptionHandler({AuthenticationException.class})
     public ResponseEntity<ResponseObject> handleAuthenticationExceptions(
-            AuthenticationException ex) {
-
-        return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(ex.getMessage()).status("ERROR").build(), HttpStatus.BAD_REQUEST);
+            AuthenticationException ex, WebRequest request) {
+        System.out.println("Caught e");
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(ex.getMessage()).status("ERROR").build(), HttpStatus.FORBIDDEN);
     }
 
 
