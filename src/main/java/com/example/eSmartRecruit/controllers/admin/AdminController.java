@@ -4,20 +4,14 @@ import com.example.eSmartRecruit.authentication.AuthenticationService;
 import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.controllers.request_reponse.request.InterviewSessionRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.request.PositionRequest;
-import com.example.eSmartRecruit.controllers.request_reponse.request.ReportRequest;
 import com.example.eSmartRecruit.exception.PositionException;
 import com.example.eSmartRecruit.exception.UserException;
 
-import com.example.eSmartRecruit.models.Position;
-import com.example.eSmartRecruit.models.Application;
-import com.example.eSmartRecruit.models.Report;
-import com.example.eSmartRecruit.models.User;
+import com.example.eSmartRecruit.models.*;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
-import com.example.eSmartRecruit.services.impl.ApplicationService;
-import com.example.eSmartRecruit.services.impl.InterviewSessionService;
-import com.example.eSmartRecruit.services.impl.PositionService;
-import com.example.eSmartRecruit.services.impl.UserService;
+import com.example.eSmartRecruit.services.impl.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -29,8 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -47,6 +39,8 @@ public class AdminController {
     private ApplicationRepos applicationRepository;
     private InterviewSessionService interviewSessionService;
     private AuthenticationService authenticationService;
+    @Autowired
+    private ReportService reportService;
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @GetMapping("/home")
@@ -298,5 +292,56 @@ public class AdminController {
                     .status("ERROR").build(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+    @GetMapping("/report/{interviewsessionid}")
+    public ResponseEntity<ResponseObject> getReport(@PathVariable("interviewsessionid") Integer sessionId, HttpServletRequest request) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            Integer userId = userInfo.getUserId();
+
+            if (!userInfo.isEnabled() ) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            Report reportObject = reportService.getReportBySessionId(sessionId); // Sử dụng sessionId thay vì userId
+            if (reportObject != null) {
+
+                Map<String, Object> data = new LinkedHashMap<>();
+                data.put("id", reportObject.getId());
+                data.put("report_name", reportObject.getReportName());
+                data.put("report_data", reportObject.getReportData());
+                data.put("createDate", reportObject.getCreateDate() != null ? reportObject.getCreateDate().toString() : null);
+                data.put("updateDate", reportObject.getUpdateDate() != null ? reportObject.getUpdateDate().toString() : null);
+
+                return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").message("Report").data(data).build());
+            }
+        else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.builder().status("ERROR").message("Report not found").build());
+            }
+        } catch (Exception e) {
+            logger.error("Error in getReport", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message("Internal server error").build());
+        }
+    }
+    @PutMapping ("/interviewsession/{interviewsessionid}")
+    public ResponseEntity<ResponseObject> scheduleInterview(@PathVariable("interviewsessionid") Integer id, HttpServletRequest request,
+                                                            @RequestBody @Valid InterviewSessionRequest interviewSessionRequest) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
+            if (!userInfo.isEnabled()) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+            }
+
+            interviewSessionService.scheduleInterview(id, interviewSessionRequest);
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Schedule successfully!").status("SUCCESS").data(interviewSessionService.scheduleInterview(id, interviewSessionRequest)).build(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(), HttpStatus.NOT_IMPLEMENTED);
+        }
     }
 }
