@@ -141,9 +141,9 @@ public class InterviewerController {
             data.put("phonenumber", user.getPhoneNumber());
             data.put("roleName", user.getRoleName().name());
 
-            return new ResponseEntity<>(ResponseObject.builder().status("Success").data(data).build(), HttpStatus.OK);
+            return new ResponseEntity<>(ResponseObject.builder().status("SUCCESS").data(data).build(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(ResponseObject.builder().status("Error")
+            return new ResponseEntity<>(ResponseObject.builder().status("ERROR")
                     .message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -151,7 +151,7 @@ public class InterviewerController {
     //update userInterviewer
     @PutMapping("/profile")
     ResponseEntity<ResponseObject> updateUserInterviewer(HttpServletRequest request,
-                                                         @RequestBody @Valid UserRequest user0){
+                                                         @RequestBody @Valid UserRequest user0) {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
@@ -166,7 +166,7 @@ public class InterviewerController {
             data.put("email", user.getEmail());
             data.put("phoneNumber", user.getPhoneNumber());
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .status("Success").data(data).build(), HttpStatus.OK);
+                    .status("SUCCESS").data(data).build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                     .status("ERROR").message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -185,17 +185,20 @@ public class InterviewerController {
 
             User candidate = userService.getUserById(candidateId);
             if (!candidate.getRoleName().equals(Role.Candidate)) {
-                throw new UserException("Not a candidate");
+                return new ResponseEntity<>(ResponseObject.builder()
+                        .message("Not a candidate")
+                        .status("ERROR").build(), HttpStatus.BAD_REQUEST);
             }
+
             Map<String, String> data = new HashMap<>();
             data.put("username", candidate.getUsername());
             data.put("email", candidate.getEmail());
             data.put("phonenumber", candidate.getPhoneNumber());
             data.put("roleName", candidate.getRoleName().name());
 
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(data).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).build(), HttpStatus.OK);
         } catch (Exception exception) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success")
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR")
                     .message(exception.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
