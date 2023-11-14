@@ -6,13 +6,9 @@ import java.util.Map;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
-import com.example.eSmartRecruit.exception.PositionException;
-import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.Application;
-
 import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.models.User;
-
 
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.services.impl.ApplicationService;
@@ -22,11 +18,7 @@ import com.example.eSmartRecruit.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -107,7 +99,7 @@ public class CandidateController {
     }
 
     @GetMapping("/application")
-    public ResponseEntity<ResponseObject> getMyApplications(HttpServletRequest request) throws JSONException {
+    public ResponseEntity<ResponseObject> getMyApplications(HttpServletRequest request) {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
@@ -203,8 +195,7 @@ public class CandidateController {
     //update user
     @PutMapping("/profile")
     ResponseEntity<ResponseObject> updateUser(HttpServletRequest request,
-                                              @RequestBody @Valid UserRequest user0
-    ) throws JSONException, UserException {
+                                              @RequestBody @Valid UserRequest user0) {
         try {
             String authHeader = request.getHeader("Authorization");
             //return new ResponseEntity<String>("hello",HttpStatus.OK);
