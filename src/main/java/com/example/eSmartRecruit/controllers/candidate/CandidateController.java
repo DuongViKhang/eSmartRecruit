@@ -110,12 +110,6 @@ public class CandidateController {
     public ResponseEntity<ResponseObject> getMyApplications(HttpServletRequest request) throws JSONException {
         try {
             String authHeader = request.getHeader("Authorization");
-            if (authHeader == null) {
-                // Trả về lỗi nếu không có header Authorization
-                return new ResponseEntity<>(ResponseObject.builder()
-                        .message("Missing Authorization header").status("Error").build(), HttpStatus.UNAUTHORIZED);
-            }
-
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             if (!userInfo.isEnabled()) {
                 return new ResponseEntity<>(ResponseObject.builder()
@@ -146,7 +140,7 @@ public class CandidateController {
                     .message("Loading applications success").status("SUCCESS").data(applicationList).build());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder()
-                    .message(e.getMessage()).status("Error").build());
+                    .message(e.getMessage()).status("ERROR").build());
         }
     }
 
@@ -154,13 +148,6 @@ public class CandidateController {
     public ResponseEntity<ResponseObject> getApplicationDetails(@PathVariable("applicationID") Integer id, HttpServletRequest request) {
         try {
             String authHeader = request.getHeader("Authorization");
-            // TODO cần đoạn này không?
-            if (authHeader == null) {
-                // Trả về lỗi nếu không có header Authorization
-                return new ResponseEntity<>(ResponseObject.builder()
-                        .message("Missing Authorization header").status("Error").build(), HttpStatus.UNAUTHORIZED);
-            }
-
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             if (!userInfo.isEnabled()) {
                 return new ResponseEntity<>(ResponseObject.builder()
