@@ -165,7 +165,7 @@ class InterviewerControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
+        assertEquals("SUCCESS", responseObject.getStatus());
 
         List<InterviewSession> expectedData = (List<InterviewSession>) responseEntity.getBody().getData();
         assertNotNull(expectedData);
@@ -197,7 +197,7 @@ class InterviewerControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
+        assertEquals("SUCCESS", responseObject.getStatus());
         assertEquals(Collections.emptyList(), responseObject.getData());
     }
 
