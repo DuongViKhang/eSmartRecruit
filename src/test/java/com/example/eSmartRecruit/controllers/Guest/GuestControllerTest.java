@@ -14,6 +14,7 @@ import com.example.eSmartRecruit.repositories.UserRepos;
 import com.example.eSmartRecruit.services.impl.PositionService;
 import com.example.eSmartRecruit.services.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,43 +47,100 @@ class GuestControllerTest {
     @Mock
     private UserRepos userRepos;
     @Test
-    void forgotPassword() throws UserException {
-
+    void forgotPassword_SuccessfulPasswordChange() throws UserException {
+        // Mock successful password change
+        when(userService.updateUserpassword(anyString(), anyString())).thenReturn("Successfully saved");
+//
+        // Create a mock ChangePasswordRequest
         ChangePasswordRequest mockChangePasswordRequest = new ChangePasswordRequest();
-        mockChangePasswordRequest.setUsername("khang");
-        mockChangePasswordRequest.setNewPassword("$2a$10$S5x1eUGgsbXA4RJfrnc07ueCheYAVNMXsqw23/HfivFQJsaowrTXW");
+        mockChangePasswordRequest.setUsername("admin");
+        mockChangePasswordRequest.setNewPassword("$10$/nCR/hYK8RJFwvHCxCwBQOirAhm9jdcxaSSKCBFJCgCLimHFTWUuy");
 
-
-        List<String> stringReturn = Arrays.asList("Successfully saved", "Could not save");
-        for (String str:stringReturn) {
-            when(userService.updateUserpassword(anyString(), anyString())).thenReturn(str);
-            ResponseEntity<ResponseObject> responseEntity = guestController.forgotPassword(mockChangePasswordRequest);
-            assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-            assertEquals("Success", responseEntity.getBody().getStatus());
-            assertEquals(str, responseEntity.getBody().getMessage());
-        }
-
-        // check respond error
-//        when(userRepos.findByUsername(any(String.class))).thenThrow(any(UserException.class));
-//        when(userService.updateUserpassword(anyString(), anyString())).thenThrow(UserException.class);
-//        when(guestController.forgotPassword(mockChangePasswordRequest)).thenThrow(new UserException("User not found!"));
+        // Call the forgotPassword method
         ResponseEntity<ResponseObject> responseEntity = guestController.forgotPassword(mockChangePasswordRequest);
-        assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
-        assertEquals("Error", responseEntity.getBody().getStatus());
 
+        // Assert the results
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("Success", responseEntity.getBody().getStatus());
+        assertEquals("Successfully saved", responseEntity.getBody().getMessage());
+    }
+
+    @Test
+    void forgotPassword_UnsuccessfulPasswordChange() throws UserException {
+        // Mock unsuccessful password change
+        when(userService.updateUserpassword(anyString(), anyString())).thenReturn("Could not save");
+
+        // Create a mock ChangePasswordRequest
+        ChangePasswordRequest mockChangePasswordRequest = new ChangePasswordRequest();
+        mockChangePasswordRequest.setUsername("admin");
+        mockChangePasswordRequest.setNewPassword("$10$/nCR/hYK8RJFwvHCxCwBQOirAhm9jdcxaSSKCBFJCgCLimHFTWUuy");
+
+        // Call the forgotPassword method
+        ResponseEntity<ResponseObject> responseEntity = guestController.forgotPassword(mockChangePasswordRequest);
+
+        // Assert the results
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("Success", responseEntity.getBody().getStatus());
+        assertEquals("Could not save", responseEntity.getBody().getMessage());
+    }
+
+    @Test
+    void forgotPassword_UserException() throws UserException {
+        // Mock throwing a UserException
+        when(userService.updateUserpassword(anyString(), anyString())).thenThrow(UserException.class);
+
+        // Create a mock ChangePasswordRequest
+        ChangePasswordRequest mockChangePasswordRequest = new ChangePasswordRequest();
+        mockChangePasswordRequest.setUsername("admin");
+        mockChangePasswordRequest.setNewPassword("$10$/nCR/hYK8RJFwvHCxCwBQOirAhm9jdcxaSSKCBFJCgCLimHFTWUuy");
+
+        // Call the forgotPassword method
+        ResponseEntity<ResponseObject> responseEntity = guestController.forgotPassword(mockChangePasswordRequest);
+
+        // Assert the results for the exception case
+        assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
+        assertEquals("Error", responseEntity.getBody().getStatus()); // Adjust this based on your actual implementation
+        // Additional assertions based on how you handle exceptions in your application
     }
 
     @Test
     void searchJob() throws Exception {
+
         when(positionService.searchPositions(anyString())).thenReturn(Arrays.asList(new Position(), new Position()));
         ResponseEntity<ResponseObject> responseEntity = guestController.searchJob(anyString());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("Success", responseEntity.getBody().getStatus());
-
-        when(positionService.searchPositions(anyString())).thenThrow(Exception.class);
-        responseEntity = guestController.searchJob(anyString());
-        assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
-        assertEquals("Error", responseEntity.getBody().getStatus());
+        assertEquals("Search successfully!", responseEntity.getBody().getMessage());
+         // Add more assertions based on your expected search result
+        verify(positionService, times(1)).searchPositions(anyString());
 
     }
+    @Test
+    void searchJob_EmptyResult() throws Exception {
+        // Arrange
+        when(positionService.searchPositions(anyString())).thenReturn(Collections.emptyList());
+
+        // Act
+        ResponseEntity<ResponseObject> responseEntity = guestController.searchJob(anyString());
+
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("Success", responseEntity.getBody().getStatus());
+        assertEquals("Search successfully!", responseEntity.getBody().getMessage());
+        verify(positionService, times(1)).searchPositions(anyString());
+    }
+
+    @Test
+    void searchJob_Exception() throws Exception {
+        // Arrange
+//        String keyword = "FPT";
+        when(positionService.searchPositions(anyString())).thenThrow(new Exception());
+
+        ResponseEntity<ResponseObject> responseEntity = guestController.searchJob(anyString());
+
+        assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
+        assertEquals("Error", responseEntity.getBody().getStatus());
+        verify(positionService, times(1)).searchPositions(anyString());
+    }
+
 }
