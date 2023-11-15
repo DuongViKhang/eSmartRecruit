@@ -50,30 +50,20 @@ public class AdminController {
     @GetMapping("/home")
     public ResponseEntity<ResponseObject> home(HttpServletRequest request) throws JSONException, UserException {
 
-        String authHeader = request.getHeader("Authorization");
-        //return new ResponseEntity<String>("hello",HttpStatus.OK);
-        ExtractUser userInfo = new ExtractUser(authHeader, userService);
-        if (!userInfo.isEnabled()) {
-            return null;
-        }
+
         Map<String, Object> homeList = new LinkedHashMap<>();
         homeList.put("no_user", userService.getcountUser());
         homeList.put("no_position", positionService.getcountPosition());
         homeList.put("no_application", applicationService.getcountApplication());
         homeList.put("no_interview_session", interviewSessionService.getCountInterview());
-        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(homeList).build(), HttpStatus.OK);
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).data(homeList).build(), HttpStatus.OK);
 
     }
 
     @PostMapping("/position/create")
     public ResponseEntity<ResponseObject> createPost(@RequestBody Position position, HttpServletRequest request) throws JSONException, UserException {
 
-        String authHeader = request.getHeader("Authorization");
-        //return new ResponseEntity<String>("hello",HttpStatus.OK);
-        ExtractUser userInfo = new ExtractUser(authHeader, userService);
-        if (!userInfo.isEnabled()) {
-            return null;
-        }
+
         // System.out.println("đã chạy create post");
         Position createPosition = positionService.createPost(position);
         Map<String, Object> datapost = new LinkedHashMap<>();
@@ -85,7 +75,7 @@ public class AdminController {
         datapost.put("location", createPosition.getLocation());
 
         ResponseObject response = ResponseObject.builder()
-                .status("Success")
+                .status(ResponseObject.SUCCESS_STATUS)
                 .data(datapost)
                 .build();
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -103,9 +93,9 @@ public class AdminController {
             }
 
             List<Position> data = positionService.getAllPosition();
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).message("Loading position successfully").build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).data(data).message(ResponseObject.LOAD_SUCCESS).build(), HttpStatus.OK);
         } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(exception.getMessage()).build());
         }
     }
 
@@ -116,19 +106,16 @@ public class AdminController {
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             Integer userId = userInfo.getUserId();
             User user = userService.getUserById(userId);
-            if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message("Account is not active!").build(), HttpStatus.BAD_REQUEST);
-            }
 
             Position positions = positionService.getSelectedPosition(id);
 
             if (positions == null) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message("Position not found").build(), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(ResponseObject.POSITION_NOT_FOUND).build(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").message("Loading position successfully").data(positions).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(positions).build(), HttpStatus.OK);
 
         } catch (Exception exception) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(exception.getMessage()).build(), HttpStatus.FORBIDDEN);
         }
     }
 
@@ -139,9 +126,6 @@ public class AdminController {
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             Integer userId = userInfo.getUserId();
             User user = userService.getUserById(userId);
-            if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseObject.builder().status("ERROR").message("Account not active!").build());
-            }
 
             List<Application> applications = applicationRepository.findAll();
             List<Map<String, Object>> applicationList = new ArrayList<>();
@@ -154,9 +138,9 @@ public class AdminController {
                 applicationMap.put("applicationDate", app.getCreateDate().toString());
                 applicationList.add(applicationMap);
             }
-            return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").message("Applications retrieved successfully.").data(applicationList).build());
+            return ResponseEntity.ok(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(applicationList).build());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message(e.getMessage()).build());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build());
         }
     }
 
@@ -185,12 +169,12 @@ public class AdminController {
                 data.put("cv", app.getCv());
                 data.put("applicationDate", app.getCreateDate().toString());
 
-                return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").message("Application").data(data).build());
+                return ResponseEntity.ok(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(data).build());
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.builder().status("ERROR").message("Application not found").build());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(ResponseObject.APPLICATION_NOT_FOUND).build());
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message("Internal server error").build());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(ResponseObject.INTERNAL_SERVER_ERROR).build());
         }
     }
 
@@ -199,10 +183,6 @@ public class AdminController {
         String authHeader = request.getHeader("Authorization");
         ExtractUser userInfo = new ExtractUser(authHeader, userService);
 
-        if (!userInfo.isEnabled()) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-        }
         try {
             Position existingPosition = positionService.getSelectedPosition(positionID);
             Position updatedPosition = Position.builder()
@@ -216,10 +196,10 @@ public class AdminController {
             positionService.editPosition(positionID, updatedPosition);
 
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .status("SUCCESS").message("Position updated successfully").build(), HttpStatus.OK);
+                    .status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.UPDATED_SUCCESS).build(), HttpStatus.OK);
         } catch (PositionException e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message("Error editing position: " + e.getMessage()).status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                    .message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -227,21 +207,18 @@ public class AdminController {
     public ResponseEntity<ResponseObject> deletePosition(@PathVariable Integer positionID, HttpServletRequest request) throws JSONException, UserException, PositionException {
         String authHeader = request.getHeader("Authorization");
         ExtractUser userInfo = new ExtractUser(authHeader, userService);
-        if (!userInfo.isEnabled()) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-        }
+
         Position existingPosition = positionService.getSelectedPosition(positionID);
 
         try {
             positionService.deletePosition(positionID);
         } catch (PositionException e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message("Error deleting position: " + e.getMessage()).status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                    .message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                .status("SUCCESS").message("Position deleted successfully").build(), HttpStatus.OK);
+                .status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.DELETED_SUCCESS).build(), HttpStatus.OK);
     }
 
     @GetMapping("/user")
@@ -252,10 +229,6 @@ public class AdminController {
 
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             Integer userId = userInfo.getUserId();
-            if (!userInfo.isEnabled() || !userService.getUserRole(userId).equalsIgnoreCase("admin")) {
-                logger.warn("Unauthorized access. User ID: {}", userId);
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
 
             List<User> userList = userService.getAllUser();
             List<Map<String, Object>> dataList = new ArrayList<>();
@@ -273,10 +246,10 @@ public class AdminController {
             }
 
             logger.info("Returning user list. Total users: {}", userList.size());
-            return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").message("List all users successfully!").data(dataList).build());
+            return ResponseEntity.ok(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(dataList).build());
         } catch (UserException e) {
             logger.error("Internal Server Error: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message(e.getMessage()).build());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build());
         }
     }
 
@@ -289,15 +262,13 @@ public class AdminController {
 
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             Integer userId = userInfo.getUserId();
-            if (!userInfo.isEnabled() || !userService.getUserRole(userId).equalsIgnoreCase("admin")) {
-                logger.warn("Unauthorized access. User ID: {}", userId);
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
+
             return ResponseEntity.ok(userService.saveUser(registerRequest));
         } catch (UserException | JSONException e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                     .message(e.getMessage())
-                    .status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                    .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
 
     }
@@ -309,10 +280,6 @@ public class AdminController {
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             Integer userId = userInfo.getUserId();
 
-            if (!userInfo.isEnabled()) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-
             Report reportObject = reportService.getReportBySessionId(sessionId); // Sử dụng sessionId thay vì userId
             if (reportObject != null) {
 
@@ -323,13 +290,13 @@ public class AdminController {
                 data.put("createDate", reportObject.getCreateDate() != null ? reportObject.getCreateDate().toString() : null);
                 data.put("updateDate", reportObject.getUpdateDate() != null ? reportObject.getUpdateDate().toString() : null);
 
-                return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").message("Report").data(data).build());
+                return ResponseEntity.ok(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(data).build());
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.builder().status("ERROR").message("Report not found").build());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(ResponseObject.REPORT_NOT_FOUND).build());
             }
         } catch (Exception e) {
             logger.error("Error in getReport", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message("Internal server error").build());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(ResponseObject.INTERNAL_SERVER_ERROR).build());
         }
     }
 
@@ -339,13 +306,10 @@ public class AdminController {
             String authHeader = request.getHeader("Authorization");
             //return new ResponseEntity<String>("hello",HttpStatus.OK);
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return null;
-            }
 
             User user = userService.getUserById(candidateId);
             if (!user.getRoleName().equals(Role.Candidate)) {
-                throw new UserException("Not a candidate");
+                throw new UserException(ResponseObject.NOT_CANDIDATE);
             }
             Map<String, String> data = new LinkedHashMap<>();
             data.put("username", user.getUsername());
@@ -353,9 +317,9 @@ public class AdminController {
             data.put("phonenumber", user.getPhoneNumber());
             data.put("roleName", user.getRoleName().name());
 
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(ResponseObject.LOAD_SUCCESS).status(ResponseObject.SUCCESS_STATUS).data(data).build(), HttpStatus.OK);
         } catch (Exception exception) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(exception.getMessage()).build(), HttpStatus.OK);
         }
     }
 
@@ -366,17 +330,12 @@ public class AdminController {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
 
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
-
             interviewSessionService.scheduleInterview(id, interviewSessionRequest);
 
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message("Schedule successfully!").status("SUCCESS").data(interviewSessionService.scheduleInterview(id, interviewSessionRequest)).build(), HttpStatus.OK);
+                    .message(ResponseObject.SCHEDULED).status(ResponseObject.SUCCESS_STATUS).data(interviewSessionService.scheduleInterview(id, interviewSessionRequest)).build(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(), HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build(), HttpStatus.NOT_IMPLEMENTED);
         }
     }
 
@@ -386,10 +345,7 @@ public class AdminController {
             String authHeader = request.getHeader("Authorization");
             //return new ResponseEntity<String>("hello",HttpStatus.OK);
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR")
-                        .message("Account not active!").build(), HttpStatus.BAD_REQUEST);
-            }
+
 
             User user = userService.getUserById(userId);
             Map<String, String> data = new LinkedHashMap<>();
@@ -401,9 +357,9 @@ public class AdminController {
             data.put("status", user.getStatus().toString());
             data.put("create_date", user.getCreateDate().toString());
             data.put("update_date", user.getUpdateDate().toString());
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).data(data).message(ResponseObject.LOAD_SUCCESS).build(), HttpStatus.OK);
         } catch (Exception exception) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(exception.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -413,10 +369,7 @@ public class AdminController {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR")
-                        .message("Account not active!").build(), HttpStatus.BAD_REQUEST);
-            }
+
             User user = userService.editUser(userId, editUserRequest);
             Map<String, String> data = new LinkedHashMap<>();
             data.put("id", user.getId().toString());
@@ -427,10 +380,10 @@ public class AdminController {
             data.put("status", user.getStatus().toString());
             data.put("create_date", user.getCreateDate().toString());
             data.put("update_date", user.getUpdateDate().toString());
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").message("Edit user successfully!").data(data).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.UPDATED_SUCCESS).data(data).build(), HttpStatus.OK);
         }
         catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @PutMapping ("/application/{applicationID}")
@@ -438,15 +391,12 @@ public class AdminController {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
+
             try {
                 ApplicationStatus.valueOf(applicationResultRequest.getStatus());
             } catch (IllegalArgumentException e) {
                 return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Invalid status").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+                        .message(ResponseObject.INVALID_STATUS).status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
             }
             ApplicationStatus status1 = ApplicationStatus.valueOf(applicationResultRequest.getStatus());
             String message = applicationService.adminUpdate(id, status1);
@@ -456,9 +406,9 @@ public class AdminController {
             data.put("positionTitle", positionService.getSelectedPosition(application.getPositionID()).getTitle());
             data.put("status", application.getStatus());
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message(message).status("SUCCESS").data(data).build(), HttpStatus.OK);
+                    .message(message).status(ResponseObject.SUCCESS_STATUS).data(data).build(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(), HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build(), HttpStatus.NOT_IMPLEMENTED);
         }
     }
     @GetMapping("/interviewsession")
@@ -468,9 +418,6 @@ public class AdminController {
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             Integer userId = userInfo.getUserId();
 
-            if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
             List<InterviewSession> interviewSessions = interviewSessionRepos.findAll();
             List<Map<String, Object>> listIntervewsession = new ArrayList<>();
 
@@ -486,10 +433,10 @@ public class AdminController {
                 list.put("notes", interview.getNotes());
                 listIntervewsession.add(list);
             }
-            return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").message("Applications retrieved successfully.").data(interviewSessions).build());
+            return ResponseEntity.ok(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(interviewSessions).build());
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message(e.getMessage()).build());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build());
         }
     }
 }

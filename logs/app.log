@@ -1,0 +1,208 @@
+2023-11-15 16:32:28,006 INFO c.e.e.ESmartRecruitApplication [main] Starting ESmartRecruitApplication using Java 17.0.9 with PID 15268 (C:\Users\huynh\OneDrive\Máy tính\eSmartRecruit\target\classes started by huynh in C:\Users\huynh\OneDrive\Máy tính\eSmartRecruit)
+2023-11-15 16:32:28,008 DEBUG c.e.e.ESmartRecruitApplication [main] Running with Spring Boot v3.1.4, Spring v6.0.12
+2023-11-15 16:32:28,010 INFO c.e.e.ESmartRecruitApplication [main] No active profile set, falling back to 1 default profile: "default"
+2023-11-15 16:32:29,938 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2023-11-15 16:32:29,940 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-11-15 16:32:30,002 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 16 ms. Found 0 Redis repository interfaces.
+2023-11-15 16:32:30,519 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2023-11-15 16:32:30,521 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-11-15 16:32:30,763 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 235 ms. Found 8 JPA repository interfaces.
+2023-11-15 16:32:30,775 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Multiple Spring Data modules found, entering strict repository configuration mode
+2023-11-15 16:32:30,775 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-11-15 16:32:30,786 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.example.eSmartRecruit.repositories.ApplicationRepos; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-11-15 16:32:30,786 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.example.eSmartRecruit.repositories.BlacklistRepos; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-11-15 16:32:30,786 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.example.eSmartRecruit.repositories.CommunicationRepos; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-11-15 16:32:30,787 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.example.eSmartRecruit.repositories.InterviewSessionRepos; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-11-15 16:32:30,787 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.example.eSmartRecruit.repositories.PositionRepos; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-11-15 16:32:30,788 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.example.eSmartRecruit.repositories.ReportRepos; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-11-15 16:32:30,788 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.example.eSmartRecruit.repositories.SkillRepos; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-11-15 16:32:30,789 INFO o.s.d.r.c.RepositoryConfigurationExtensionSupport [main] Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.example.eSmartRecruit.repositories.UserRepos; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-11-15 16:32:30,789 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+2023-11-15 16:32:32,415 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
+2023-11-15 16:32:32,432 INFO o.a.c.c.StandardService [main] Starting service [Tomcat]
+2023-11-15 16:32:32,433 INFO o.a.c.c.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/10.1.13]
+2023-11-15 16:32:32,647 INFO o.a.c.c.C.[.[.[/] [main] Initializing Spring embedded WebApplicationContext
+2023-11-15 16:32:32,648 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 4541 ms
+2023-11-15 16:32:33,079 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-15 16:32:33,222 INFO o.h.Version [main] HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-11-15 16:32:33,227 INFO o.h.c.Environment [main] HHH000406: Using bytecode reflection optimizer
+2023-11-15 16:32:33,590 INFO o.h.b.i.BytecodeProviderInitiator [main] HHH000021: Bytecode provider name : bytebuddy
+2023-11-15 16:32:34,019 INFO o.s.o.j.p.SpringPersistenceUnitInfo [main] No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-11-15 16:32:34,065 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2023-11-15 16:32:34,962 INFO c.z.h.p.HikariPool [main] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@355493bf
+2023-11-15 16:32:34,966 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2023-11-15 16:32:35,068 WARN o.h.o.deprecation [main] HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2023-11-15 16:32:35,648 INFO o.h.b.i.BytecodeProviderInitiator [main] HHH000021: Bytecode provider name : bytebuddy
+2023-11-15 16:32:37,044 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-11-15 16:32:38,102 DEBUG c.e.e.c.JwtAuthenticationFilter [main] Filter 'jwtAuthenticationFilter' configured for use
+2023-11-15 16:32:39,028 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-11-15 16:32:39,840 INFO o.s.s.w.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@5e8359da, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@36b6802f, org.springframework.security.web.context.SecurityContextHolderFilter@5a63de07, org.springframework.security.web.header.HeaderWriterFilter@5317a7ef, org.springframework.security.web.authentication.logout.LogoutFilter@1676e501, com.example.eSmartRecruit.config.JwtAuthenticationFilter@12115c28, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1aa7d66e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7388d94d, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7d2d5625, org.springframework.security.web.session.SessionManagementFilter@a55b4f9, org.springframework.security.web.access.ExceptionTranslationFilter@30dabb23, org.springframework.security.web.access.intercept.AuthorizationFilter@5852605c]
+2023-11-15 16:32:40,776 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
+2023-11-15 16:32:40,792 INFO c.e.e.ESmartRecruitApplication [main] Started ESmartRecruitApplication in 13.592 seconds (process running for 15.102)
+2023-11-15 16:32:45,608 INFO o.a.c.c.C.[.[.[/] [http-nio-8080-exec-2] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-11-15 16:32:45,608 INFO o.s.w.s.DispatcherServlet [http-nio-8080-exec-2] Initializing Servlet 'dispatcherServlet'
+2023-11-15 16:32:45,611 INFO o.s.w.s.DispatcherServlet [http-nio-8080-exec-2] Completed initialization in 2 ms
+2023-11-15 16:32:45,693 DEBUG c.e.e.a.LogAspect [http-nio-8080-exec-2] Enter: com.example.eSmartRecruit.controllers.candidate.CandidateController.home() with argument[s] = []
+2023-11-15 16:32:45,694 DEBUG c.e.e.a.LogAspect [http-nio-8080-exec-2] Enter: com.example.eSmartRecruit.services.impl.PositionService.getAllPosition() with argument[s] = []
+2023-11-15 16:32:45,991 DEBUG c.e.e.a.LogAspect [http-nio-8080-exec-2] Exit: com.example.eSmartRecruit.services.impl.PositionService.getAllPosition() with result = [Position(id=1, title=bv, jobDescription=bv, jobRequirements=tot nghiep, salary=2000000.00, postDate=2023-10-29, expireDate=2023-11-30, updateDate=2023-10-31, location=somewhere)]
+2023-11-15 16:32:46,005 DEBUG c.e.e.a.LogAspect [http-nio-8080-exec-2] Exit: com.example.eSmartRecruit.controllers.candidate.CandidateController.home() with result = <200 OK OK,ResponseObject(status=SUCCESS, message=List Position Successfully, data=[Position(id=1, title=bv, jobDescription=bv, jobRequirements=tot nghiep, salary=2000000.00, postDate=2023-10-29, expireDate=2023-11-30, updateDate=2023-10-31, location=somewhere)]),[]>
+2023-11-15 16:32:54,050 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-11-15 16:32:54,082 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2023-11-15 16:32:54,098 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2023-11-15 16:52:07,632 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDQxOTI3LCJleHAiOjE3MDAwNDU1Mjd9.c3BaVYK3jbl5kxT4TYSeu_nN5tGAzD1kjEJANxcsn7k
+2023-11-15 16:52:07,644 INFO c.e.e.c.a.AdminController [main] Returning user list. Total users: 2
+2023-11-15 16:52:21,402 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDQxOTQwLCJleHAiOjE3MDAwNDU1NDB9.qo9PonPBKD-bMe64kCFOUNn-niG9ZG5l9MbSerQb-VM
+2023-11-15 16:52:21,420 INFO c.e.e.c.a.AdminController [main] Returning user list. Total users: 0
+2023-11-15 16:52:48,814 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDQxOTY4LCJleHAiOjE3MDAwNDU1Njh9.9fjc0WIO1KJgWERyPB7kaHKx9Bhe_fYvj1AWaH4DWr4
+2023-11-15 16:52:48,828 INFO c.e.e.c.a.AdminController [main] Returning user list. Total users: 0
+2023-11-15 16:54:08,345 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDQyMDQ3LCJleHAiOjE3MDAwNDU2NDd9.Fh7ZVTphqb4ZiBStoeyOL06933Ai4eMXGrFmHeJc-2M
+2023-11-15 16:54:08,359 ERROR c.e.e.c.a.AdminController [main] Internal Server Error: Error getting users
+com.example.eSmartRecruit.exception.UserException: Error getting users
+	at com.example.eSmartRecruit.services.impl.UserService.getAllUser(UserService.java:29)
+	at com.example.eSmartRecruit.controllers.admin.AdminController.getUsers(AdminController.java:233)
+	at com.example.eSmartRecruit.controllers.admin.AdminControllerTest.getUsers_shouldReturnInternalServerErrorResponseWhenCatchUserException(AdminControllerTest.java:388)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:727)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:217)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
+	at com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:57)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater$1.execute(IdeaTestRunner.java:38)
+	at com.intellij.rt.execution.junit.TestsRepeater.repeat(TestsRepeater.java:11)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
+	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:232)
+	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
+2023-11-15 16:54:56,233 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDQyMDk1LCJleHAiOjE3MDAwNDU2OTV9.9s2ZaNZE17cUC1W2Es10XvcaLCi_F8b4rrUXUQ5GMR0
+2023-11-15 16:58:02,235 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDQyMjgxLCJleHAiOjE3MDAwNDU4ODF9.umnbg8ig2oNIfFVQxrIi0oZzVoY7aWmwwPcIR-6RfpY
+2023-11-15 16:59:06,212 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDQyMzQ0LCJleHAiOjE3MDAwNDU5NDR9.VvPYGYlPFLDiENq7QQgTtLV9KV7qnRggFqmOivvx95Q
+2023-11-15 17:57:18,475 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDQ1ODM3LCJleHAiOjE3MDAwNDk0Mzd9.KFsWrrDfomg2Iv0PeRoYL9y9Jqwb523mh4vYbHFJ3qw
+2023-11-15 17:57:18,573 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDQ1ODM4LCJleHAiOjE3MDAwNDk0Mzh9.5yBPvavQP0Uz9mCAUs1yJ5lydKBO-QJiiX7EazRC-Kk
+2023-11-15 17:57:18,577 ERROR c.e.e.c.a.AdminController [main] Internal Server Error: Error getting users
+com.example.eSmartRecruit.exception.UserException: Error getting users
+	at com.example.eSmartRecruit.services.impl.UserService.getAllUser(UserService.java:29)
+	at com.example.eSmartRecruit.controllers.admin.AdminController.getUsers(AdminController.java:233)
+	at com.example.eSmartRecruit.controllers.admin.AdminControllerTest.getUsers_shouldReturnInternalServerErrorResponseWhenCatchUserException(AdminControllerTest.java:388)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:727)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:217)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
+	at com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:57)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater$1.execute(IdeaTestRunner.java:38)
+	at com.intellij.rt.execution.junit.TestsRepeater.repeat(TestsRepeater.java:11)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
+	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:232)
+	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
+2023-11-15 17:57:18,715 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDQ1ODM4LCJleHAiOjE3MDAwNDk0Mzh9.5yBPvavQP0Uz9mCAUs1yJ5lydKBO-QJiiX7EazRC-Kk
+2023-11-15 17:57:18,739 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDQ1ODM4LCJleHAiOjE3MDAwNDk0Mzh9.5yBPvavQP0Uz9mCAUs1yJ5lydKBO-QJiiX7EazRC-Kk
+2023-11-15 17:57:18,739 INFO c.e.e.c.a.AdminController [main] Returning user list. Total users: 2

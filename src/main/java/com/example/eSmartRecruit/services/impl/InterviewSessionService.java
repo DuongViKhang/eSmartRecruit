@@ -1,5 +1,6 @@
 package com.example.eSmartRecruit.services.impl;
 
+import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.InterviewSessionRequest;
 import com.example.eSmartRecruit.exception.InterviewSessionException;
 import com.example.eSmartRecruit.exception.PositionException;
@@ -31,7 +32,7 @@ public class InterviewSessionService implements IInterviewSessionService {
 //        } catch (Exception e) {
 //            throw new RuntimeException(e);
 //        }
-        return  interviewSessionRepos.findById(ID).orElseThrow(()->new InterviewSessionException("The required interview session not found"));
+        return  interviewSessionRepos.findById(ID).orElseThrow(()->new InterviewSessionException(ResponseObject.NO_INTERVIEWSESSION));
     }
 
     public boolean isAlready(Integer interviewersessionID) throws InterviewSessionException {

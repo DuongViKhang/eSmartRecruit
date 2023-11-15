@@ -40,14 +40,14 @@ public class UserService {
 //        return userOptional.orElse(null);
 //    }
     public  String updateUserpassword(String username,String newpassword) throws UserException {
-        User exUser = userRepository.findByUsername(username).orElseThrow(()->new UserException("User not found!"));
+        User exUser = userRepository.findByUsername(username).orElseThrow(()->new UserException(ResponseObject.USER_NOT_FOUND));
         newpassword = passwordEncoder.encode(newpassword);
         exUser.setPassword(newpassword);
         try{
             userRepository.save(exUser);
-            return "Successfully saved";
+            return ResponseObject.UPDATED_SUCCESS;
         }catch(Exception e){
-            return "Could not save";
+            return ResponseObject.UPDATED_FAIL;
         }
     }
     public String checkDuplicateUsername(User user){
@@ -136,14 +136,14 @@ public class UserService {
         try {
             userRepository.save(user);
             return ResponseObject.builder()
-                    .status("SUCCESS")
-                    .message("Create user successfully!").build();
+                    .status(ResponseObject.SUCCESS_STATUS)
+                    .message(ResponseObject.USER_CREATED).build();
         }catch (Exception e){
-            return ResponseObject.builder().status("ERROR").message(e.getMessage()).build();
+            return ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build();
         }
     }
     public User findById(int id) throws UserException{
-        return userRepository.findById(id).orElseThrow(()->new UserException("User not found!"));
+        return userRepository.findById(id).orElseThrow(()->new UserException(ResponseObject.USER_NOT_FOUND));
     }
     public User editUser(int userId, EditUserRequest editUserRequest) throws UserException {
         User user = findById(userId);

@@ -27,9 +27,9 @@ public class GuestController {
     @PutMapping("/resetpassword")
     public ResponseEntity<ResponseObject> forgotPassword(@RequestBody @Valid ChangePasswordRequest user) throws UserException {
         try {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message(userService.updateUserpassword(user.getUsername(), user.getNewPassword())).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(userService.updateUserpassword(user.getUsername(), user.getNewPassword())).build(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Error").message(e.getMessage()).build(), HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build(), HttpStatus.NOT_IMPLEMENTED);
         }
 
     }
@@ -39,9 +39,9 @@ public class GuestController {
     public ResponseEntity<ResponseObject> searchJob(@PathVariable("keyword") String keyword)
     {
         try{
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Search succesfully!").data(positionService.searchPositions(keyword)).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.SEARCH_SUCCESS).data(positionService.searchPositions(keyword)).build(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Error").message(e.getMessage()).build(), HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build(), HttpStatus.NOT_IMPLEMENTED);
         }
 
     }
