@@ -61,7 +61,7 @@ public class AuthenticationController {
         return ResponseEntity.ok("{\"status\": \"SUCCESS\", \"message\": \"Sign out successfully!\"}");
     }
     @GetMapping("/hello")
-    public List<User> sayHello(){
+    public List<User> sayHello() throws UserException {
         System.out.println("get hello");
         return userService.getAllUser();
     }

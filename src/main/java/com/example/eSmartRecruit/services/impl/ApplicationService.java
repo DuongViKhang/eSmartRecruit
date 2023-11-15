@@ -3,11 +3,13 @@ package com.example.eSmartRecruit.services.impl;
 import com.example.eSmartRecruit.exception.ApplicationException;
 import com.example.eSmartRecruit.models.Application;
 
+import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.services.IApplicationService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +22,14 @@ import java.time.LocalDate;
 @Service
 @AllArgsConstructor
 public class ApplicationService implements IApplicationService {
-    ApplicationRepos applicationRepository;
+    @Autowired
+    private final ApplicationRepos applicationRepository;
     public String apply(Application application){
         try{
             if(isApplied(application.getCandidateID(),application.getPositionID())){
                 throw new ApplicationException("You have already applied to this position!");
             }
+
             applicationRepository.save(application);
             return "Successfully applied";
         }catch (Exception e){
@@ -44,8 +48,8 @@ public class ApplicationService implements IApplicationService {
     public List<Application> getApplicationsByCandidateId(Integer candidateID) {
         return applicationRepository.findByCandidateID(candidateID);
     }
-    public Application getApplicationByIdAndCandidateId(Integer ID, Integer candidateID) throws ApplicationException {
-        return applicationRepository.findByIdAndCandidateID(ID, candidateID).orElseThrow(()->new ApplicationException("Cant find the required application!"));
+    public Application getApplicationById(Integer ID, Integer candidateID) throws ApplicationException {
+        return applicationRepository.findById(ID).orElseThrow(()->new ApplicationException("Cant find the required application!"));
     }
 
 
@@ -55,6 +59,7 @@ public class ApplicationService implements IApplicationService {
             if(!candidateId.equals(exApplication.getCandidateID())){
                 throw new ApplicationException("This is not your application!");
             }
+
             exApplication.setCv(applications.getCv());
             exApplication.setUpdateDate(Date.valueOf(LocalDate.now()));
             applicationRepository.save(exApplication);
@@ -63,6 +68,24 @@ public class ApplicationService implements IApplicationService {
             return e.toString();
         }
 
+    }
+
+    public String adminUpdate(Integer id, ApplicationStatus status){
+        try{
+            Application exApplication = applicationRepository.findById(id).orElseThrow(()->new ApplicationException("Application not found!"));
+            exApplication.setStatus(status);
+            exApplication.setUpdateDate(Date.valueOf(LocalDate.now()));
+            applicationRepository.save(exApplication);
+            if(status == ApplicationStatus.Approved){
+                return "Approve application successfully!";
+            }
+            else if (status == ApplicationStatus.Declined){
+                return "Decline application successfully!";
+            }
+        }catch (Exception e){
+            return e.toString();
+        }
+        return null;
     }
 
     public Boolean isPresent(Integer jobid){
@@ -93,4 +116,10 @@ public class ApplicationService implements IApplicationService {
         }
     }
 
+    public Long getcountApplication() {
+        return applicationRepository.count();
+    }
+    public Application findById(int id) throws ApplicationException{
+        return applicationRepository.findById(id).orElseThrow(()->new ApplicationContextException("Application not found!"));
+    }
 }
