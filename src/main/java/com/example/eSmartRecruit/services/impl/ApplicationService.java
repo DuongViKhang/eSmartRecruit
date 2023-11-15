@@ -3,6 +3,7 @@ package com.example.eSmartRecruit.services.impl;
 import com.example.eSmartRecruit.exception.ApplicationException;
 import com.example.eSmartRecruit.models.Application;
 
+import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.services.IApplicationService;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -47,7 +48,7 @@ public class ApplicationService implements IApplicationService {
     public List<Application> getApplicationsByCandidateId(Integer candidateID) {
         return applicationRepository.findByCandidateID(candidateID);
     }
-    public Application getApplicationById(Integer ID, Integer candidateID) throws ApplicationException {
+    public Application getApplicationById(Integer ID) throws ApplicationException {
         return applicationRepository.findById(ID).orElseThrow(()->new ApplicationException("Cant find the required application!"));
     }
 
@@ -67,6 +68,24 @@ public class ApplicationService implements IApplicationService {
             return e.toString();
         }
 
+    }
+
+    public String adminUpdate(Integer id, ApplicationStatus status){
+        try{
+            Application exApplication = applicationRepository.findById(id).orElseThrow(()->new ApplicationException("Application not found!"));
+            exApplication.setStatus(status);
+            exApplication.setUpdateDate(Date.valueOf(LocalDate.now()));
+            applicationRepository.save(exApplication);
+            if(status == ApplicationStatus.Approved){
+                return "Approve application successfully!";
+            }
+            else if (status == ApplicationStatus.Declined){
+                return "Decline application successfully!";
+            }
+        }catch (Exception e){
+            return e.toString();
+        }
+        return null;
     }
 
     public Boolean isPresent(Integer jobid){
@@ -97,4 +116,10 @@ public class ApplicationService implements IApplicationService {
         }
     }
 
+    public Long getcountApplication() {
+        return applicationRepository.count();
+    }
+    public Application findById(int id) throws ApplicationException{
+        return applicationRepository.findById(id).orElseThrow(()->new ApplicationContextException("Application not found!"));
+    }
 }

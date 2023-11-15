@@ -1,5 +1,6 @@
 package com.example.eSmartRecruit.services.impl;
 
+import com.example.eSmartRecruit.controllers.request_reponse.request.InterviewSessionRequest;
 import com.example.eSmartRecruit.exception.InterviewSessionException;
 import com.example.eSmartRecruit.exception.PositionException;
 import com.example.eSmartRecruit.models.InterviewSession;
@@ -18,7 +19,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class InterviewSessionService implements IInterviewSessionService {
     private final InterviewSessionRepos interviewSessionRepos;
-    public List<InterviewSession> findByInterviewerID(Integer userId) {
+    public List<InterviewSession> findByInterviewerID(Integer userId) throws InterviewSessionException {
         return  interviewSessionRepos.findByInterviewerID(userId);
     }
     public  InterviewSession findByID(Integer ID) throws InterviewSessionException {
@@ -39,5 +40,22 @@ public class InterviewSessionService implements IInterviewSessionService {
             return false;
         }
         return true;
+    }
+
+    public Long getCountInterview() {
+        return interviewSessionRepos.count();
+    }
+    public void save(InterviewSession interviewSession){
+        interviewSessionRepos.save(interviewSession);
+    }
+    public InterviewSession scheduleInterview(int id, InterviewSessionRequest interviewSessionRequest) throws InterviewSessionException {
+        InterviewSession interviewSession = findByID(id);
+        interviewSession.setInterviewerID(interviewSessionRequest.getInterviewerId());
+        interviewSession.setDate(interviewSessionRequest.getDate());
+        interviewSession.setLocation(interviewSessionRequest.getLocation());
+        interviewSession.setStatus(SessionStatus.Yet);
+        interviewSession.setNotes(interviewSessionRequest.getNotes());
+        save(interviewSession);
+        return interviewSession;
     }
 }

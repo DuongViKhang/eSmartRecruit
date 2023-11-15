@@ -48,6 +48,16 @@
 			<groupId>jakarta.persistence</groupId>
 			<artifactId>jakarta.persistence-api</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version> <!-- Sử dụng phiên bản phù hợp -->
+			<scope>provided</scope>
+		</dependency>
 
 		<!--session-->
 <!--		<dependency>-->
@@ -139,6 +149,16 @@
             <scope>test</scope>
         </dependency>
 
+<!--		redis-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+<!--			<version>3.3.0</version>-->
+		</dependency>
 
     </dependencies>
 

@@ -9,11 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReportRequest {
-    @NotBlank(message = "This must be filled!")
-    @Pattern(message = "Please filled right format!",regexp = "^[a-zA-Z0-9]+$")
-    private String ReportName;
+public class ApplicationResultRequest {
     @NotBlank(message = "This must be filled!")
     @Pattern(message = "Please filled right format!",regexp = "^[a-zA-Z0-9 ]+$")
-    private String ReportData; 
+    private String status;
 }

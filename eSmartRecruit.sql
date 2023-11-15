@@ -1,6 +1,24 @@
 CREATE DATABASE IF NOT EXISTS eSmartRecruit;
 USE eSmartRecruit;
 
+-- Tạo bảng Roles
+Create table Roles(
+	ID INT AUTO_INCREMENT PRIMARY KEY,
+    RoleName VARCHAR(20) UNIQUE NOT NULL);
+    
+INSERT INTO `esmartrecruit`.`roles`
+(`RoleName`)
+VALUES
+("Candidate");
+INSERT INTO `esmartrecruit`.`roles`
+(`RoleName`)
+VALUES
+("Admin");
+INSERT INTO `esmartrecruit`.`roles`
+(`RoleName`)
+VALUES
+("Interviewer");
+
 -- Tạo bảng Users
 CREATE TABLE Users (
     ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -8,10 +26,11 @@ CREATE TABLE Users (
     Password VARCHAR(255),
     Email VARCHAR(255) UNIQUE,
     PhoneNumber VARCHAR(20) UNIQUE,
-    RoleName ENUM('Candidate', 'Admin', 'Interviewer') DEFAULT('Candidate'),
+    RoleName INT NOT NULL,
     Status ENUM('Active', 'Inactive') DEFAULT('Active'),
     CreateDate Date,
-    UpdateDate Date
+    UpdateDate Date,
+    FOREIGN KEY (RoleName) REFERENCE Roles(ID)
 );
 
 -- Tạo bảng Vị trí tuyển dụng
