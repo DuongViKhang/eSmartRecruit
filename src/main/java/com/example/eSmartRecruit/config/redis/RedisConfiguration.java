@@ -18,8 +18,10 @@ public class RedisConfiguration {
     @Bean
     public JedisConnectionFactory connectionFactory(){
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-        configuration.setHostName("localhost");
-        configuration.setPort(6379);
+        configuration.setHostName("redis-13287.c302.asia-northeast1-1.gce.cloud.redislabs.com");
+        configuration.setPort(13287);
+        configuration.setUsername("default");
+        configuration.setPassword("e8pvJdOXTzd0gWHjiV326oofOzwPspjn");
         return new JedisConnectionFactory(configuration);
     }
 
