@@ -123,7 +123,7 @@ class AdminControllerTest {
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
         assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Account not active!", responseObject.getMessage());
+        assertEquals("Account is not active!", responseObject.getMessage());
     }
 
     @Test
@@ -241,7 +241,7 @@ class AdminControllerTest {
         // Act
         ResponseEntity<ResponseObject> responseEntity = adminController.getDetailPositionAdmin(1, mockRequest);
         // Assert
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
         assertEquals("ERROR", responseObject.getStatus());
@@ -263,9 +263,8 @@ class AdminControllerTest {
         ResponseEntity<ResponseObject> responseEntity = adminController.getDetailPositionAdmin(1, mockRequest);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
-        assertNotNull(responseObject);
         assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Account not active!", responseObject.getMessage());
+        assertEquals("Account is not active!", responseObject.getMessage());
 
     }
 
