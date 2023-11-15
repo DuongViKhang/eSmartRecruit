@@ -335,12 +335,6 @@ public class AdminController {
     @GetMapping("/candidate/{candidateId}")
     ResponseEntity<ResponseObject> getCandidateInformation(@PathVariable("candidateId") Integer candidateId, HttpServletRequest request) throws JSONException, UserException {
         try {
-            String authHeader = request.getHeader("Authorization");
-            //return new ResponseEntity<String>("hello",HttpStatus.OK);
-            ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return null;
-            }
 
             User user = userService.getUserById(candidateId);
             if (!user.getRoleName().equals(Role.Candidate)) {
@@ -361,12 +355,6 @@ public class AdminController {
     @PutMapping ("/application/{applicationID}")
     public ResponseEntity<ResponseObject> updateApplicationStatus(@PathVariable("applicationID") Integer id, HttpServletRequest request, @RequestBody ApplicationResultRequest applicationResultRequest) {
         try {
-            String authHeader = request.getHeader("Authorization");
-            ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
             try {
                 ApplicationStatus.valueOf(applicationResultRequest.getStatus());
             } catch (IllegalArgumentException e) {

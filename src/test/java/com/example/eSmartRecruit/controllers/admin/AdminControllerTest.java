@@ -3,19 +3,14 @@ import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.config.JwtService;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.controllers.request_reponse.request.ApplicationResultRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.request.InterviewSessionRequest;
 import com.example.eSmartRecruit.exception.ApplicationException;
 import com.example.eSmartRecruit.exception.InterviewSessionException;
 import com.example.eSmartRecruit.exception.PositionException;
 import com.example.eSmartRecruit.exception.UserException;
-import com.example.eSmartRecruit.models.InterviewSession;
-import com.example.eSmartRecruit.models.Position;
-import com.example.eSmartRecruit.models.Report;
-import com.example.eSmartRecruit.models.User;
-import com.example.eSmartRecruit.models.enumModel.Role;
-import com.example.eSmartRecruit.models.enumModel.SessionResult;
-import com.example.eSmartRecruit.models.enumModel.SessionStatus;
-import com.example.eSmartRecruit.models.enumModel.UserStatus;
+import com.example.eSmartRecruit.models.*;
+import com.example.eSmartRecruit.models.enumModel.*;
 import com.example.eSmartRecruit.services.IStorageService;
 import com.example.eSmartRecruit.services.impl.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -501,7 +497,7 @@ class AdminControllerTest {
 
 
     @Test
-    void scheduleReport_shouldReturnSuccess() throws InterviewSessionException {
+    void scheduleInterview_shouldReturnSuccess() throws InterviewSessionException {
 
         Integer sessionId = 1;
 
@@ -569,6 +565,141 @@ class AdminControllerTest {
         assertEquals("Report", response.getBody().getMessage());
         assertEquals(data,response.getBody().getData());
     }
+
+    // start testing getCandidateInformation
+    @Test
+    void getCandidateInformation_shouldReturnSuccess() throws ApplicationException, UserException, JSONException {
+        User mockUser = new User();
+        mockUser.setId(2);
+        mockUser.setUsername("bcd");
+        mockUser.setPassword("$2a$10$SgZX47bsE057V9z4n1NeG.y0hJkv1scG07pmPjPmBovIAnw4RhB7y");
+        mockUser.setEmail("b123@gmail.com");
+        mockUser.setPhoneNumber("0988888888");
+        mockUser.setRoleName(Role.Candidate);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-10-23"));
+        mockUser.setUpdateDate(Date.valueOf("2023-10-23"));
+        lenient().when(userService.getUserById(2)).thenReturn(mockUser);
+
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("username", mockUser.getUsername());
+        data.put("email", mockUser.getEmail());
+        data.put("phonenumber", mockUser.getPhoneNumber());
+        data.put("roleName", mockUser.getRoleName().name());
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+
+        ResponseEntity<ResponseObject> response = adminController.getCandidateInformation(2, mockRequest);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Success", response.getBody().getStatus());
+        assertEquals(data,response.getBody().getData());
+    }
+
+    @Test
+    void getCandidateInformation_shouldReturnError() throws ApplicationException, UserException, JSONException {
+        User mockUser = new User();
+        mockUser.setId(2);
+        mockUser.setUsername("bcd");
+        mockUser.setPassword("$2a$10$SgZX47bsE057V9z4n1NeG.y0hJkv1scG07pmPjPmBovIAnw4RhB7y");
+        mockUser.setEmail("b123@gmail.com");
+        mockUser.setPhoneNumber("0988888888");
+        mockUser.setRoleName(Role.Admin);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-10-23"));
+        mockUser.setUpdateDate(Date.valueOf("2023-10-23"));
+        lenient().when(userService.getUserById(2)).thenReturn(mockUser);
+        //lenient().when(mockUser.getRoleName().equals(Role.Candidate)).thenReturn(false);
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("username", mockUser.getUsername());
+        data.put("email", mockUser.getEmail());
+        data.put("phonenumber", mockUser.getPhoneNumber());
+        data.put("roleName", mockUser.getRoleName().name());
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+
+        ResponseEntity<ResponseObject> response = adminController.getCandidateInformation(2, mockRequest);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Success", response.getBody().getStatus());
+        assertEquals("Not a candidate",response.getBody().getMessage());
+    }
+    // end testing getCandidateInformation
+
+
+    //start testing updateApplicationStatus
+    @Test
+    void updateApplicationStatus_shouldReturnSuccess() throws UserException, PositionException {
+        User mockUser = new User();
+
+        ApplicationResultRequest resultRequest = new ApplicationResultRequest();
+        resultRequest.setStatus(ApplicationStatus.Pending.name());
+
+        Integer applicationId = 1;
+        Application application = new Application();
+        application.setId(applicationId);
+        application.setCandidateID(1);
+        application.setPositionID(1);
+        application.setCv("cv");
+        application.setCreateDate(Date.valueOf("2023-11-11"));
+        application.setUpdateDate(Date.valueOf("2023-11-11"));
+
+        lenient().when(applicationService.findById(1)).thenReturn(application);
+        Position mockPosition = new Position();
+        mockPosition.setTitle("Bao ve");
+        lenient().when(positionService.getSelectedPosition(application.getPositionID())).thenReturn(mockPosition);
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("applicationID", application.getId());
+        data.put("positionTitle", positionService.getSelectedPosition(application.getPositionID()).getTitle());
+        data.put("status", application.getStatus());
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+
+        ResponseEntity<ResponseObject> response = adminController.updateApplicationStatus(1, mockRequest,resultRequest);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("SUCCESS", response.getBody().getStatus());
+        assertEquals(data,response.getBody().getData());
+    }
+
+    @Test
+    void updateApplicationStatus_shouldReturnErrorInvalidStatus() throws UserException, PositionException {
+        User mockUser = new User();
+
+        ApplicationResultRequest resultRequest = new ApplicationResultRequest();
+        resultRequest.setStatus("Hello");
+
+        Integer applicationId = 1;
+        Application application = new Application();
+        application.setId(applicationId);
+        application.setCandidateID(1);
+        application.setPositionID(1);
+        application.setCv("cv");
+        application.setCreateDate(Date.valueOf("2023-11-11"));
+        application.setUpdateDate(Date.valueOf("2023-11-11"));
+
+        lenient().when(applicationService.findById(1)).thenReturn(application);
+        Position mockPosition = new Position();
+        mockPosition.setTitle("Bao ve");
+        lenient().when(positionService.getSelectedPosition(application.getPositionID())).thenReturn(mockPosition);
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("applicationID", application.getId());
+        data.put("positionTitle", positionService.getSelectedPosition(application.getPositionID()).getTitle());
+        data.put("status", application.getStatus());
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+
+        ResponseEntity<ResponseObject> response = adminController.updateApplicationStatus(1, mockRequest,resultRequest);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("ERROR", response.getBody().getStatus());
+        //assertEquals(data,response.getBody().getData());
+    }
+
+
+
+    //end testing updateApplicationStatus
+
 }
 
 
