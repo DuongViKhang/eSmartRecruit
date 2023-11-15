@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
+import static com.example.eSmartRecruit.controllers.request_reponse.ResponseObject.*;
 
 @RestController
 @RequestMapping("eSmartRecruit/candidate")
@@ -39,68 +40,71 @@ public class CandidateController {
     private PositionService positionService;
     private ApplicationService applicationService;
     private ApplicationRepos applicationRepository;
-
     private UserService userService;
     private IStorageService storageService;
 
 
     @GetMapping("/home")
-    public ResponseEntity<ResponseObject> home()
-    {
-        try{
+    public ResponseEntity<ResponseObject> home() {
+        try {
             List<Position> data = positionService.getAllPosition();
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).message("List position successfully!").build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(SUCCESS_STATUS).data(data).message(LIST_SUCCESS).build(), HttpStatus.OK);
         } catch (Exception exception) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(),HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ERROR_STATUS).message(exception.getMessage()).build(), HttpStatus.NOT_IMPLEMENTED);
         }
     }
-    @GetMapping("/position/{positionID}")
-    ResponseEntity<ResponseObject> getDetailPosition(@PathVariable("positionID")Integer id){
-        try{
-            Position pos = positionService.getSelectedPosition(id);
-            if(pos == null){
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message("Position not found").build(),HttpStatus.OK);
-            }
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(pos).build(),HttpStatus.OK);
 
-        }catch (Exception exception){
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(),HttpStatus.OK);
+    @GetMapping("/position/{positionID}")
+    ResponseEntity<ResponseObject> getDetailPosition(@PathVariable("positionID") Integer id) {
+        try {
+            Position pos = positionService.getSelectedPosition(id);
+            if (pos == null) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ERROR_STATUS).message(NOT_FOUND).build(), HttpStatus.OK);
+            }
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(SUCCESS_STATUS).data(pos).build(), HttpStatus.OK);
+
+        } catch (Exception exception) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ERROR_STATUS).message(exception.getMessage()).build(), HttpStatus.OK);
         }
     }
+
 
     @PostMapping("/application/create/{positionID}")
-    ResponseEntity<ResponseObject> applyForPosition(@PathVariable("positionID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv){
+    ResponseEntity<ResponseObject> applyForPosition(@PathVariable("positionID") Integer id, HttpServletRequest request, @RequestParam("cv") MultipartFile cv) {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if(!userInfo.isEnabled()){
+            if (!userInfo.isEnabled()) {
                 return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
+                        .message(NOT_ACTIVE).status(ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
             }
 
             String generatedFileName = storageService.storeFile(cv);
             int candidateId = userInfo.getUserId();
-            if(!positionService.isPresent(id)){
+            if (!positionService.isPresent(id)) {
                 return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Position not open!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
+                        .message(NOT_OPEN).status(ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
             }
             Application application = new Application(candidateId, id, generatedFileName);
 
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message(applicationService.apply(application)).status("SUCCESS").build(),HttpStatus.OK);
+                    .message(applicationService.apply(application)).status(SUCCESS_STATUS).build(), HttpStatus.OK);
 
-        }catch (Exception e){
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
+        } catch (Exception e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status(ERROR_STATUS).build(), HttpStatus.NOT_IMPLEMENTED);
         }
     }
+
     @GetMapping("/application")
     public ResponseEntity<ResponseObject> getMyApplications(HttpServletRequest request) throws JSONException, PositionException, UserException {
-        {
+        try {
             String authHeader = request.getHeader("Authorization");
-            //return new ResponseEntity<String>("hello",HttpStatus.OK);
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             if (!userInfo.isEnabled()) {
-                return null;
+                return new ResponseEntity<>(ResponseObject.builder()
+                        .status(ResponseObject.ERROR_STATUS)
+                        .message(NOT_ACTIVE)
+                        .build(), HttpStatus.BAD_REQUEST);
             }
             Integer userId = userInfo.getUserId();
             User user = userService.getUserById(userId);
@@ -116,9 +120,18 @@ public class CandidateController {
                 applicationMap.put("applicationDate", app.getCreateDate().toString());
                 applicationList.add(applicationMap);
             }
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(applicationList).build(), HttpStatus.OK);
+            return new ResponseEntity<>(ResponseObject.builder()
+                    .status(ResponseObject.SUCCESS_STATUS)
+                    .data(applicationList)
+                    .build(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(ResponseObject.builder()
+                    .status(ResponseObject.ERROR_STATUS)
+                    .message(e.getMessage())
+                    .build(), HttpStatus.NOT_IMPLEMENTED);
         }
     }
+
 
     @GetMapping("/application/{applicationID}")
     public ResponseEntity<ResponseObject> getApplicationDetails(@PathVariable("applicationID") Integer id, HttpServletRequest request) {
@@ -143,22 +156,23 @@ public class CandidateController {
                 data.put("cv", app.getCv());
                 data.put("applicationDate", app.getCreateDate().toString());
 
-                return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").data(data).build());
+                return ResponseEntity.ok(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).data(data).build());
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.builder().status("ERROR").build());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).build());
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().message(e.getMessage()).status("ERROR").build());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build());
         }
     }
+
     //get user info
     @GetMapping("/profile")
-    ResponseEntity<ResponseObject> getDetailUser(HttpServletRequest request) {
+    public ResponseEntity<ResponseObject> getDetailUser(HttpServletRequest request) {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             if(!userInfo.isEnabled()){
-                return null;
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
             Integer userId = userInfo.getUserId();
             User user = userService.getUserById(userId);
@@ -168,79 +182,107 @@ public class CandidateController {
             data.put("email", user.getEmail());
             data.put("phonenumber", user.getPhoneNumber());
 
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Loading data success!").data(data).build(),HttpStatus.OK);
+            return ResponseEntity.ok(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(LOAD_SUCCESS).data(data).build());
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(e.getMessage()).build(),HttpStatus.NOT_IMPLEMENTED);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build());
         }
     }
+
     //update user
     @PutMapping("/profile")
-    ResponseEntity<ResponseObject> updateUser(HttpServletRequest request,
-                                              @RequestBody @Valid UserRequest user0
-                                              ) throws JSONException, UserException {
+    public ResponseEntity<ResponseObject> updateUser(HttpServletRequest request,
+                                                     @RequestBody @Valid UserRequest userRequest) {
         try {
             String authHeader = request.getHeader("Authorization");
-            //return new ResponseEntity<String>("hello",HttpStatus.OK);
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
             if (!userInfo.isEnabled()) {
-                return null;
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
+
             Integer userId = userInfo.getUserId();
-            User user = userService.updateUser(user0, userId);
-            Map<String, Object> data = new LinkedHashMap<>();
-            data.put("email", user.getEmail());
-            data.put("phoneNumber", user.getPhoneNumber());
+            User user = userService.updateUser(userRequest, userId);
 
-        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Update information successfully!").data(data).build(),HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(e.getMessage()).build(),HttpStatus.NOT_IMPLEMENTED);
+            if (user != null) {
+                Map<String, Object> data = new LinkedHashMap<>();
+                data.put("email", user.getEmail());
+                data.put("phoneNumber", user.getPhoneNumber());
 
+                return ResponseEntity.ok(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS)
+                        .message(UPDATED_SUCCESS).data(data).build());
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS)
+                                .message(UPDATED_FAIL).build());
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS)
+                            .message(e.getMessage()).build());
         }
     }
+
 
     @PutMapping("/application/{applicationID}")
-    ResponseEntity<ResponseObject> updateApplyPosition(@PathVariable("applicationID")Integer id, HttpServletRequest request, @RequestParam("cv")MultipartFile cv){
+    public ResponseEntity<ResponseObject> updateApplyPosition(@PathVariable("applicationID") Integer id,
+                                                              HttpServletRequest request,
+                                                              @RequestParam("cv") MultipartFile cv) {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if(!userInfo.isEnabled()){
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
+
+            if (!userInfo.isEnabled()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseObject.builder()
+                        .message(NOT_ACTIVE).status(ResponseObject.ERROR_STATUS).build());
             }
+
             String generatedFileName = storageService.storeFile(cv);
             int candidateId = userInfo.getUserId();
-
             Application application = new Application(generatedFileName);
-            //Application application = new Application(candidateId, id, generatedFileName);
 
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message(applicationService.update(candidateId,application,id)).status("SUCCESS").build(),HttpStatus.OK);
+            String message = applicationService.update(candidateId, application, id);
 
-        }catch (Exception e){
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
+            if ("SUCCESS".equals(message)) {
+                return ResponseEntity.ok(ResponseObject.builder().message(message).status(ResponseObject.SUCCESS_STATUS).build());
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder()
+                        .message(message).status(ResponseObject.ERROR_STATUS).build());
+            }
 
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder()
+                    .message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build());
         }
-
     }
 
+
     @DeleteMapping("/application/{applicationID}")
-    ResponseEntity<ResponseObject> deleteApplyPosition(@PathVariable("applicationID")Integer id, HttpServletRequest request){
+    public ResponseEntity<ResponseObject> deleteApplyPosition(@PathVariable("applicationID") Integer id,
+                                                              HttpServletRequest request) {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if(!userInfo.isEnabled()){
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(),HttpStatus.BAD_REQUEST);
+
+            if (!userInfo.isEnabled()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResponseObject.builder()
+                        .message(NOT_ACTIVE).status(ResponseObject.ERROR_STATUS).build());
             }
+
             Integer candidateId = userInfo.getUserId();
+            String message = applicationService.deletejob(candidateId, id);
 
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(applicationService.deletejob(candidateId, id)).status("SUCCESS").build(),HttpStatus.OK);
+            if ("SUCCESS".equals(message)) {
+                return ResponseEntity.ok(ResponseObject.builder().message(message).status(ResponseObject.SUCCESS_STATUS).build());
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder()
+                        .message(message).status(ResponseObject.ERROR_STATUS).build());
+            }
 
-
-    }catch (Exception e){
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message("Error").status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder()
+                    .message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build());
         }
-
-        }
-
     }
+
+
+}

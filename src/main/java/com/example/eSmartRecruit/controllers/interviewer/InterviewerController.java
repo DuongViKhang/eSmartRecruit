@@ -43,6 +43,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.*;
 
+import static com.example.eSmartRecruit.controllers.request_reponse.ResponseObject.*;
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("eSmartRecruit/interviewer")
@@ -53,66 +55,76 @@ public class InterviewerController {
     private ReportService reportService;
 
     @GetMapping("/home")
-    ResponseEntity<ResponseObject> getInterviewerSession(HttpServletRequest request){
+    public ResponseEntity<ResponseObject> getInterviewerSession(HttpServletRequest request) {
         try {
 
             //TODO
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if(!userInfo.isEnabled()){
+
+            if (!userInfo.isEnabled()) {
                 return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!")
-                        .status("ERROR").build(),HttpStatus.BAD_REQUEST);
+                        .message(NOT_ACTIVE)
+                        .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
             }
+
             Integer interviewerId = userInfo.getUserId();
             List<InterviewSession> interviewSessionList = interviewSessionService.findByInterviewerID(interviewerId);
+
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message("").status("SUCCESS")
-                    .data(interviewSessionList).build(), HttpStatus.OK);
+                    .message("")
+                    .status(ResponseObject.SUCCESS_STATUS)
+                    .data(interviewSessionList)
+                    .build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                     .message(e.getMessage())
-                    .status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
+                    .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.NOT_IMPLEMENTED);
         }
-
     }
+
     @GetMapping("/{interviewersessionID}")
-    ResponseEntity<ResponseObject> findByInterviewSessionID(@PathVariable("interviewersessionID")Integer interviewersessionID, HttpServletRequest request){
+    public ResponseEntity<ResponseObject> findByInterviewSessionID(@PathVariable("interviewersessionID") Integer interviewersessionID, HttpServletRequest request) {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if(!userInfo.isEnabled()){
+
+            if (!userInfo.isEnabled()) {
                 return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!")
-                        .status("ERROR").build(),HttpStatus.BAD_REQUEST);
+                        .message(NOT_ACTIVE)
+                        .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
             }
+
             InterviewSession interviewSession = interviewSessionService.findByID(interviewersessionID);
+
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                     .message("")
-                    .status("SUCCESS")
+                    .status(ResponseObject.SUCCESS_STATUS)
                     .data(interviewSession).build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                     .message(e.getMessage())
-                    .status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
+                    .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.NOT_IMPLEMENTED);
         }
     }
 
+
     @PostMapping("/report/create/{interviewersessionID}")
-    ResponseEntity<ResponseObject> reportInterviewSession(@PathVariable("interviewersessionID")Integer interviewersessionID, HttpServletRequest request, @RequestBody @Valid ReportRequest reportRequest){
+    public ResponseEntity<ResponseObject> reportInterviewSession(@PathVariable("interviewersessionID") Integer interviewersessionID, HttpServletRequest request, @RequestBody @Valid ReportRequest reportRequest) {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if(!userInfo.isEnabled()){
+
+            if (!userInfo.isEnabled()) {
                 return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!")
-                        .status("ERROR").build(),HttpStatus.BAD_REQUEST);
+                        .message(NOT_ACTIVE)
+                        .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
             }
 
-            if(!interviewSessionService.isAlready(interviewersessionID)){
+            if (!interviewSessionService.isAlready(interviewersessionID)) {
                 return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Interview Session not already done!")
-                        .status("ERROR").build(),HttpStatus.BAD_REQUEST);
+                        .message(INTERVIEW_SESSION)
+                        .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
             }
 
             Report report = Report.builder()
@@ -121,91 +133,115 @@ public class InterviewerController {
                     .sessionID(interviewersessionID)
                     .createDate(Date.valueOf(LocalDate.now()))
                     .updateDate(Date.valueOf(LocalDate.now())).build();
+
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .status("SUCCESS")
+                    .status(ResponseObject.SUCCESS_STATUS)
                     .message(reportService.reportInterviewSession(report)).build(), HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                     .message(e.getMessage())
-                    .status("ERROR").build(),HttpStatus.NOT_IMPLEMENTED);
+                    .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.NOT_IMPLEMENTED);
         }
-
     }
 
-//get userInterviewer info
+
+    //get userInterviewer info
     @GetMapping("/profile")
-    ResponseEntity<ResponseObject> getDetailUserInterviewer(HttpServletRequest request) throws JSONException, UserException {
-        String authHeader = request.getHeader("Authorization");
-        //return new ResponseEntity<String>("hello",HttpStatus.OK);
-        ExtractUser userInfo = new ExtractUser(authHeader, userService);
-        if(!userInfo.isEnabled())
-        {
-            return null;
-        }
-        Integer userId = userInfo.getUserId();
-        User user = userService.getUserById(userId);
-
-        Map<String, String> data = new HashMap<>();
-        data.put("username", user.getUsername());
-        data.put("email", user.getEmail());
-        data.put("phonenumber", user.getPhoneNumber());
-        data.put("roleName", user.getRoleName().name());
-
-        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(data).build(), HttpStatus.OK);
-
-    }
-    //update userInterviewer
-    @PutMapping("/profile")
-    ResponseEntity<ResponseObject> updateUserInterviewer(HttpServletRequest request,
-    //                                              @RequestParam("email")String email,
-    //                                              @RequestParam("phoneNumber")String phoneNumber
-                                              @RequestBody @Valid UserRequest user0
-    ) throws JSONException, UserException {
+    public ResponseEntity<ResponseObject> getDetailUserInterviewer(HttpServletRequest request) throws JSONException, UserException {
         try {
             String authHeader = request.getHeader("Authorization");
-            //return new ResponseEntity<String>("hello",HttpStatus.OK);
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
             if (!userInfo.isEnabled()) {
-                return null;
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message(NOT_ACTIVE)
+                        .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
             }
+
             Integer userId = userInfo.getUserId();
-            User user = userService.updateUser(user0, userId);
-            Map<String, Object> data = new HashMap<>();
-            data.put("username", user.getUsername());
-            data.put("email", user.getEmail());
-            data.put("phoneNumber",user.getPhoneNumber());
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(data).build(), HttpStatus.OK);
-        }
-        catch (Exception exception){
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(), HttpStatus.OK);
-        }
-    }
-    @GetMapping("/candidate/{candidateId}")
-    ResponseEntity<ResponseObject> getCandidateInformation(@PathVariable("candidateId") Integer candidateId, HttpServletRequest request) throws JSONException, UserException {
-        try {
-            String authHeader = request.getHeader("Authorization");
-            //return new ResponseEntity<String>("hello",HttpStatus.OK);
-            ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return null;
-            }
+            User user = userService.getUserById(userId);
 
-            User user = userService.getUserById(candidateId);
-            if (!user.getRoleName().equals(Role.Candidate)) {
-                throw new UserException("Not a candidate");
-            }
             Map<String, String> data = new HashMap<>();
             data.put("username", user.getUsername());
             data.put("email", user.getEmail());
             data.put("phonenumber", user.getPhoneNumber());
             data.put("roleName", user.getRoleName().name());
 
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(data).build(), HttpStatus.OK);
-        }
-        catch (Exception exception){
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message(exception.getMessage()).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .status(ResponseObject.SUCCESS_STATUS)
+                    .data(data).build(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message(e.getMessage())
+                    .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.NOT_IMPLEMENTED);
         }
     }
+
+    //update userInterviewer
+    @PutMapping("/profile")
+    public ResponseEntity<ResponseObject> updateUserInterviewer(HttpServletRequest request,
+                                                                @RequestBody @Valid UserRequest user0) throws JSONException, UserException {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
+            if (!userInfo.isEnabled()) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message(NOT_ACTIVE)
+                        .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
+            }
+
+            Integer userId = userInfo.getUserId();
+            User user = userService.updateUser(user0, userId);
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("username", user.getUsername());
+            data.put("email", user.getEmail());
+            data.put("phoneNumber", user.getPhoneNumber());
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .status(ResponseObject.SUCCESS_STATUS)
+                    .data(data).build(), HttpStatus.OK);
+        } catch (Exception exception) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .status(ResponseObject.ERROR_STATUS)
+                    .message(exception.getMessage()).build(), HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/candidate/{candidateId}")
+    public ResponseEntity<ResponseObject> getCandidateInformation(@PathVariable("candidateId") Integer candidateId, HttpServletRequest request) throws JSONException, UserException {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
+            if (!userInfo.isEnabled()) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message(NOT_ACTIVE)
+                        .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
+            }
+
+            User user = userService.getUserById(candidateId);
+            if (!user.getRoleName().equals(Role.Candidate)) {
+                throw new UserException(NOT_CANDIDATE);
+            }
+
+            Map<String, String> data = new HashMap<>();
+            data.put("username", user.getUsername());
+            data.put("email", user.getEmail());
+            data.put("phonenumber", user.getPhoneNumber());
+            data.put("roleName", user.getRoleName().name());
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .status(ResponseObject.SUCCESS_STATUS)
+                    .data(data).build(), HttpStatus.OK);
+        } catch (Exception exception) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .status(ResponseObject.ERROR_STATUS)
+                    .message(exception.getMessage()).build(), HttpStatus.OK);
+        }
+    }
+
 
 }
