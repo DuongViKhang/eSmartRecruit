@@ -3,17 +3,21 @@ import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.config.JwtService;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.controllers.request_reponse.request.InterviewSessionRequest;
+import com.example.eSmartRecruit.exception.ApplicationException;
+import com.example.eSmartRecruit.exception.InterviewSessionException;
 import com.example.eSmartRecruit.exception.PositionException;
 import com.example.eSmartRecruit.exception.UserException;
+import com.example.eSmartRecruit.models.InterviewSession;
 import com.example.eSmartRecruit.models.Position;
+import com.example.eSmartRecruit.models.Report;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.models.enumModel.Role;
+import com.example.eSmartRecruit.models.enumModel.SessionResult;
+import com.example.eSmartRecruit.models.enumModel.SessionStatus;
 import com.example.eSmartRecruit.models.enumModel.UserStatus;
 import com.example.eSmartRecruit.services.IStorageService;
-import com.example.eSmartRecruit.services.impl.ApplicationService;
-import com.example.eSmartRecruit.services.impl.InterviewSessionService;
-import com.example.eSmartRecruit.services.impl.PositionService;
-import com.example.eSmartRecruit.services.impl.UserService;
+import com.example.eSmartRecruit.services.impl.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +33,7 @@ import org.springframework.http.ResponseEntity;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +64,9 @@ class AdminControllerTest {
 
     @Mock
     InterviewSessionService interviewSessionService;
+
+    @Mock
+    ReportService reportService;
 
     @BeforeEach
     void setUp() {
@@ -490,6 +498,77 @@ class AdminControllerTest {
         assertEquals("Error saving user", response.getBody().getMessage());
     }
     //Finish testing createUser() function
+
+
+    @Test
+    void scheduleReport_shouldReturnSuccess() throws InterviewSessionException {
+
+        Integer sessionId = 1;
+
+        InterviewSession interviewSession = new InterviewSession();
+        interviewSession.setId(sessionId);
+        interviewSession.setInterviewerID(1);
+        interviewSession.setApplicationID(1);
+        interviewSession.setDate(Date.valueOf("2023-11-11"));
+        interviewSession.setLocation("FPT");
+        interviewSession.setStatus(SessionStatus.Yet);
+        interviewSession.setResult(SessionResult.NotYet);
+        interviewSession.setNotes("Nothing");
+
+        InterviewSession newInterviewSession = new InterviewSession();
+        newInterviewSession.setId(sessionId);
+        newInterviewSession.setInterviewerID(1);
+        newInterviewSession.setApplicationID(1);
+        newInterviewSession.setDate(Date.valueOf("2023-11-20"));
+        newInterviewSession.setLocation("FPT");
+        newInterviewSession.setStatus(SessionStatus.Yet);
+        newInterviewSession.setResult(SessionResult.Good);
+        newInterviewSession.setNotes("Nothing");
+
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        InterviewSessionRequest interviewSessionRequest = new InterviewSessionRequest();
+        interviewSessionRequest.setInterviewerId(1);
+        interviewSessionRequest.setDate(Date.valueOf("2023-11-20"));
+        interviewSessionRequest.setLocation("FPT");
+        interviewSessionRequest.setNotes("Nothing");
+        lenient().when(interviewSessionService.scheduleInterview(sessionId,interviewSessionRequest)).thenReturn(newInterviewSession);
+
+        ResponseEntity<ResponseObject> response = adminController.scheduleInterview(sessionId,mockRequest, interviewSessionRequest);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("SUCCESS", response.getBody().getStatus());
+        assertEquals("Schedule successfully!", response.getBody().getMessage());
+    }
+
+    @Test
+    void getReport_shouldReturnSuccess() throws ApplicationException {
+        Integer sessionId = 1;
+        Report report = new Report();
+        report.setId(1);
+        report.setSessionID(1);
+        report.setReportName("Haha");
+        report.setReportData("Ha");
+        report.setCreateDate(Date.valueOf("2023-11-1"));
+        report.setUpdateDate(Date.valueOf("2023-11-1"));
+        lenient().when(reportService.getReportBySessionId(1)).thenReturn(report);
+
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("id", report.getId());
+        data.put("report_name", report.getReportName());
+        data.put("report_data", report.getReportData());
+        data.put("createDate", report.getCreateDate() != null ? report.getCreateDate().toString() : null);
+        data.put("updateDate", report.getUpdateDate() != null ? report.getUpdateDate().toString() : null);
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+
+        ResponseEntity<ResponseObject> response = adminController.getReport(sessionId,mockRequest);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("SUCCESS", response.getBody().getStatus());
+        assertEquals("Report", response.getBody().getMessage());
+        assertEquals(data,response.getBody().getData());
+    }
 }
 
 

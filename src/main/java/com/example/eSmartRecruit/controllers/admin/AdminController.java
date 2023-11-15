@@ -10,6 +10,7 @@ import com.example.eSmartRecruit.exception.PositionException;
 import com.example.eSmartRecruit.exception.UserException;
 
 import com.example.eSmartRecruit.models.*;
+import com.example.eSmartRecruit.models.enumModel.Role;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.services.impl.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,14 +23,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
+import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
+import com.example.eSmartRecruit.controllers.request_reponse.request.ApplicationResultRequest;
+import com.example.eSmartRecruit.services.IStorageService;
 import java.util.*;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("eSmartRecruit/admin")
 public class AdminController {
-
+    private IStorageService storageService;
     private UserService userService;
     @Autowired
     private PositionService positionService;
@@ -296,14 +300,6 @@ public class AdminController {
     @GetMapping("/report/{interviewsessionid}")
     public ResponseEntity<ResponseObject> getReport(@PathVariable("interviewsessionid") Integer sessionId, HttpServletRequest request) {
         try {
-            String authHeader = request.getHeader("Authorization");
-            ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            Integer userId = userInfo.getUserId();
-
-            if (!userInfo.isEnabled() ) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-
             Report reportObject = reportService.getReportBySessionId(sessionId); // Sử dụng sessionId thay vì userId
             if (reportObject != null) {
 
@@ -328,20 +324,80 @@ public class AdminController {
     public ResponseEntity<ResponseObject> scheduleInterview(@PathVariable("interviewsessionid") Integer id, HttpServletRequest request,
                                                             @RequestBody @Valid InterviewSessionRequest interviewSessionRequest) {
         try {
-            String authHeader = request.getHeader("Authorization");
-            ExtractUser userInfo = new ExtractUser(authHeader, userService);
-
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
-
-            interviewSessionService.scheduleInterview(id, interviewSessionRequest);
+            InterviewSession interviewSession = interviewSessionService.scheduleInterview(id, interviewSessionRequest);
 
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message("Schedule successfully!").status("SUCCESS").data(interviewSessionService.scheduleInterview(id, interviewSessionRequest)).build(), HttpStatus.OK);
+                    .message("Schedule successfully!").status("SUCCESS").data(interviewSession).build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(), HttpStatus.NOT_IMPLEMENTED);
         }
     }
-}
+    @GetMapping("/candidate/{candidateId}")
+    ResponseEntity<ResponseObject> getCandidateInformation(@PathVariable("candidateId") Integer candidateId, HttpServletRequest request) throws JSONException, UserException {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            //return new ResponseEntity<String>("hello",HttpStatus.OK);
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if (!userInfo.isEnabled()) {
+                return null;
+            }
+
+            User user = userService.getUserById(candidateId);
+            if (!user.getRoleName().equals(Role.Candidate)) {
+                throw new UserException("Not a candidate");
+            }
+            Map<String, String> data = new HashMap<>();
+            data.put("username", user.getUsername());
+            data.put("email", user.getEmail());
+            data.put("phonenumber", user.getPhoneNumber());
+            data.put("roleName", user.getRoleName().name());
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(data).build(), HttpStatus.OK);
+        }
+        catch (Exception exception){
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message(exception.getMessage()).build(), HttpStatus.OK);
+        }
+    }
+    @PutMapping ("/application/{applicationID}")
+    public ResponseEntity<ResponseObject> updateApplicationStatus(@PathVariable("applicationID") Integer id, HttpServletRequest request, @RequestBody ApplicationResultRequest applicationResultRequest) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if (!userInfo.isEnabled()) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+            }
+            try {
+                ApplicationStatus.valueOf(applicationResultRequest.getStatus());
+            } catch (IllegalArgumentException e) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Invalid status").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+            }
+            ApplicationStatus status1 = ApplicationStatus.valueOf(applicationResultRequest.getStatus());
+            Application application =  applicationService.findById(id);
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("applicationID", application.getId());
+            data.put("positionTitle", positionService.getSelectedPosition(application.getPositionID()).getTitle());
+            data.put("status", application.getStatus());
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message(applicationService.adminUpdate(id, status1)).status("SUCCESS").data(data).build(), HttpStatus.OK);
+
+//            if (status1 == ApplicationStatus.Approved) {
+//                // Xử lý hồ sơ được duyệt
+//                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+//                        .message(applicationService.adminUpdate(id, status1)).status("SUCCESS").data(applicationService.findById(id)).build(), HttpStatus.OK);
+//            }
+//            else if (status1 == ApplicationStatus.Declined) {
+//                // Xử lý hồ sơ bị từ chối
+//                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+//                        .message(applicationService.adminUpdate(id, status1)).status("SUCCESS").data(applicationService.findById(id)).build(), HttpStatus.OK);
+//            } else {
+//                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+//                        .message("Invalid status").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+//            }
+        } catch (Exception e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(), HttpStatus.NOT_IMPLEMENTED);
+        }
+    }
+
+        }
