@@ -4,7 +4,6 @@ import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.EditUserRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
-import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.models.enumModel.Role;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -151,10 +149,10 @@ public class UserService {
         if (checkDuplicationUsername != null && user.getUsername().equals(editUserRequest.getUsername())){
             throw new UserException(checkDuplicationUsername);
         }
-        if(checkDuplicationEmail!=null && !user.getEmail().equals(editUserRequest.getEmail())){
+        if (checkDuplicationEmail != null && user.getEmail().equals(editUserRequest.getEmail())) {
             throw new UserException(checkDuplicationEmail);
         }
-        if(checkDuplicationPhone!=null && !user.getPhoneNumber().equals(editUserRequest.getPhonenumber())){
+        if (checkDuplicationPhone != null && user.getPhoneNumber().equals(editUserRequest.getPhonenumber())) {
             throw new UserException(checkDuplicationPhone);
         }
         try{
