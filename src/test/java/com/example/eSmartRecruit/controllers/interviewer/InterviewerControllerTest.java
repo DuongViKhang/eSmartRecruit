@@ -313,7 +313,6 @@ class InterviewerControllerTest {
     @Test
     void getDetailUserInterviewer_success() throws JSONException, UserException {
         ResponseEntity<ResponseObject> responseEntity = interviewerController.getDetailUserInterviewer(mockRequest);
-
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);

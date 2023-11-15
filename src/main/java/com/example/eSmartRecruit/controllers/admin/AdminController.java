@@ -305,14 +305,6 @@ public class AdminController {
     @GetMapping("/report/{interviewsessionid}")
     public ResponseEntity<ResponseObject> getReport(@PathVariable("interviewsessionid") Integer sessionId, HttpServletRequest request) {
         try {
-            String authHeader = request.getHeader("Authorization");
-            ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            Integer userId = userInfo.getUserId();
-
-            if (!userInfo.isEnabled()) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-
             Report reportObject = reportService.getReportBySessionId(sessionId); // Sử dụng sessionId thay vì userId
             if (reportObject != null) {
 
@@ -325,11 +317,11 @@ public class AdminController {
 
                 return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").message("Report").data(data).build());
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.builder().status("ERROR").message("Report not found").build());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ResponseObject.builder().status("ERROR").message("Report not found!").build());
             }
         } catch (Exception e) {
             logger.error("Error in getReport", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message("Internal server error").build());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message("Internal server error!").build());
         }
     }
 
@@ -363,20 +355,12 @@ public class AdminController {
     public ResponseEntity<ResponseObject> scheduleInterview(@PathVariable("interviewsessionid") Integer id, HttpServletRequest request,
                                                             @RequestBody @Valid InterviewSessionRequest interviewSessionRequest) {
         try {
-            String authHeader = request.getHeader("Authorization");
-            ExtractUser userInfo = new ExtractUser(authHeader, userService);
-
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
-
             interviewSessionService.scheduleInterview(id, interviewSessionRequest);
 
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                     .message("Schedule successfully!").status("SUCCESS").data(interviewSessionService.scheduleInterview(id, interviewSessionRequest)).build(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(), HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

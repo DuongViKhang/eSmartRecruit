@@ -1,0 +1,2 @@
+2023-11-15 10:40:54,598 ERROR c.e.e.c.a.AdminController [main] Error in getReport
+com.example.eSmartRecruit.exception.ApplicationException: null
