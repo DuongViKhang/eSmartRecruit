@@ -421,41 +421,6 @@ class InterviewerControllerTest {
 
 
     /////////////////
-    @Test
-    void getCandidateInformation() throws UserException, JSONException {
-        User mockUser = new User();
-        mockUser.setId(5);
-        mockUser.setUsername("thang1");
-        mockUser.setPassword("$2a$10$T7/ttTcvqqo3pFkqztnTmODYJvpPeHIjyUPmeKlkjwW8XSRG6q/CK");
-        mockUser.setEmail("thang1234@gmail.com");
-        mockUser.setPhoneNumber("0999996789");
-        mockUser.setRoleName(Role.Candidate);
-        mockUser.setStatus(UserStatus.Active);
-        mockUser.setCreateDate(Date.valueOf("2023-11-08"));
-        mockUser.setUpdateDate(Date.valueOf("2023-11-08"));
-
-        var jwtToken = jwtService.generateToken(mockUser);
-        ExtractUser mockUserInfo = mock(ExtractUser.class);
-        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
-        lenient().when(mockUserInfo.getUserId()).thenReturn(4);
-        when(userService.isEnabled(5)).thenReturn(true);
-        when(userService.getUserById(5)).thenReturn(mockUser);
-        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
-        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
-
-        ResponseEntity<ResponseObject> responseEntity = interviewerController.getCandidateInformation(5, mockRequest);
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        ResponseObject responseObject = responseEntity.getBody();
-        Map<String, String> data = new LinkedHashMap<>();
-        data.put("username", "thang1");
-        data.put("email", "thang1234@gmail.com");
-        data.put("phonenumber", "0999996789");
-        data.put("roleName", Role.Candidate.toString());
-
-        assertEquals("SUCCESS", responseObject.getStatus());
-        assertEquals(data, responseObject.getData());
-    }
-
 
     @Test
     void getCandidateInformation_success() throws Exception{

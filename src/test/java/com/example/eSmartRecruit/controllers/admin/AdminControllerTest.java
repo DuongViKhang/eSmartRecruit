@@ -3,6 +3,8 @@ import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.config.JwtService;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.controllers.request_reponse.request.ApplicationResultRequest;
+import com.example.eSmartRecruit.controllers.request_reponse.request.EditUserRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.request.InterviewSessionRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.request.PositionRequest;
 import com.example.eSmartRecruit.exception.ApplicationException;
@@ -1022,7 +1024,7 @@ class AdminControllerTest {
         assertEquals("Report not found!", response.getBody().getMessage());
     }
     @Test
-    void getReport_shouldReturnInternal_Server_Error() throws ApplicationException {
+    void getReport_shouldReturnInternalServerError() throws ApplicationException {
         Integer sessionId = 1;
         Report report = new Report();
         report.setId(1);
@@ -1040,5 +1042,229 @@ class AdminControllerTest {
         assertEquals("ERROR", response.getBody().getStatus());
         assertEquals("Internal server error!", response.getBody().getMessage());
     }
-}
     //Finish testing getReport() function
+
+    //Start testing getDetailUser() function
+    @Test
+    void getDetailUser_shouldReturnSuccess() throws JSONException, UserException {
+        User mockUser = User.builder().id(1)
+                .username("khang").password("khang123")
+                .email("khang123@gmail.com").phoneNumber(null)
+                .roleName(Role.Candidate).status(UserStatus.Active)
+                .createDate(Date.valueOf("2023-11-15"))
+                .updateDate(Date.valueOf("2023-11-15")).build();
+        when(userService.getUserById(1)).thenReturn(mockUser);
+        Map<String, String> data = new LinkedHashMap<>();
+        data.put("id", mockUser.getId().toString());
+        data.put("username", mockUser.getUsername());
+        data.put("email", mockUser.getEmail());
+        data.put("phonenumber", mockUser.getPhoneNumber());
+        data.put("rolename", mockUser.getRoleName().name());
+        data.put("status", mockUser.getStatus().toString());
+        data.put("create_date", mockUser.getCreateDate().toString());
+        data.put("update_date", mockUser.getUpdateDate().toString());
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        ResponseEntity<ResponseObject> responseEntity = adminController.getDetailUser(1, mockRequest);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("SUCCESS", responseEntity.getBody().getStatus());
+        assertEquals(data, responseEntity.getBody().getData());
+    }
+    @Test
+    void getDetailUser_shouldReturnInternalServerError() throws JSONException, UserException {
+        User mockUser = User.builder().id(1)
+                .username("khang").password("khang123")
+                .email("khang123@gmail.com").phoneNumber(null)
+                .roleName(Role.Candidate).status(UserStatus.Active)
+                .createDate(Date.valueOf("2023-11-15"))
+                .updateDate(Date.valueOf("2023-11-15")).build();
+        when(userService.getUserById(1)).thenThrow(UserException.class);
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        ResponseEntity<ResponseObject> responseEntity = adminController.getDetailUser(1, mockRequest);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals("ERROR", responseEntity.getBody().getStatus());
+    }
+    //Finish testing getDetailUser() function
+
+    //Start testing editUser()
+    @Test
+    void editUser_shouldReturnSuccess() throws UserException {
+        User mockUser = User.builder().id(1)
+                .username("khang").password("khang123")
+                .email("khang123@gmail.com").phoneNumber(null)
+                .roleName(Role.Candidate).status(UserStatus.Active)
+                .createDate(Date.valueOf("2023-11-15"))
+                .updateDate(Date.valueOf("2023-11-15")).build();
+        EditUserRequest editUserRequest = new EditUserRequest();
+        editUserRequest.setUsername("khang");
+        editUserRequest.setPassword("khang123");
+        editUserRequest.setEmail("khang123@gmail.com");
+        editUserRequest.setPhonenumber("0991123333");
+        editUserRequest.setRolename(String.valueOf(Role.Candidate));
+
+        mockUser.setPhoneNumber(editUserRequest.getPhonenumber());
+        Map<String, String> data = new LinkedHashMap<>();
+        data.put("id", mockUser.getId().toString());
+        data.put("username", mockUser.getUsername());
+        data.put("email", mockUser.getEmail());
+        data.put("phonenumber", mockUser.getPhoneNumber());
+        data.put("rolename", mockUser.getRoleName().name());
+        data.put("status", mockUser.getStatus().toString());
+        data.put("create_date", mockUser.getCreateDate().toString());
+        data.put("update_date", mockUser.getUpdateDate().toString());
+
+        when(userService.editUser(1, editUserRequest)).thenReturn(mockUser);
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        ResponseEntity<ResponseObject> responseEntity = adminController.editUser(1, mockRequest, editUserRequest);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("SUCCESS", responseEntity.getBody().getStatus());
+        assertEquals("Edit user successfully!", responseEntity.getBody().getMessage());
+        assertEquals(data, responseEntity.getBody().getData());
+    }
+    @Test
+    void editUser_shouldReturnInternalServerError() throws UserException {
+        User mockUser = User.builder().id(1)
+                .username("khang").password("khang123")
+                .email("khang123@gmail.com").phoneNumber(null)
+                .roleName(Role.Candidate).status(UserStatus.Active)
+                .createDate(Date.valueOf("2023-11-15"))
+                .updateDate(Date.valueOf("2023-11-15")).build();
+        EditUserRequest editUserRequest = new EditUserRequest();
+        editUserRequest.setUsername("khang");
+        editUserRequest.setPassword("khang123");
+        editUserRequest.setEmail("khang123@gmail.com");
+        editUserRequest.setPhonenumber("0991123333");
+        editUserRequest.setRolename(String.valueOf(Role.Candidate));
+
+        when(userService.editUser(1, editUserRequest)).thenThrow(UserException.class);
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        ResponseEntity<ResponseObject> responseEntity = adminController.editUser(1, mockRequest, editUserRequest);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals("ERROR", responseEntity.getBody().getStatus());
+    }
+    //Finish testing editUser()
+
+    // Start testing getCandidateInformation()
+    @Test
+    void getCandidateInformation_shouldReturnSuccess() throws ApplicationException, UserException, JSONException {
+        User mockUser = User.builder().id(2)
+                .username("khang").password("khang123")
+                .email("khang123@gmail.com").phoneNumber(null)
+                .roleName(Role.Candidate).status(UserStatus.Active)
+                .createDate(Date.valueOf("2023-11-15"))
+                .updateDate(Date.valueOf("2023-11-15")).build();
+        lenient().when(userService.getUserById(2)).thenReturn(mockUser);
+
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("username", mockUser.getUsername());
+        data.put("email", mockUser.getEmail());
+        data.put("phonenumber", mockUser.getPhoneNumber());
+        data.put("roleName", mockUser.getRoleName().name());
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        ResponseEntity<ResponseObject> response = adminController.getCandidateInformation(2, mockRequest);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("SUCCESS", response.getBody().getStatus());
+        assertEquals(data,response.getBody().getData());
+    }
+
+    @Test
+    void getCandidateInformation_shouldReturnInternalServerError() throws ApplicationException, UserException, JSONException {
+        User mockUser = new User();
+        mockUser.setId(2);
+        mockUser.setUsername("bcd");
+        mockUser.setPassword("$2a$10$SgZX47bsE057V9z4n1NeG.y0hJkv1scG07pmPjPmBovIAnw4RhB7y");
+        mockUser.setEmail("b123@gmail.com");
+        mockUser.setPhoneNumber("0988888888");
+        mockUser.setRoleName(Role.Admin);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-10-23"));
+        mockUser.setUpdateDate(Date.valueOf("2023-10-23"));
+        lenient().when(userService.getUserById(2)).thenReturn(mockUser);
+        //lenient().when(mockUser.getRoleName().equals(Role.Candidate)).thenReturn(false);
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("username", mockUser.getUsername());
+        data.put("email", mockUser.getEmail());
+        data.put("phonenumber", mockUser.getPhoneNumber());
+        data.put("roleName", mockUser.getRoleName().name());
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+
+        ResponseEntity<ResponseObject> response = adminController.getCandidateInformation(2, mockRequest);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("ERROR", response.getBody().getStatus());
+        assertEquals("Not a candidate",response.getBody().getMessage());
+    }
+    //Finish testing getCandidateInformation()
+
+    //Start testing updateApplicationStatus()
+    @Test
+    void updateApplicationStatus_shouldReturnSuccess() throws UserException, PositionException, ApplicationException {
+        User mockUser = new User();
+
+        ApplicationResultRequest resultRequest = new ApplicationResultRequest();
+        resultRequest.setStatus(ApplicationStatus.Pending.name());
+
+        Integer applicationId = 1;
+        Application application = new Application();
+        application.setId(applicationId);
+        application.setCandidateID(1);
+        application.setPositionID(1);
+        application.setCv("cv");
+        application.setCreateDate(Date.valueOf("2023-11-11"));
+        application.setUpdateDate(Date.valueOf("2023-11-11"));
+
+        lenient().when(applicationService.findById(1)).thenReturn(application);
+        Position mockPosition = new Position();
+        mockPosition.setTitle("Bao ve");
+        lenient().when(positionService.getSelectedPosition(application.getPositionID())).thenReturn(mockPosition);
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("applicationID", application.getId());
+        data.put("positionTitle", positionService.getSelectedPosition(application.getPositionID()).getTitle());
+        data.put("status", application.getStatus());
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+
+        ResponseEntity<ResponseObject> response = adminController.updateApplicationStatus(1, mockRequest,resultRequest);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("SUCCESS", response.getBody().getStatus());
+        assertEquals(data,response.getBody().getData());
+    }
+
+    @Test
+    void updateApplicationStatus_shouldReturnErrorInvalidStatus() throws UserException, PositionException, ApplicationException {
+        User mockUser = new User();
+
+        ApplicationResultRequest resultRequest = new ApplicationResultRequest();
+        resultRequest.setStatus("Hello");
+
+        Integer applicationId = 1;
+        Application application = new Application();
+        application.setId(applicationId);
+        application.setCandidateID(1);
+        application.setPositionID(1);
+        application.setCv("cv");
+        application.setCreateDate(Date.valueOf("2023-11-11"));
+        application.setUpdateDate(Date.valueOf("2023-11-11"));
+
+        lenient().when(applicationService.findById(1)).thenReturn(application);
+        Position mockPosition = new Position();
+        mockPosition.setTitle("Bao ve");
+        lenient().when(positionService.getSelectedPosition(application.getPositionID())).thenReturn(mockPosition);
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("applicationID", application.getId());
+        data.put("positionTitle", positionService.getSelectedPosition(application.getPositionID()).getTitle());
+        data.put("status", application.getStatus());
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        ResponseEntity<ResponseObject> response = adminController.updateApplicationStatus(1, mockRequest,resultRequest);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("ERROR", response.getBody().getStatus());
+    }
+    //Finish testing updateApplicationStatus()
+}

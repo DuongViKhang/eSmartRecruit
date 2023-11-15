@@ -328,13 +328,6 @@ public class AdminController {
     @GetMapping("/candidate/{candidateId}")
     ResponseEntity<ResponseObject> getCandidateInformation(@PathVariable("candidateId") Integer candidateId, HttpServletRequest request) throws JSONException, UserException {
         try {
-            String authHeader = request.getHeader("Authorization");
-            //return new ResponseEntity<String>("hello",HttpStatus.OK);
-            ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return null;
-            }
-
             User user = userService.getUserById(candidateId);
             if (!user.getRoleName().equals(Role.Candidate)) {
                 throw new UserException("Not a candidate");
@@ -347,7 +340,7 @@ public class AdminController {
 
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).build(), HttpStatus.OK);
         } catch (Exception exception) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -367,14 +360,6 @@ public class AdminController {
     @GetMapping("/user/{userId}")
     ResponseEntity<ResponseObject> getDetailUser(@PathVariable("userId") Integer userId, HttpServletRequest request) throws JSONException, UserException {
         try {
-            String authHeader = request.getHeader("Authorization");
-            //return new ResponseEntity<String>("hello",HttpStatus.OK);
-            ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR")
-                        .message("Account not active!").build(), HttpStatus.BAD_REQUEST);
-            }
-
             User user = userService.getUserById(userId);
             Map<String, String> data = new LinkedHashMap<>();
             data.put("id", user.getId().toString());
@@ -387,7 +372,8 @@ public class AdminController {
             data.put("update_date", user.getUpdateDate().toString());
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).build(), HttpStatus.OK);
         } catch (Exception exception) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR")
+                    .message(exception.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -395,12 +381,6 @@ public class AdminController {
     ResponseEntity<ResponseObject> editUser(@PathVariable("userId") Integer userId, HttpServletRequest request,
                                               @RequestBody @Valid EditUserRequest editUserRequest) {
         try {
-            String authHeader = request.getHeader("Authorization");
-            ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR")
-                        .message("Account not active!").build(), HttpStatus.BAD_REQUEST);
-            }
             User user = userService.editUser(userId, editUserRequest);
             Map<String, String> data = new LinkedHashMap<>();
             data.put("id", user.getId().toString());
@@ -420,12 +400,6 @@ public class AdminController {
     @PutMapping ("/application/{applicationID}")
     public ResponseEntity<ResponseObject> updateApplicationStatus(@PathVariable("applicationID") Integer id, HttpServletRequest request, @RequestBody ApplicationResultRequest applicationResultRequest) {
         try {
-            String authHeader = request.getHeader("Authorization");
-            ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
             try {
                 ApplicationStatus.valueOf(applicationResultRequest.getStatus());
             } catch (IllegalArgumentException e) {
@@ -442,7 +416,7 @@ public class AdminController {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                     .message(message).status("SUCCESS").data(data).build(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(), HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping("/interviewsession")
