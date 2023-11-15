@@ -4,6 +4,7 @@ import com.example.eSmartRecruit.models.enumModel.SessionResult;
 import com.example.eSmartRecruit.models.enumModel.SessionStatus;
 import jakarta.persistence.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
@@ -12,6 +13,7 @@ import java.sql.Date;
 @Entity
 @Table(name = "InterviewSessions")
 @Data
+@AllArgsConstructor
 public class InterviewSession {
 	
 	@Id
@@ -52,96 +54,5 @@ public class InterviewSession {
 
 
     public InterviewSession() {}
-
-
-
-//	public Integer getId() {
-//		return id;
-//	}
-//
-//
-//	public void setId(Integer id) {
-//		this.id = id;
-//	}
-//
-//
-//	public Integer getPositionID() {
-//		return positionID;
-//	}
-//
-//
-//	public void setPositionID(Integer positionID) {
-//		this.positionID = positionID;
-//	}
-//
-//
-//	public Integer getInterviewerID() {
-//		return interviewerID;
-//	}
-//
-//
-//	public void setInterviewerID(Integer interviewerID) {
-//		this.interviewerID = interviewerID;
-//	}
-//
-//
-//	public Integer getCandidateID() {
-//		return candidateID;
-//	}
-//
-//
-//	public void setCandidateID(int candidateID) {
-//		this.candidateID = candidateID;
-//	}
-//
-//
-//	public Date getDate() {
-//		return date;
-//	}
-//
-//
-//	public void setDate(Date date) {
-//		this.date = date;
-//	}
-//
-//
-//	public String getLocation() {
-//		return location;
-//	}
-//
-//
-//	public void setLocation(String location) {
-//		this.location = location;
-//	}
-//
-//
-//	public String getStatus() {
-//		return status;
-//	}
-//
-//
-//	public void setStatus(String status) {
-//		this.status = status;
-//	}
-//
-//
-//	public String getResult() {
-//		return result;
-//	}
-//
-//
-//	public void setResult(String result) {
-//		this.result = result;
-//	}
-//
-//
-//	public String getNotes() {
-//		return notes;
-//	}
-//
-//
-//	public void setNotes(String notes) {
-//		this.notes = notes;
-//	}
 
 }

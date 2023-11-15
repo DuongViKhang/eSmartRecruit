@@ -4,6 +4,7 @@ import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.EditUserRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
+import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.models.enumModel.Role;
@@ -99,9 +100,6 @@ public class UserService {
 
         String checkDuplicationEmail = checkDuplicateEmail(exUser);
         String checkDuplicationPhone = checkDuplicatePhone(exUser);
-//        if(checkDuplication!=null && (!user.getEmail().equals(oldMail)||!user.getPhoneNumber().equals(oldPhone))){
-//            throw new UserException(checkDuplication);
-//        }
         if(checkDuplicationEmail!=null && !user.getEmail().equals(oldMail)){
             throw new UserException(checkDuplicationEmail);
         }
@@ -172,4 +170,5 @@ public class UserService {
             return null;
         }
     }
+
 }

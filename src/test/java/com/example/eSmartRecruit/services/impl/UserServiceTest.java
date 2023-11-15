@@ -1,9 +1,11 @@
 package com.example.eSmartRecruit.services.impl;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
+import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.controllers.request_reponse.request.EditUserRequest;
 import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.models.enumModel.UserStatus;
@@ -15,22 +17,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+public class UserServiceTest {
 
-class UserServiceTest {
     private UserService userService;
     private UserRepos userRepository;
     private PasswordEncoder passwordEncoder;
+
     @BeforeEach
     public void setup() {
         userRepository = mock(UserRepos.class);
         passwordEncoder = mock(PasswordEncoder.class);
         userService = new UserService(userRepository, passwordEncoder);
     }
+
     @Test
     void testGetAllUser() throws UserException {
         // Arrange
@@ -43,6 +47,7 @@ class UserServiceTest {
         // Assert
         assertEquals(expectedUsers, result);
     }
+
     @Test
     void testFindByUsername_Successful() throws UserException {
         // Arrange
@@ -58,6 +63,7 @@ class UserServiceTest {
         // Assert
         assertEquals(expectedUser, result);
     }
+
     @Test
     void testFindByUsername_UserNotFound() {
         // Arrange
@@ -67,7 +73,6 @@ class UserServiceTest {
         // Act and Assert
         assertThrows(UserException.class, () -> userService.findByUsername(username));
     }
-
     @Test
     void testGetUserRole() {
         // Arrange
@@ -111,10 +116,6 @@ class UserServiceTest {
         assertThrows(UserException.class, () -> userService.updateUserpassword(username, newPassword));
         verify(userRepository, never()).save(any());
     }
-
-    @Test
-    void checkDuplicateUsername() {
-    }
     @Test
     void testUpdateUser_DuplicateEmail() {
         // Arrange
@@ -132,7 +133,6 @@ class UserServiceTest {
         assertThrows(UserException.class, () -> userService.updateUser(userRequest, userId));
         verify(userRepository, never()).save(any());
     }
-
     @Test
     void testUpdateUser_DuplicatePhoneNumber() {
         // Arrange
@@ -330,21 +330,123 @@ class UserServiceTest {
 //        // Act and Assert
 //        assertNull(userService.updateUser(userRequest, 1));
 //    }
+@Test
+void testGetCountUser() {
+    // Arrange
+    when(userRepository.count()).thenReturn(10L); // Giả lập kết quả trả về
 
+    // Act
+    Long result = userService.getcountUser();
 
+    // Assert
+    assertEquals(10L, result); // Kiểm tra xem kết quả có phải là 10L như mong đợi hay không
+    verify(userRepository, times(1)).count(); // Kiểm tra xem phương thức count đã được gọi một lần hay không
+}
     @Test
-    void getcountUser() {
+    void testSaveUser_Success() throws UserException {
+        // Arrange
+        RegisterRequest request = new RegisterRequest("john_doe", "john_doe@example.com", "John@123", "0123456789","Candidate");
+//
+//        User user = new User();
+
+        // Giả lập việc kiểm tra trùng lặp không có lỗi
+//        when(userRepository.save(any(User.class))).thenReturn(any(User.class));
+        ResponseObject result = userService.saveUser(request);
+        assertEquals(result.getStatus(),"SUCCESS");
+//        when(userService.checkDuplicate(any())).thenReturn(null);
+//        when(passwordEncoder.encode("password")).thenReturn("encoded_password");
+//
+//        // Act
+//        ResponseObject result = userService.saveUser(request);
+//
+//        // Assert
+        assertNotNull(result);
+        assertEquals("SUCCESS", result.getStatus());
+        assertEquals("Create user successfully!", result.getMessage());
+        verify(userRepository, times(1)).save(any());
+    }
+    //    @Test
+//    void testSaveUser_DuplicateUser() {
+//        // Arrange
+//
+//        RegisterRequest request = new RegisterRequest("john_doe", "john_doe@example.com", "John@123", "0123456789","Candidate");
+//        User user = new User(1,"john_doe","john_doe@example.com", "John@123", "0123456789",Role.Candidate,UserStatus.Active, Date.valueOf("2023-11-02"), Date.valueOf("2023-11-02"));
+//        // Giả lập việc kiểm tra trùng lặp có lỗi
+//        lenient().when(userService.checkDuplicate(user)).thenReturn("sdg");
+//
+//        // Act and Assert
+//        assertThrows(UserException.class, () -> userService.saveUser(request));
+//    }
+    @Test
+    void testFindById_UserExists() throws UserException {
+        // Arrange
+        int userId = 1;
+        User expectedUser = new User(userId, "john_doe", "john_doe@example.com","John@123", "0123456789",Role.Candidate,UserStatus.Active, Date.valueOf("2023-11-02"), Date.valueOf("2023-11-02"));
+
+        // Mocking the behavior of userRepository.findById
+        when(userRepository.findById(userId)).thenReturn(Optional.of(expectedUser));
+
+        // Act
+        User actualUser = userService.findById(userId);
+
+        // Assert
+        assertEquals(expectedUser, actualUser);
+
+        // Verify that userRepository.findById was called exactly once with the correct userId
+        verify(userRepository, times(1)).findById(userId);
+    }
+    @Test
+    void testFindById_UserNotFound() {
+        // Arrange
+        int userId = 2;
+
+        // Mocking the behavior of userRepository.findById to return an empty Optional
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // Act and Assert
+        UserException exception = assertThrows(UserException.class, () -> userService.findById(userId));
+
+        // Verify that userRepository.findById was called exactly once with the correct userId
+        verify(userRepository, times(1)).findById(userId);
+
+        // Verify that the exception message is correct
+        assertEquals("User not found!", exception.getMessage());
     }
 
     @Test
-    void saveUser() {
+    void testEditUser_SuccessfulEdit() throws UserException {
+        // Arrange
+        int userId = 1;
+        EditUserRequest editUserRequest = new EditUserRequest("john_doe1", "john1_doe@example.com","John@1234", "0123456799","Candidate","Active");
+        User existingUser = new User(userId, "john_doe", "john_doe@example.com","John@123", "0123456789",Role.Candidate,UserStatus.Active,Date.valueOf("2023-11-02"), Date.valueOf("2023-11-02"));
+
+        // Mocking the behavior of findById
+        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
+
+        // Mocking the behavior of other checkDuplicate methods
+        when(userService.checkDuplicateUsername(existingUser)).thenReturn(null);
+        when(userService.checkDuplicateEmail(existingUser)).thenReturn(null);
+        when(userService.checkDuplicatePhone(existingUser)).thenReturn(null);
+
+        // Mocking the behavior of userRepository.save
+        when(userRepository.save(any())).thenReturn(existingUser);
+
+        // Act
+        User editedUser = userService.editUser(userId, editUserRequest);
+
+        // Assert
+        assertNotNull(editedUser);
+        assertEquals("john_doe1", editedUser.getUsername());
+        assertEquals("john1_doe@example.com", editedUser.getEmail());
+        assertEquals("0123456799", editedUser.getPhoneNumber());
+        assertEquals(UserStatus.Active, editedUser.getStatus());
+
+        // Verify that userRepository.findById was called exactly once with the correct userId
+        verify(userRepository, times(1)).findById(userId);
+
+        // Verify that userRepository.save was called exactly once
+        verify(userRepository, times(1)).save(existingUser);
     }
 
-    @Test
-    void findById() {
-    }
 
-    @Test
-    void editUser() {
-    }
 }
