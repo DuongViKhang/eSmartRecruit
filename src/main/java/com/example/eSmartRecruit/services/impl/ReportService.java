@@ -1,12 +1,10 @@
 package com.example.eSmartRecruit.services.impl;
 
-import com.example.eSmartRecruit.exception.ApplicationException;
+import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.Report;
 import com.example.eSmartRecruit.repositories.ReportRepos;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.lang.module.ResolutionException;
 
 @Service
 @AllArgsConstructor
@@ -20,7 +18,8 @@ public class ReportService {
             return e.getMessage();
         }
     }
-    public Report getReportBySessionId(Integer sessionID) throws ApplicationException {
-        return reportRepos.findBySessionID(sessionID);
+
+    public Report getReportBySessionId(Integer sessionID) throws UserException {
+        return reportRepos.findBySessionID(sessionID).orElseThrow(() -> new UserException("Session does not exist"));
     }
 }
