@@ -42,6 +42,7 @@ public class ResponseObject {
     public static final String USER_CREATED = "Create user successfully!";
     public static final String NO_INTERVIEWSESSION = "No interview sessions found!";
     public static final String INVALID_STATUS = "Invalid Status";
+    public static final String CREATED = "Successfully created!";
 
     private String status;
     private String message;

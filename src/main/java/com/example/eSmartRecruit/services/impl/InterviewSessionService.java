@@ -36,7 +36,7 @@ public class InterviewSessionService implements IInterviewSessionService {
     }
 
     public boolean isAlready(Integer interviewersessionID) throws InterviewSessionException {
-        InterviewSession interviewSession = interviewSessionRepos.findById(interviewersessionID).orElseThrow(()->new InterviewSessionException("The required position not found"));
+        InterviewSession interviewSession = interviewSessionRepos.findById(interviewersessionID).orElseThrow(()->new InterviewSessionException(ResponseObject.POSITION_NOT_FOUND));
         if(interviewSession.getStatus() != SessionStatus.Already ){
             return false;
         }
