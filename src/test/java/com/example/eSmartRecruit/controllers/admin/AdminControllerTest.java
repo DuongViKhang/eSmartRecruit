@@ -4,13 +4,16 @@ import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.config.JwtService;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.PositionRequest;
+import com.example.eSmartRecruit.exception.InterviewSessionException;
 import com.example.eSmartRecruit.exception.PositionException;
 import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.Application;
+import com.example.eSmartRecruit.models.InterviewSession;
 import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
 import com.example.eSmartRecruit.models.enumModel.Role;
+import com.example.eSmartRecruit.models.enumModel.SessionStatus;
 import com.example.eSmartRecruit.models.enumModel.UserStatus;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.services.IStorageService;
@@ -897,7 +900,126 @@ class AdminControllerTest {
         // Verify that the editPosition method is called once with the updated position
         verify(positionService, times(1)).editPosition(eq(1), any(Position.class));
     }
+    @Test
+    void listInterviewsession() throws UserException, JSONException, InterviewSessionException {
+        User mockUser = new User();
+        mockUser.setId(5);
+        mockUser.setUsername("thuytrang");
+        mockUser.setPassword("$2a$10$HLVCKSnNE1iUAo8zLh0ioe9CkF3n1L8HM6HNZawxvW2cFswUt9Vlu");
+        mockUser.setEmail("trang@gmail.com");
+        mockUser.setPhoneNumber("0384928392");
+        mockUser.setRoleName(Role.Admin);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-11-10"));
+        mockUser.setUpdateDate(Date.valueOf("2023-11-10"));
 
+        var jwtToken = jwtService.generateToken(mockUser);
+
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(5);
+        lenient().when(userService.isEnabled(5)).thenReturn(true);
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        List<InterviewSession> mockInterviewSessions = new ArrayList<>();
+        InterviewSession interviewSession = new InterviewSession();
+        interviewSession.setId(1);
+        interviewSession.setInterviewerID(null);
+        interviewSession.setApplicationID(1);
+//        interviewSession.setPositionID(null);
+//        interviewSession.setCandidateID(null);
+        interviewSession.setDate(Date.valueOf("2023-10-29"));
+        interviewSession.setLocation("fpt");
+        interviewSession.setStatus(SessionStatus.valueOf("NotOnSchedule"));
+        interviewSession.setLocation("NotYet");
+        interviewSession.setNotes("abc");
+        mockInterviewSessions.add(interviewSession);
+
+
+        interviewSession.setId(2);
+        interviewSession.setInterviewerID(3);
+        interviewSession.setApplicationID(1);
+//        interviewSession.setPositionID(null);
+//        interviewSession.setCandidateID(null);
+        interviewSession.setDate(Date.valueOf("2023-10-25"));
+        interviewSession.setLocation("fpt");
+        interviewSession.setStatus(SessionStatus.valueOf("Yet"));
+        interviewSession.setLocation("Good");
+        interviewSession.setNotes("bcd");
+        mockInterviewSessions.add(interviewSession);
+
+
+        ResponseEntity<ResponseObject> responseEntity = adminController.listInterviewsession(mockRequest);
+//
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals("Loading position successfully", responseObject.getMessage());
+
+        List<InterviewSession> returnedData = (List<InterviewSession>) responseObject.getData();
+        assertNotNull(returnedData);
+
+        verify(interviewSessionService, times(1)).getAllInterviewSession();
+
+    }
+
+    @Test
+    void getInterviewSessionId() throws UserException, InterviewSessionException {
+        User mockUser = new User();
+        mockUser.setId(2);
+        mockUser.setUsername("bcd");
+        mockUser.setPassword("$2a$10$SgZX47bsE057V9z4n1NeG.y0hJkv1scG07pmPjPmBovIAnw4RhB7y");
+        mockUser.setEmail("b123@gmail.com");
+        mockUser.setPhoneNumber("0988888888");
+        mockUser.setRoleName(Role.Admin);
+        mockUser.setStatus(UserStatus.Active);
+        mockUser.setCreateDate(Date.valueOf("2023-10-23"));
+        mockUser.setUpdateDate(Date.valueOf("2023-10-23"));
+
+        var jwtToken = jwtService.generateToken(mockUser);
+
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(2);
+        lenient().when(userService.isEnabled(2)).thenReturn(true);
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        InterviewSession mockinterviewSession = new InterviewSession();
+        mockinterviewSession.setId(1);
+        mockinterviewSession.setInterviewerID(null);
+        mockinterviewSession.setApplicationID(1);
+//        mockinterviewSession.setPositionID(null);
+//        mockinterviewSession.setCandidateID(null);
+        mockinterviewSession.setDate(Date.valueOf("2023-10-29"));
+        mockinterviewSession.setLocation("fpt");
+        mockinterviewSession.setStatus(SessionStatus.valueOf("NotOnSchedule"));
+        mockinterviewSession.setLocation("NotYet");
+        mockinterviewSession.setNotes("abc");
+
+        when(interviewSessionService.getSelectedInterviewSession(1)).thenReturn(mockinterviewSession);
+        ResponseEntity<ResponseObject> responseEntity = adminController.detailInterviewSessionId(1,mockRequest);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals("Loading detailinterviewsession successfully", responseObject.getMessage());
+
+        InterviewSession returnedInterviewsession = (InterviewSession) responseObject.getData();
+        assertNotNull(returnedInterviewsession);
+        assertEquals(1, returnedInterviewsession.getId());
+        assertEquals("NotOnSchedule", returnedInterviewsession.getStatus());
+
+
+    }
+
+    @Test
+    void getEvaluate() {
+
+    }
 }
 
 
