@@ -449,5 +449,37 @@ public class AdminController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message(e.getMessage()).build());
         }
+
+    }
+    @GetMapping("/interviewsession/{interviewsessionID}")
+    public ResponseEntity<ResponseObject> getDetailInterviewSession(@PathVariable("interviewsessionID") Integer Id, HttpServletRequest request) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
+            if (!userInfo.isEnabled()) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR")
+                        .message("Account not active!").build(), HttpStatus.BAD_REQUEST);
+            }
+
+            InterviewSession interviewSession = interviewSessionService.findByID(Id);
+            if (interviewSession == null) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message("InterviewSession not found").build(), HttpStatus.NOT_FOUND);
+            }
+
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("id", interviewSession.getId());
+            data.put("interviewid", interviewSession.getInterviewerID());
+            data.put("applicationid", interviewSession.getApplicationID());
+            data.put("date", interviewSession.getDate());
+            data.put("location", interviewSession.getLocation());
+            data.put("status", interviewSession.getStatus());
+            data.put("result", interviewSession.getResult());
+            data.put("notes", interviewSession.getNotes());
+            return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").message("Loading interviewsession successfully").data(data).build());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message("Internal server error").build());
+        }
     }
 }

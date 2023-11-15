@@ -1267,4 +1267,78 @@ class AdminControllerTest {
         assertEquals("ERROR", response.getBody().getStatus());
     }
     //Finish testing updateApplicationStatus()
+
+    //Start testing getDetailInterviewSession()
+    @Test
+    void getDetailInterviewSession_success() throws UserException, InterviewSessionException {
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(2);
+        lenient().when(userService.isEnabled(2)).thenReturn(true);
+        lenient().when(userService.getUserRole(2)).thenReturn("Admin");
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        InterviewSession mockInterviewSession = new InterviewSession();
+        mockInterviewSession.setId(1);
+        mockInterviewSession.setInterviewerID(1);
+        mockInterviewSession.setApplicationID(1);
+        mockInterviewSession.setDate(Date.valueOf("2023-10-29"));
+        mockInterviewSession.setLocation("fpt");
+        mockInterviewSession.setStatus(SessionStatus.valueOf("NotOnSchedule"));
+        mockInterviewSession.setResult(SessionResult.valueOf("NotYet"));
+        mockInterviewSession.setNotes("abc");
+
+        lenient().when(interviewSessionService.findByID(1)).thenReturn(mockInterviewSession);
+        ResponseEntity<ResponseObject> responseEntity = adminController.getDetailInterviewSession(1, mockRequest);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals("Loading interviewsession successfully", responseObject.getMessage());
+    }
+
+    @Test
+    void getDetailInterviewSession_notFound() throws Exception{
+
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(2);
+        lenient().when(userService.isEnabled(2)).thenReturn(true);
+        lenient().when(userService.getUserRole(2)).thenReturn("Admin");
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        when(interviewSessionService.findByID(anyInt())).thenReturn(null);
+        ResponseEntity<ResponseObject> responseEntity = adminController.getDetailInterviewSession(1, mockRequest);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals("ERROR", responseObject.getStatus());
+
+    }
+
+    @Test
+    void getDetailInterviewSession_internalServerError() throws Exception{
+
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(2);
+        lenient().when(userService.isEnabled(2)).thenReturn(true);
+        lenient().when(userService.getUserRole(2)).thenReturn("Admin");
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        when(interviewSessionService.findByID(anyInt())).thenThrow(new RuntimeException("Some error occurred."));
+        ResponseEntity<ResponseObject> responseEntity = adminController.getDetailInterviewSession(1, mockRequest);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals("Internal server error", responseEntity.getBody().getMessage());
+
+    }
+    //Finish testing getDetailInterviewSession()
 }
