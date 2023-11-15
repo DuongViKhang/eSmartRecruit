@@ -140,7 +140,7 @@ public class AdminController {
             Integer userId = userInfo.getUserId();
             User user = userService.getUserById(userId);
             if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseObject.builder().status("ERROR").message("Account not active!").build());
             }
 
             List<Application> applications = applicationRepository.findAll();

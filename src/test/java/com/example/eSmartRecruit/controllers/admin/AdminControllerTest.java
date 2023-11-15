@@ -60,7 +60,6 @@ class AdminControllerTest {
     @Mock
     private ApplicationRepos applicationRepository;
 
-
     @Mock
     private PositionService positionService;
 
@@ -718,8 +717,9 @@ class AdminControllerTest {
         // Call the method
         ResponseEntity<ResponseObject> responseEntity = adminController.getApplications(mockRequest);
         // Assert
-        assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode());
-        assertNull(responseEntity.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals("ERROR", responseEntity.getBody().getStatus());
+        assertEquals("Account not active!", responseEntity.getBody().getMessage());
     }
     @Test
     void deletePosition_shouldReturnSuccessWhenPositionDeletedSuccessfully() throws JSONException, UserException, PositionException {
@@ -745,7 +745,7 @@ class AdminControllerTest {
         mockPosition.setUpdateDate(null);
         mockPosition.setLocation("fpt");
 
-         // Assuming positionID is 1
+        // Assuming positionID is 1
         when(positionService.getSelectedPosition(1)).thenReturn(mockPosition);
         doNothing().when(positionService).deletePosition(1); // Mocking delete success
         // Act
@@ -791,6 +791,7 @@ class AdminControllerTest {
         assertEquals("ERROR", responseObject.getStatus());
         assertEquals("Error deleting position: Simulated exception", responseObject.getMessage());
     }
+    //Finish testing createUser() function
     @Test
     void deletePosition_shouldReturnBadRequestWhenAccountNotActive() throws JSONException, UserException, PositionException {
 
@@ -897,8 +898,4 @@ class AdminControllerTest {
         // Verify that the editPosition method is called once with the updated position
         verify(positionService, times(1)).editPosition(eq(1), any(Position.class));
     }
-
 }
-
-
-
