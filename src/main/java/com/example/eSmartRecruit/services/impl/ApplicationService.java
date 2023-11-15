@@ -48,7 +48,7 @@ public class ApplicationService implements IApplicationService {
     public List<Application> getApplicationsByCandidateId(Integer candidateID) {
         return applicationRepository.findByCandidateID(candidateID);
     }
-    public Application getApplicationById(Integer ID, Integer candidateID) throws ApplicationException {
+    public Application getApplicationById(Integer ID) throws ApplicationException {
         return applicationRepository.findById(ID).orElseThrow(()->new ApplicationException("Cant find the required application!"));
     }
 
