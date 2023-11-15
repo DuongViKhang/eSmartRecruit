@@ -58,4 +58,25 @@ public class InterviewSessionService implements IInterviewSessionService {
         save(interviewSession);
         return interviewSession;
     }
+
+    public InterviewSession getSelectedInterviewSession(int id) throws InterviewSessionException {
+        return interviewSessionRepos.findById(id).orElseThrow(()->new InterviewSessionException("The required interviewsession not found"));
+    }
+    public String evaluate(Integer interviewsessionId, InterviewSession interviewSession) {
+        try {
+            InterviewSession evaluateInterview = interviewSessionRepos.findById(interviewsessionId)
+                    .orElseThrow(() -> new PositionException("The required position not found"));
+
+            evaluateInterview.setStatus(interviewSession.getStatus());
+            evaluateInterview.setResult(interviewSession.getResult());
+
+            return "Update infomation successfully";
+        } catch (PositionException e) {
+            return "Error updating information: " + e.getMessage();
+        }
+    }
+
+    public List<InterviewSession> getAllInterviewSession() throws InterviewSessionException {
+        return  interviewSessionRepos.findAll();
+    }
 }

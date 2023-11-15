@@ -26,4 +26,7 @@ public class InterviewSessionRequest {
     @NotBlank(message = "This must be filled!")
     @Pattern(message = "Please fill in the right format!", regexp = "^[a-zA-Z0-9]+$")
     String notes;
+
+    String status;
+    String result;
 }
