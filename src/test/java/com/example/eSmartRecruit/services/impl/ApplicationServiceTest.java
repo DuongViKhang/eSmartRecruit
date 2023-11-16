@@ -238,8 +238,25 @@ class ApplicationServiceTest {
         // Assert
         assertFalse(result);
     }
-
     @Test
-    void deletejob() {
+    public void testDeleteJob_Success() {
+        // Arrange
+        Integer candidateId = 1;
+        Integer jobId = 2 ;
+        Application application = new Application();
+        application.setCandidateID(candidateId);
+
+        when(applicationRepository.findById(jobId)).thenReturn(Optional.of(application));
+//        doNothing().when(applicationService).isPresent(jobId);
+        when(applicationService.isPresent(jobId)).thenReturn(true);
+        doNothing().when(applicationRepository).deleteById(jobId);
+
+        // Act
+        String result = applicationService.deletejob(candidateId, jobId);
+
+        // Assert
+        assertEquals("Successfully deleted!", result);
+        verify(applicationRepository, times(1)).findById(jobId);
+        verify(applicationRepository, times(1)).deleteById(jobId);
     }
 }

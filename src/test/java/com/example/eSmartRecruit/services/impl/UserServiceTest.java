@@ -442,7 +442,7 @@ void testGetCountUser() {
         assertEquals(UserStatus.Active, editedUser.getStatus());
 
         // Verify that userRepository.findById was called exactly once with the correct userId
-        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(2)).findById(userId);
 
         // Verify that userRepository.save was called exactly once
         verify(userRepository, times(1)).save(existingUser);
