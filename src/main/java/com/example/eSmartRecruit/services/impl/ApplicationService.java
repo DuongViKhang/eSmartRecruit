@@ -3,6 +3,7 @@ package com.example.eSmartRecruit.services.impl;
 import com.example.eSmartRecruit.exception.ApplicationException;
 import com.example.eSmartRecruit.models.Application;
 
+import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.services.IApplicationService;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -69,6 +70,24 @@ public class ApplicationService implements IApplicationService {
 
     }
 
+    public String adminUpdate(Integer id, ApplicationStatus status){
+        try{
+            Application exApplication = applicationRepository.findById(id).orElseThrow(()->new ApplicationException("Application not found!"));
+            exApplication.setStatus(status);
+            exApplication.setUpdateDate(Date.valueOf(LocalDate.now()));
+            applicationRepository.save(exApplication);
+            if(status == ApplicationStatus.Approved){
+                return "Approve application successfully!";
+            }
+            else if (status == ApplicationStatus.Declined){
+                return "Decline application successfully!";
+            }
+        }catch (Exception e){
+            return e.toString();
+        }
+        return null;
+    }
+
     public Boolean isPresent(Integer jobid){
         try{
             Application application = applicationRepository.findById(jobid).orElseThrow(()->new ApplicationException("Cant find this application!"));
@@ -99,5 +118,8 @@ public class ApplicationService implements IApplicationService {
 
     public Long getcountApplication() {
         return applicationRepository.count();
+    }
+    public Application findById(int id) throws ApplicationException{
+        return applicationRepository.findById(id).orElseThrow(()->new ApplicationContextException("Application not found!"));
     }
 }

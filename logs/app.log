@@ -1,0 +1,690 @@
+2023-11-15 10:40:54,598 ERROR c.e.e.c.a.AdminController [main] Error in getReport
+com.example.eSmartRecruit.exception.ApplicationException: null
+2023-11-15 11:19:15,581 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIxOTU1LCJleHAiOjE3MDAwMjU1NTV9.zvwT4wW4-_AjMJq3e6OfK5VWTvvmZl5LqvQhHlD-DsQ
+2023-11-15 11:19:15,629 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIxOTU1LCJleHAiOjE3MDAwMjU1NTV9.zvwT4wW4-_AjMJq3e6OfK5VWTvvmZl5LqvQhHlD-DsQ
+2023-11-15 11:19:15,630 ERROR c.e.e.c.a.AdminController [main] Internal Server Error: Error getting users
+com.example.eSmartRecruit.exception.UserException: Error getting users
+	at com.example.eSmartRecruit.services.impl.UserService.getAllUser(UserService.java:29)
+	at com.example.eSmartRecruit.controllers.admin.AdminController.getUsers(AdminController.java:260)
+	at com.example.eSmartRecruit.controllers.admin.AdminControllerTest.getUsers_shouldReturnInternalServerErrorResponseWhenCatchUserException(AdminControllerTest.java:385)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:727)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:217)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
+	at com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:57)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater$1.execute(IdeaTestRunner.java:38)
+	at com.intellij.rt.execution.junit.TestsRepeater.repeat(TestsRepeater.java:11)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
+	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:232)
+	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
+2023-11-15 11:19:15,657 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIxOTU1LCJleHAiOjE3MDAwMjU1NTV9.zvwT4wW4-_AjMJq3e6OfK5VWTvvmZl5LqvQhHlD-DsQ
+2023-11-15 11:19:15,657 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:19:15,742 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIxOTU1LCJleHAiOjE3MDAwMjU1NTV9.zvwT4wW4-_AjMJq3e6OfK5VWTvvmZl5LqvQhHlD-DsQ
+2023-11-15 11:19:15,743 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:19:15,871 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIxOTU1LCJleHAiOjE3MDAwMjU1NTV9.zvwT4wW4-_AjMJq3e6OfK5VWTvvmZl5LqvQhHlD-DsQ
+2023-11-15 11:19:15,872 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:19:15,881 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIxOTU1LCJleHAiOjE3MDAwMjU1NTV9.zvwT4wW4-_AjMJq3e6OfK5VWTvvmZl5LqvQhHlD-DsQ
+2023-11-15 11:19:15,894 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIxOTU1LCJleHAiOjE3MDAwMjU1NTV9.zvwT4wW4-_AjMJq3e6OfK5VWTvvmZl5LqvQhHlD-DsQ
+2023-11-15 11:19:15,895 INFO c.e.e.c.a.AdminController [main] Returning user list. Total users: 2
+2023-11-15 11:19:15,946 ERROR c.e.e.c.a.AdminController [main] Error in getReport
+com.example.eSmartRecruit.exception.ApplicationException: null
+2023-11-15 11:19:16,005 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIxOTU2LCJleHAiOjE3MDAwMjU1NTZ9.SOSmE34SK3JAqYFlSQN6h1sNTJmKVLM_n2YAEDEGQEw
+2023-11-15 11:19:16,006 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:36:01,184 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIyOTYxLCJleHAiOjE3MDAwMjY1NjF9.XL8Ksk8u1YcLIaaepJbkbFdfKqObR9IWP7uvxfglUB4
+2023-11-15 11:36:01,209 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIyOTYxLCJleHAiOjE3MDAwMjY1NjF9.XL8Ksk8u1YcLIaaepJbkbFdfKqObR9IWP7uvxfglUB4
+2023-11-15 11:36:01,210 ERROR c.e.e.c.a.AdminController [main] Internal Server Error: Error getting users
+com.example.eSmartRecruit.exception.UserException: Error getting users
+	at com.example.eSmartRecruit.services.impl.UserService.getAllUser(UserService.java:29)
+	at com.example.eSmartRecruit.controllers.admin.AdminController.getUsers(AdminController.java:260)
+	at com.example.eSmartRecruit.controllers.admin.AdminControllerTest.getUsers_shouldReturnInternalServerErrorResponseWhenCatchUserException(AdminControllerTest.java:386)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:727)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:217)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
+	at com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:57)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater$1.execute(IdeaTestRunner.java:38)
+	at com.intellij.rt.execution.junit.TestsRepeater.repeat(TestsRepeater.java:11)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
+	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:232)
+	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
+2023-11-15 11:36:01,226 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIyOTYxLCJleHAiOjE3MDAwMjY1NjF9.XL8Ksk8u1YcLIaaepJbkbFdfKqObR9IWP7uvxfglUB4
+2023-11-15 11:36:01,226 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:36:01,336 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIyOTYxLCJleHAiOjE3MDAwMjY1NjF9.XL8Ksk8u1YcLIaaepJbkbFdfKqObR9IWP7uvxfglUB4
+2023-11-15 11:36:01,338 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:36:01,497 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIyOTYxLCJleHAiOjE3MDAwMjY1NjF9.XL8Ksk8u1YcLIaaepJbkbFdfKqObR9IWP7uvxfglUB4
+2023-11-15 11:36:01,497 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:36:01,509 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIyOTYxLCJleHAiOjE3MDAwMjY1NjF9.XL8Ksk8u1YcLIaaepJbkbFdfKqObR9IWP7uvxfglUB4
+2023-11-15 11:36:01,525 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIyOTYxLCJleHAiOjE3MDAwMjY1NjF9.XL8Ksk8u1YcLIaaepJbkbFdfKqObR9IWP7uvxfglUB4
+2023-11-15 11:36:01,525 INFO c.e.e.c.a.AdminController [main] Returning user list. Total users: 2
+2023-11-15 11:36:01,579 ERROR c.e.e.c.a.AdminController [main] Error in getReport
+com.example.eSmartRecruit.exception.ApplicationException: null
+2023-11-15 11:36:01,641 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIyOTYxLCJleHAiOjE3MDAwMjY1NjF9.XL8Ksk8u1YcLIaaepJbkbFdfKqObR9IWP7uvxfglUB4
+2023-11-15 11:36:01,642 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:49:19,481 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzU5LCJleHAiOjE3MDAwMjczNTl9.1lRrGvIiHaAzrQDLxkTA9MqFopWNcee-G0XN4DOd2tg
+2023-11-15 11:49:19,503 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzU5LCJleHAiOjE3MDAwMjczNTl9.1lRrGvIiHaAzrQDLxkTA9MqFopWNcee-G0XN4DOd2tg
+2023-11-15 11:49:19,504 ERROR c.e.e.c.a.AdminController [main] Internal Server Error: Error getting users
+com.example.eSmartRecruit.exception.UserException: Error getting users
+	at com.example.eSmartRecruit.services.impl.UserService.getAllUser(UserService.java:29)
+	at com.example.eSmartRecruit.controllers.admin.AdminController.getUsers(AdminController.java:260)
+	at com.example.eSmartRecruit.controllers.admin.AdminControllerTest.getUsers_shouldReturnInternalServerErrorResponseWhenCatchUserException(AdminControllerTest.java:386)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:727)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:217)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
+	at com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:57)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater$1.execute(IdeaTestRunner.java:38)
+	at com.intellij.rt.execution.junit.TestsRepeater.repeat(TestsRepeater.java:11)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
+	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:232)
+	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
+2023-11-15 11:49:19,519 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzU5LCJleHAiOjE3MDAwMjczNTl9.1lRrGvIiHaAzrQDLxkTA9MqFopWNcee-G0XN4DOd2tg
+2023-11-15 11:49:19,519 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:49:19,627 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzU5LCJleHAiOjE3MDAwMjczNTl9.1lRrGvIiHaAzrQDLxkTA9MqFopWNcee-G0XN4DOd2tg
+2023-11-15 11:49:19,628 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:49:19,737 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzU5LCJleHAiOjE3MDAwMjczNTl9.1lRrGvIiHaAzrQDLxkTA9MqFopWNcee-G0XN4DOd2tg
+2023-11-15 11:49:19,738 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:49:19,748 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzU5LCJleHAiOjE3MDAwMjczNTl9.1lRrGvIiHaAzrQDLxkTA9MqFopWNcee-G0XN4DOd2tg
+2023-11-15 11:49:19,760 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzU5LCJleHAiOjE3MDAwMjczNTl9.1lRrGvIiHaAzrQDLxkTA9MqFopWNcee-G0XN4DOd2tg
+2023-11-15 11:49:19,761 INFO c.e.e.c.a.AdminController [main] Returning user list. Total users: 2
+2023-11-15 11:49:19,825 ERROR c.e.e.c.a.AdminController [main] Error in getReport
+com.example.eSmartRecruit.exception.ApplicationException: null
+2023-11-15 11:49:19,895 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzU5LCJleHAiOjE3MDAwMjczNTl9.1lRrGvIiHaAzrQDLxkTA9MqFopWNcee-G0XN4DOd2tg
+2023-11-15 11:49:19,896 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:49:31,529 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzcxLCJleHAiOjE3MDAwMjczNzF9.0OLfkFQCiy-OdSXIG09Hp1ja1lZDptHFWBJmtR0H9-o
+2023-11-15 11:49:31,554 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzcxLCJleHAiOjE3MDAwMjczNzF9.0OLfkFQCiy-OdSXIG09Hp1ja1lZDptHFWBJmtR0H9-o
+2023-11-15 11:49:31,556 ERROR c.e.e.c.a.AdminController [main] Internal Server Error: Error getting users
+com.example.eSmartRecruit.exception.UserException: Error getting users
+	at com.example.eSmartRecruit.services.impl.UserService.getAllUser(UserService.java:29)
+	at com.example.eSmartRecruit.controllers.admin.AdminController.getUsers(AdminController.java:260)
+	at com.example.eSmartRecruit.controllers.admin.AdminControllerTest.getUsers_shouldReturnInternalServerErrorResponseWhenCatchUserException(AdminControllerTest.java:386)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:727)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:217)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
+	at com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:57)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater$1.execute(IdeaTestRunner.java:38)
+	at com.intellij.rt.execution.junit.TestsRepeater.repeat(TestsRepeater.java:11)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
+	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:232)
+	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
+2023-11-15 11:49:31,577 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzcxLCJleHAiOjE3MDAwMjczNzF9.0OLfkFQCiy-OdSXIG09Hp1ja1lZDptHFWBJmtR0H9-o
+2023-11-15 11:49:31,578 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:49:31,690 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzcxLCJleHAiOjE3MDAwMjczNzF9.0OLfkFQCiy-OdSXIG09Hp1ja1lZDptHFWBJmtR0H9-o
+2023-11-15 11:49:31,691 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:49:31,817 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzcxLCJleHAiOjE3MDAwMjczNzF9.0OLfkFQCiy-OdSXIG09Hp1ja1lZDptHFWBJmtR0H9-o
+2023-11-15 11:49:31,818 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 11:49:31,827 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzcxLCJleHAiOjE3MDAwMjczNzF9.0OLfkFQCiy-OdSXIG09Hp1ja1lZDptHFWBJmtR0H9-o
+2023-11-15 11:49:31,837 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzcxLCJleHAiOjE3MDAwMjczNzF9.0OLfkFQCiy-OdSXIG09Hp1ja1lZDptHFWBJmtR0H9-o
+2023-11-15 11:49:31,838 INFO c.e.e.c.a.AdminController [main] Returning user list. Total users: 2
+2023-11-15 11:49:31,886 ERROR c.e.e.c.a.AdminController [main] Error in getReport
+com.example.eSmartRecruit.exception.ApplicationException: null
+2023-11-15 11:49:31,948 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDIzNzcxLCJleHAiOjE3MDAwMjczNzF9.0OLfkFQCiy-OdSXIG09Hp1ja1lZDptHFWBJmtR0H9-o
+2023-11-15 11:49:31,948 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:40:29,821 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDI5LCJleHAiOjE3MDAwMzQwMjl9.BzVVmb146HHVhOXal3JdYEBg2j6sPjMCDyM44qVp9z4
+2023-11-15 13:40:29,842 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDI5LCJleHAiOjE3MDAwMzQwMjl9.BzVVmb146HHVhOXal3JdYEBg2j6sPjMCDyM44qVp9z4
+2023-11-15 13:40:29,844 ERROR c.e.e.c.a.AdminController [main] Internal Server Error: Error getting users
+com.example.eSmartRecruit.exception.UserException: Error getting users
+	at com.example.eSmartRecruit.services.impl.UserService.getAllUser(UserService.java:29)
+	at com.example.eSmartRecruit.controllers.admin.AdminController.getUsers(AdminController.java:260)
+	at com.example.eSmartRecruit.controllers.admin.AdminControllerTest.getUsers_shouldReturnInternalServerErrorResponseWhenCatchUserException(AdminControllerTest.java:386)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:727)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:217)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
+	at com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:57)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater$1.execute(IdeaTestRunner.java:38)
+	at com.intellij.rt.execution.junit.TestsRepeater.repeat(TestsRepeater.java:11)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
+	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:232)
+	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
+2023-11-15 13:40:29,874 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDI5LCJleHAiOjE3MDAwMzQwMjl9.BzVVmb146HHVhOXal3JdYEBg2j6sPjMCDyM44qVp9z4
+2023-11-15 13:40:29,875 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:40:30,006 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDI5LCJleHAiOjE3MDAwMzQwMjl9.BzVVmb146HHVhOXal3JdYEBg2j6sPjMCDyM44qVp9z4
+2023-11-15 13:40:30,007 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:40:30,173 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDMwLCJleHAiOjE3MDAwMzQwMzB9.J3JRYFlUFDyTULVroh9_z7q3nskJI5ksXoopEc25H-g
+2023-11-15 13:40:30,173 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:40:30,185 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDMwLCJleHAiOjE3MDAwMzQwMzB9.J3JRYFlUFDyTULVroh9_z7q3nskJI5ksXoopEc25H-g
+2023-11-15 13:40:30,197 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDMwLCJleHAiOjE3MDAwMzQwMzB9.J3JRYFlUFDyTULVroh9_z7q3nskJI5ksXoopEc25H-g
+2023-11-15 13:40:30,198 INFO c.e.e.c.a.AdminController [main] Returning user list. Total users: 2
+2023-11-15 13:40:30,287 ERROR c.e.e.c.a.AdminController [main] Error in getReport
+com.example.eSmartRecruit.exception.ApplicationException: null
+2023-11-15 13:40:30,424 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDMwLCJleHAiOjE3MDAwMzQwMzB9.J3JRYFlUFDyTULVroh9_z7q3nskJI5ksXoopEc25H-g
+2023-11-15 13:40:30,426 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:40:39,985 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDM5LCJleHAiOjE3MDAwMzQwMzl9.JsHxP7aZ8nTJmNgC6Nc1xfNwce2CWsDtdmOg7G1UWtk
+2023-11-15 13:40:40,008 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDQwLCJleHAiOjE3MDAwMzQwNDB9.OW9JTBbpjhnxw27lgjCn1JruGvq1qXhf9cEgoHTnyR0
+2023-11-15 13:40:40,010 ERROR c.e.e.c.a.AdminController [main] Internal Server Error: Error getting users
+com.example.eSmartRecruit.exception.UserException: Error getting users
+	at com.example.eSmartRecruit.services.impl.UserService.getAllUser(UserService.java:29)
+	at com.example.eSmartRecruit.controllers.admin.AdminController.getUsers(AdminController.java:260)
+	at com.example.eSmartRecruit.controllers.admin.AdminControllerTest.getUsers_shouldReturnInternalServerErrorResponseWhenCatchUserException(AdminControllerTest.java:386)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:727)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:217)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
+	at com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:57)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater$1.execute(IdeaTestRunner.java:38)
+	at com.intellij.rt.execution.junit.TestsRepeater.repeat(TestsRepeater.java:11)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
+	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:232)
+	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
+2023-11-15 13:40:40,046 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDQwLCJleHAiOjE3MDAwMzQwNDB9.OW9JTBbpjhnxw27lgjCn1JruGvq1qXhf9cEgoHTnyR0
+2023-11-15 13:40:40,047 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:40:40,149 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDQwLCJleHAiOjE3MDAwMzQwNDB9.OW9JTBbpjhnxw27lgjCn1JruGvq1qXhf9cEgoHTnyR0
+2023-11-15 13:40:40,150 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:40:40,276 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDQwLCJleHAiOjE3MDAwMzQwNDB9.OW9JTBbpjhnxw27lgjCn1JruGvq1qXhf9cEgoHTnyR0
+2023-11-15 13:40:40,277 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:40:40,289 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDQwLCJleHAiOjE3MDAwMzQwNDB9.OW9JTBbpjhnxw27lgjCn1JruGvq1qXhf9cEgoHTnyR0
+2023-11-15 13:40:40,299 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDQwLCJleHAiOjE3MDAwMzQwNDB9.OW9JTBbpjhnxw27lgjCn1JruGvq1qXhf9cEgoHTnyR0
+2023-11-15 13:40:40,300 INFO c.e.e.c.a.AdminController [main] Returning user list. Total users: 2
+2023-11-15 13:40:40,367 ERROR c.e.e.c.a.AdminController [main] Error in getReport
+com.example.eSmartRecruit.exception.ApplicationException: null
+2023-11-15 13:40:40,424 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNDQwLCJleHAiOjE3MDAwMzQwNDB9.OW9JTBbpjhnxw27lgjCn1JruGvq1qXhf9cEgoHTnyR0
+2023-11-15 13:40:40,425 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:41:46,423 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTA2LCJleHAiOjE3MDAwMzQxMDZ9.IJVJur-e0wQWNFy0ERvFULb_GKH4RBG4ng8FLPJlQ7Y
+2023-11-15 13:41:46,453 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTA2LCJleHAiOjE3MDAwMzQxMDZ9.IJVJur-e0wQWNFy0ERvFULb_GKH4RBG4ng8FLPJlQ7Y
+2023-11-15 13:41:46,456 ERROR c.e.e.c.a.AdminController [main] Internal Server Error: Error getting users
+com.example.eSmartRecruit.exception.UserException: Error getting users
+	at com.example.eSmartRecruit.services.impl.UserService.getAllUser(UserService.java:29)
+	at com.example.eSmartRecruit.controllers.admin.AdminController.getUsers(AdminController.java:260)
+	at com.example.eSmartRecruit.controllers.admin.AdminControllerTest.getUsers_shouldReturnInternalServerErrorResponseWhenCatchUserException(AdminControllerTest.java:386)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:727)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:217)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
+	at com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:57)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater$1.execute(IdeaTestRunner.java:38)
+	at com.intellij.rt.execution.junit.TestsRepeater.repeat(TestsRepeater.java:11)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
+	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:232)
+	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
+2023-11-15 13:41:46,471 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTA2LCJleHAiOjE3MDAwMzQxMDZ9.IJVJur-e0wQWNFy0ERvFULb_GKH4RBG4ng8FLPJlQ7Y
+2023-11-15 13:41:46,472 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:41:46,586 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTA2LCJleHAiOjE3MDAwMzQxMDZ9.IJVJur-e0wQWNFy0ERvFULb_GKH4RBG4ng8FLPJlQ7Y
+2023-11-15 13:41:46,587 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:41:46,706 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTA2LCJleHAiOjE3MDAwMzQxMDZ9.IJVJur-e0wQWNFy0ERvFULb_GKH4RBG4ng8FLPJlQ7Y
+2023-11-15 13:41:46,706 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:41:46,716 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTA2LCJleHAiOjE3MDAwMzQxMDZ9.IJVJur-e0wQWNFy0ERvFULb_GKH4RBG4ng8FLPJlQ7Y
+2023-11-15 13:41:46,725 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTA2LCJleHAiOjE3MDAwMzQxMDZ9.IJVJur-e0wQWNFy0ERvFULb_GKH4RBG4ng8FLPJlQ7Y
+2023-11-15 13:41:46,726 INFO c.e.e.c.a.AdminController [main] Returning user list. Total users: 2
+2023-11-15 13:41:46,788 ERROR c.e.e.c.a.AdminController [main] Error in getReport
+com.example.eSmartRecruit.exception.ApplicationException: null
+2023-11-15 13:41:46,854 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTA2LCJleHAiOjE3MDAwMzQxMDZ9.IJVJur-e0wQWNFy0ERvFULb_GKH4RBG4ng8FLPJlQ7Y
+2023-11-15 13:41:46,856 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:42:56,676 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTc2LCJleHAiOjE3MDAwMzQxNzZ9.r_zECxkMuX0VsaJ55SWSlxBDbDxPI0-VSi5F6c5ko0Y
+2023-11-15 13:42:56,702 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTc2LCJleHAiOjE3MDAwMzQxNzZ9.r_zECxkMuX0VsaJ55SWSlxBDbDxPI0-VSi5F6c5ko0Y
+2023-11-15 13:42:56,704 ERROR c.e.e.c.a.AdminController [main] Internal Server Error: Error getting users
+com.example.eSmartRecruit.exception.UserException: Error getting users
+	at com.example.eSmartRecruit.services.impl.UserService.getAllUser(UserService.java:29)
+	at com.example.eSmartRecruit.controllers.admin.AdminController.getUsers(AdminController.java:260)
+	at com.example.eSmartRecruit.controllers.admin.AdminControllerTest.getUsers_shouldReturnInternalServerErrorResponseWhenCatchUserException(AdminControllerTest.java:386)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:727)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:217)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.junit.platform.launcher.core.SessionPerRequestLauncher.execute(SessionPerRequestLauncher.java:53)
+	at com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:57)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater$1.execute(IdeaTestRunner.java:38)
+	at com.intellij.rt.execution.junit.TestsRepeater.repeat(TestsRepeater.java:11)
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:35)
+	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:232)
+	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:55)
+2023-11-15 13:42:56,741 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTc2LCJleHAiOjE3MDAwMzQxNzZ9.r_zECxkMuX0VsaJ55SWSlxBDbDxPI0-VSi5F6c5ko0Y
+2023-11-15 13:42:56,742 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:42:56,854 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTc2LCJleHAiOjE3MDAwMzQxNzZ9.r_zECxkMuX0VsaJ55SWSlxBDbDxPI0-VSi5F6c5ko0Y
+2023-11-15 13:42:56,855 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:42:56,991 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTc2LCJleHAiOjE3MDAwMzQxNzZ9.r_zECxkMuX0VsaJ55SWSlxBDbDxPI0-VSi5F6c5ko0Y
+2023-11-15 13:42:56,991 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
+2023-11-15 13:42:57,004 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTc2LCJleHAiOjE3MDAwMzQxNzZ9.r_zECxkMuX0VsaJ55SWSlxBDbDxPI0-VSi5F6c5ko0Y
+2023-11-15 13:42:57,018 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTc3LCJleHAiOjE3MDAwMzQxNzd9.yrrOQIjDehLbSjMXVqX3d1aSkauegsqE0VtbjAvm4XI
+2023-11-15 13:42:57,019 INFO c.e.e.c.a.AdminController [main] Returning user list. Total users: 2
+2023-11-15 13:42:57,096 ERROR c.e.e.c.a.AdminController [main] Error in getReport
+com.example.eSmartRecruit.exception.ApplicationException: null
+2023-11-15 13:42:57,155 INFO c.e.e.c.a.AdminController [main] Received request to get users. Authorization header: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiY2QiLCJqdGkiOiIyIiwiaWF0IjoxNzAwMDMwNTc3LCJleHAiOjE3MDAwMzQxNzd9.yrrOQIjDehLbSjMXVqX3d1aSkauegsqE0VtbjAvm4XI
+2023-11-15 13:42:57,156 WARN c.e.e.c.a.AdminController [main] Unauthorized access. User ID: 2
