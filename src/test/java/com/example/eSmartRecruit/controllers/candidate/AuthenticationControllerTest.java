@@ -90,7 +90,7 @@ class AuthenticationControllerTest {
 
         var jwtToken = jwtService.generateToken(mockUser);
 
-        ResponseObject response = ResponseObject.builder().message(jwtToken).status("SUCCESS").build();
+        ResponseObject response = ResponseObject.builder().message(jwtToken).status(ResponseObject.SUCCESS_STATUS).build();
         lenient().when(authenticationService.register(mockRequest)).thenReturn(response);
 
         ResponseEntity<ResponseObject> responseEntity = authenticationController.register(mockRequest);
@@ -98,7 +98,7 @@ class AuthenticationControllerTest {
 
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
         assertEquals(jwtToken, responseObject.getMessage());
 
     }
@@ -133,7 +133,7 @@ class AuthenticationControllerTest {
 
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
         assertEquals(jwtToken, responseObject.getMessage());
     }
 
@@ -155,7 +155,7 @@ class AuthenticationControllerTest {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
 
-        ResponseObject response = ResponseObject.builder().message("Token removed!").status("SUCCESS").build();
+        ResponseObject response = ResponseObject.builder().message(ResponseObject.LOGOUT_SUCCESS).status(ResponseObject.SUCCESS_STATUS).build();
         lenient().when(authenticationService.logout(jwtToken)).thenReturn(response);
         ResponseEntity<ResponseObject> responseEntity = authenticationController.logout(mockRequest);
 
@@ -165,8 +165,8 @@ class AuthenticationControllerTest {
 
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("SUCCESS", responseObject.getStatus());
-        assertEquals("Token removed!", responseObject.getMessage());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.LOGOUT_SUCCESS, responseObject.getMessage());
     }
 
     @Test
