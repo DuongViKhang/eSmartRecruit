@@ -13,6 +13,9 @@ public class ResponseObject {
     public static final String ERROR_STATUS = "ERROR";
 
     //msg
+    public static final String REGISTER_SUCCESS = "Register successfully!";
+    public static final String SIGN_IN_SUCCESS = "Sign in successfully!";
+    public static final String LOGOUT_SUCCESS = "Logout successfully!";
     public static final String USER_NOT_FOUND = "User Not Found";
     public static final String APPLICATION_NOT_FOUND = "Application not found!";
     public static final String CV_NOT_FOUND = "CV is required!Not found!";
