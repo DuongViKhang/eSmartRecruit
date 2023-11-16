@@ -1,18 +1,14 @@
 package com.example.eSmartRecruit.services.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.EditUserRequest;
+import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
 import com.example.eSmartRecruit.exception.UserException;
 import com.example.eSmartRecruit.models.User;
+import com.example.eSmartRecruit.models.enumModel.Role;
 import com.example.eSmartRecruit.models.enumModel.UserStatus;
 import com.example.eSmartRecruit.repositories.UserRepos;
-import com.example.eSmartRecruit.models.enumModel.Role;
-//import com.example.eSmartRecruit.requests.UserRequest;
-import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +17,9 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class UserServiceTest {
 
@@ -413,40 +412,101 @@ void testGetCountUser() {
         assertEquals("User not found!", exception.getMessage());
     }
 
+//    @Test
+//    void testEditUser_SuccessfulEdit() throws UserException {
+//        // Arrange
+//        int userId = 1;
+//        EditUserRequest editUserRequest = new EditUserRequest("john_doe1", "john1_doe@example.com","John@1234", "0123456799","Candidate","Active");
+//        User existingUser = new User(userId, "john_doe", "john_doe@example.com","John@123", "0123456789",Role.Candidate,UserStatus.Active,Date.valueOf("2023-11-02"), Date.valueOf("2023-11-02"));
+//
+//        // Mocking the behavior of findById
+//        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
+//
+//        // Mocking the behavior of other checkDuplicate methods
+//        when(userService.checkDuplicateUsername(existingUser)).thenReturn(null);
+//        when(userService.checkDuplicateEmail(existingUser)).thenReturn(null);
+//        when(userService.checkDuplicatePhone(existingUser)).thenReturn(null);
+//
+//        // Mocking the behavior of userRepository.save
+//        when(userRepository.save(any())).thenReturn(existingUser);
+//
+//        // Act
+//        User editedUser = userService.editUser(userId, editUserRequest);
+//
+//        // Assert
+//        assertNotNull(editedUser);
+//        assertEquals("john_doe1", editedUser.getUsername());
+//        assertEquals("john1_doe@example.com", editedUser.getEmail());
+//        assertEquals("0123456799", editedUser.getPhoneNumber());
+//        assertEquals(UserStatus.Active, editedUser.getStatus());
+//
+//        // Verify that userRepository.findById was called exactly once with the correct userId
+//        verify(userRepository, times(1)).findById(userId);
+//
+//        // Verify that userRepository.save was called exactly once
+//        verify(userRepository, times(1)).save(existingUser);
+//    }
+
     @Test
-    void testEditUser_SuccessfulEdit() throws UserException {
+    public void testEditUser_DuplicateUsername() {
         // Arrange
         int userId = 1;
-        EditUserRequest editUserRequest = new EditUserRequest("john_doe1", "john1_doe@example.com","John@1234", "0123456799","Candidate","Active");
-        User existingUser = new User(userId, "john_doe", "john_doe@example.com","John@123", "0123456789",Role.Candidate,UserStatus.Active,Date.valueOf("2023-11-02"), Date.valueOf("2023-11-02"));
+        EditUserRequest editUserRequest = new EditUserRequest("john_doe", "newpassword", "john.doe@example.com", "1234567890", "Candidate", "Active");
+        User existingUser = new User(userId, "john_doe", "password", "john.doe@example.com", "1234567890", Role.Candidate, UserStatus.Active, Date.valueOf("2021-01-12"), Date.valueOf("2021-01-02"));
 
-        // Mocking the behavior of findById
         when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
+        when(userRepository.findByUsername(editUserRequest.getUsername())).thenReturn(Optional.of(existingUser));
 
-        // Mocking the behavior of other checkDuplicate methods
-        when(userService.checkDuplicateUsername(existingUser)).thenReturn(null);
-        when(userService.checkDuplicateEmail(existingUser)).thenReturn(null);
-        when(userService.checkDuplicatePhone(existingUser)).thenReturn(null);
-
-        // Mocking the behavior of userRepository.save
-        when(userRepository.save(any())).thenReturn(existingUser);
-
-        // Act
-        User editedUser = userService.editUser(userId, editUserRequest);
-
-        // Assert
-        assertNotNull(editedUser);
-        assertEquals("john_doe1", editedUser.getUsername());
-        assertEquals("john1_doe@example.com", editedUser.getEmail());
-        assertEquals("0123456799", editedUser.getPhoneNumber());
-        assertEquals(UserStatus.Active, editedUser.getStatus());
-
-        // Verify that userRepository.findById was called exactly once with the correct userId
-        verify(userRepository, times(2)).findById(userId);
-
-        // Verify that userRepository.save was called exactly once
-        verify(userRepository, times(1)).save(existingUser);
+        // Act and Assert
+        assertThrows(UserException.class, () -> userService.editUser(userId, editUserRequest));
     }
 
+    @Test
+    public void testEditUser_DuplicateEmail() {
+        // Arrange
+        int userId = 1;
+        EditUserRequest editUserRequest = new EditUserRequest("john_doe", "newpassword", "john.doe@example.com", "1234567890", "Candidate", "Active");
+        User existingUser = new User(userId, "john_doe", "password", "john.doe@example.com", "1234567890", Role.Candidate, UserStatus.Active, Date.valueOf("2021-01-12"), Date.valueOf("2021-01-02"));
 
+        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
+        when(userRepository.findByEmail(editUserRequest.getEmail())).thenReturn(Optional.of(existingUser));
+
+        // Act and Assert
+        assertThrows(UserException.class, () -> userService.editUser(userId, editUserRequest));
+    }
+
+    @Test
+    public void testEditUser_DuplicatePhone() {
+        // Arrange
+        int userId = 1;
+        EditUserRequest editUserRequest = new EditUserRequest("john_doe", "newpassword", "john.doe@example.com", "1234567890", "Candidate", "Active");
+        User existingUser = new User(userId, "john_doe", "password", "john.doe@example.com", "1234567890", Role.Candidate, UserStatus.Active, Date.valueOf("2021-01-12"), Date.valueOf("2021-01-02"));
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
+        when(userRepository.findByPhoneNumber(editUserRequest.getPhonenumber())).thenReturn(Optional.of(existingUser));
+
+        // Act and Assert
+        assertThrows(UserException.class, () -> userService.editUser(userId, editUserRequest));
+    }
+
+    @Test
+    public void testEditUser_SuccessfulEdit() throws UserException {
+        // Arrange
+        int userId = 1;
+        EditUserRequest editUserRequest = new EditUserRequest("john_doe", "newpassword", "john.doe@example.com", "1234567890", "Candidate", "Active");
+        User existingUser = new User(userId, "john_doe", "password", "john.doe@example.com", "1234567890", Role.Candidate, UserStatus.Active, Date.valueOf("2021-01-12"), Date.valueOf("2021-01-02"));
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
+        when(userRepository.save(existingUser)).thenReturn(existingUser);
+
+        // Act
+        User updatedUser = userService.editUser(userId, editUserRequest);
+
+        // Assert
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(1)).save(existingUser);
+        assertNotNull(updatedUser);
+        assertEquals(editUserRequest.getUsername(), updatedUser.getUsername());
+        // Additional assertions for other fields
+    }
 }

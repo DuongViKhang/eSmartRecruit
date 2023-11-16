@@ -1,26 +1,20 @@
 package com.example.eSmartRecruit.services.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.example.eSmartRecruit.controllers.request_reponse.request.InterviewSessionRequest;
 import com.example.eSmartRecruit.exception.InterviewSessionException;
 import com.example.eSmartRecruit.models.InterviewSession;
-import com.example.eSmartRecruit.models.enumModel.Role;
-import com.example.eSmartRecruit.models.enumModel.SessionResult;
-import com.example.eSmartRecruit.models.enumModel.UserStatus;
-import com.example.eSmartRecruit.repositories.InterviewSessionRepos;
 import com.example.eSmartRecruit.models.enumModel.SessionStatus;
-import com.example.eSmartRecruit.repositories.UserRepos;
+import com.example.eSmartRecruit.repositories.InterviewSessionRepos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class InterviewSessionServiceTest {
 
@@ -133,38 +127,40 @@ public class InterviewSessionServiceTest {
         // Verify that interviewSessionRepos.save() was called exactly once with the correct interviewSession
         verify(interviewSessionRepos, times(1)).save(interviewSession);
     }
-//    @Test
-//    void testScheduleInterview_Success() throws InterviewSessionException {
-//        // Arrange
-//        int sessionId = 1;
-//        InterviewSessionRequest interviewSessionRequest = new InterviewSessionRequest(3,Date.valueOf("2023-11-02"),"FPT - Thu Duc City","Good");
-//        InterviewSession existingInterviewSession = new InterviewSession(sessionId,1,2,Date.valueOf("2023-11-12"),"Vo Van Ngan",SessionStatus.Already, SessionResult.Good,"Tốt");
-//        // Mocking the behavior of findByID
-//
-////        InterviewSessionService tempService = new InterviewSessionService();
-////        InterviewSessionService spyTemp = Mockito.spy(tempService);
-////
-////        Mockito.doReturn(existingInterviewSession).when(spyTemp).findByID(1);
-//        when(interviewSessionRepos.findById(1)).thenReturn(Optional.of(existingInterviewSession));
-//        when(interviewSessionService.findByID(sessionId)).thenReturn(Optional.of(existingInterviewSession));
-//
-//        // Mocking the behavior of save
-//        when(interviewSessionRepos.save(any())).thenReturn(existingInterviewSession);
-//
-//        // Act
-//        InterviewSession scheduledInterviewSession = interviewSessionService.scheduleInterview(sessionId, interviewSessionRequest);
-//
-//        // Assert
-//        assertEquals(interviewSessionRequest.getInterviewerId(), scheduledInterviewSession.getInterviewerID());
-//        assertEquals(interviewSessionRequest.getDate(), scheduledInterviewSession.getDate());
-//        assertEquals(interviewSessionRequest.getLocation(), scheduledInterviewSession.getLocation());
-//        assertEquals(SessionStatus.Yet, scheduledInterviewSession.getStatus());
-//        assertEquals(interviewSessionRequest.getNotes(), scheduledInterviewSession.getNotes());
-//
-//        // Verify that findByID was called exactly once with the correct sessionId
-//        verify(interviewSessionService, times(1)).findByID(sessionId);
-//
-//        // Verify that save was called exactly once with the correct interview session
-//        verify(interviewSessionRepos, times(1)).save(existingInterviewSession);
-//    }
+
+    @Test
+    void testScheduleInterview_Success() throws InterviewSessionException {
+        // Arrange
+        int id = 1;
+        InterviewSessionRequest interviewSessionRequest = new InterviewSessionRequest();
+        interviewSessionRequest.setInterviewerId(123);
+        interviewSessionRequest.setDate(Date.valueOf("2022-12-12"));
+        interviewSessionRequest.setLocation("Test Location");
+        interviewSessionRequest.setNotes("Test Notes");
+
+        InterviewSession interviewSession = new InterviewSession();
+        interviewSession.setId(id);
+
+        // Mock the repository method calls
+        when(interviewSessionRepos.findById(anyInt())).thenReturn(Optional.of(interviewSession));
+        when(interviewSessionRepos.save(any())).thenReturn(interviewSession);
+
+        // Act
+        InterviewSession result = interviewSessionService.scheduleInterview(id, interviewSessionRequest);
+
+        // Assert
+        verify(interviewSessionRepos, times(1)).findById(anyInt());
+        verify(interviewSessionRepos, times(1)).save(any());
+
+        // Assert the updated interviewSession object
+        assertEquals(interviewSessionRequest.getInterviewerId(), result.getInterviewerID());
+        assertEquals(interviewSessionRequest.getDate(), result.getDate());
+        assertEquals(interviewSessionRequest.getLocation(), result.getLocation());
+        assertEquals(SessionStatus.Yet, result.getStatus());
+        assertEquals(interviewSessionRequest.getNotes(), result.getNotes());
+    }
 }
+
+
+
+

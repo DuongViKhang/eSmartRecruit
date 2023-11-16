@@ -1,18 +1,19 @@
 package com.example.eSmartRecruit.services.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import com.example.eSmartRecruit.exception.ApplicationException;
+import com.example.eSmartRecruit.exception.NotFoundException;
 import com.example.eSmartRecruit.models.Application;
+import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
+import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import com.example.eSmartRecruit.repositories.ApplicationRepos;
-import java.util.Optional;
+
 import java.util.Arrays;
 import java.util.List;
-import java.sql.Date;
-import java.time.LocalDate;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 class ApplicationServiceTest {
     private ApplicationService applicationService;
     private ApplicationRepos applicationRepository;
@@ -194,6 +195,25 @@ class ApplicationServiceTest {
     }
 
     @Test
+    public void testAdminUpdate_StatusApproved() {
+        // Arrange
+        int applicationId = 1;
+        ApplicationStatus status = ApplicationStatus.Approved;
+        Application expectedApplication = new Application(applicationId, 1, "gsdfgsdgf");
+        expectedApplication.setStatus(status);
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(expectedApplication));
+
+        // Act
+        String result = applicationService.adminUpdate(applicationId, status);
+
+        // Assert
+        verify(applicationRepository, times(1)).findById(applicationId);
+        verify(applicationRepository, times(1)).save(expectedApplication);
+        assertEquals("Approve application successfully!", result);
+    }
+
+    @Test
     void testIsPresent_ApplicationFound() {
         // Arrange
         Integer applicationId = 1;
@@ -228,7 +248,7 @@ class ApplicationServiceTest {
         // Arrange
         Integer applicationId = 1;
 
-        when(applicationRepository.findById(applicationId)).thenThrow(new ApplicationException("Test exception"));
+        when(applicationRepository.findById(applicationId)).thenThrow(new NotFoundException("Cant find this application!"));
 
         ApplicationService applicationService = new ApplicationService(applicationRepository);
 
@@ -238,25 +258,132 @@ class ApplicationServiceTest {
         // Assert
         assertFalse(result);
     }
+
     @Test
-    public void testDeleteJob_Success() {
+    public void testDeleteJob_SuccessfulDeletion() throws ApplicationException {
         // Arrange
-        Integer candidateId = 1;
-        Integer jobId = 2 ;
+        int candidateId = 123;
+        int jobId = 1;
+
         Application application = new Application();
         application.setCandidateID(candidateId);
 
-        when(applicationRepository.findById(jobId)).thenReturn(Optional.of(application));
-//        doNothing().when(applicationService).isPresent(jobId);
-        when(applicationService.isPresent(jobId)).thenReturn(true);
-        doNothing().when(applicationRepository).deleteById(jobId);
+        // Mock the repository method calls
+        when(applicationRepository.findById(anyInt())).thenReturn(Optional.of(application));
+//        when(applicationRepository.existsById(anyInt())).thenReturn(true);
 
         // Act
         String result = applicationService.deletejob(candidateId, jobId);
 
         // Assert
+        verify(applicationRepository, times(2)).findById(anyInt());
+        verify(applicationRepository, times(1)).deleteById(anyInt());
+
+        // Assert the result message
         assertEquals("Successfully deleted!", result);
+    }
+
+    @Test
+    public void testDeleteJob_ApplicationNotFound() throws ApplicationException {
+        // Arrange
+        int candidateId = 123;
+        int jobId = 1;
+
+        // Mock the repository method calls
+        when(applicationRepository.findById(anyInt())).thenReturn(Optional.empty());
+
+        // Act
+        String result = applicationService.deletejob(candidateId, jobId);
+
+        // Assert
         verify(applicationRepository, times(1)).findById(jobId);
-        verify(applicationRepository, times(1)).deleteById(jobId);
+        verify(applicationRepository, never()).deleteById(anyInt());
+
+        // Assert the result message
+        assertEquals("Cant find this application!", result);
+    }
+
+    @Test
+    public void testDeleteJob_NotYourApplication() throws ApplicationException {
+        // Arrange
+        int candidateId = 123;
+        int jobId = 1;
+
+        Application application = new Application();
+        application.setCandidateID(456);
+
+        // Mock the repository method calls
+        when(applicationRepository.findById(anyInt())).thenReturn(Optional.of(application));
+
+        // Act
+        String result = applicationService.deletejob(candidateId, jobId);
+
+        // Assert
+        verify(applicationRepository, times(2)).findById(jobId);
+        verify(applicationRepository, never()).deleteById(anyInt());
+
+        // Assert the result message
+        assertEquals("This is not your application!", result);
+    }
+
+    @Test
+    public void testDeleteJob_ExceptionThrown() throws ApplicationException {
+        // Arrange
+        int candidateId = 123;
+        int jobId = 1;
+
+        // Mock the repository method calls
+        when(applicationRepository.findById(anyInt())).thenThrow(new NotFoundException("Cant find this application!"));
+//        doAnswer(new ApplicationException("Something went wrong!")).when(applicationRepository).findById(jobId);
+        // Act
+        String result = applicationService.deletejob(candidateId, jobId);
+
+        // Assert
+        verify(applicationRepository, times(1)).findById(jobId);
+        verify(applicationRepository, never()).deleteById(anyInt());
+
+        // Assert the result message
+        assertEquals("Cant find this application!", result);
+    }
+
+    @Test
+    public void testGetCountApplication() {
+        // Arrange
+        long expectedCount = 10;
+        when(applicationRepository.count()).thenReturn(expectedCount);
+
+        // Act
+        long actualCount = applicationService.getcountApplication();
+
+        // Assert
+        verify(applicationRepository, times(1)).count();
+        assertEquals(expectedCount, actualCount);
+    }
+
+    @Test
+    public void testFindById_ApplicationFound() {
+        // Arrange
+        int applicationId = 1;
+        Application expectedApplication = new Application(applicationId, 1, "sdfgdsfg");
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.of(expectedApplication));
+
+        // Act
+        Application actualApplication = applicationService.findById(applicationId);
+
+        // Assert
+        verify(applicationRepository, times(1)).findById(applicationId);
+        assertEquals(expectedApplication, actualApplication);
+    }
+
+    @Test
+    public void testFindById_ApplicationNotFound() {
+        // Arrange
+        int applicationId = 1;
+
+        when(applicationRepository.findById(applicationId)).thenReturn(Optional.empty());
+
+        // Act and Assert
+        assertThrows(NotFoundException.class, () -> applicationService.findById(applicationId));
     }
 }
