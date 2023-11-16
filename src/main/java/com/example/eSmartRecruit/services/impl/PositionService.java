@@ -1,5 +1,6 @@
 package com.example.eSmartRecruit.services.impl;
 
+import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.exception.PositionException;
 import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.repositories.PositionRepos;
@@ -17,11 +18,11 @@ public class PositionService implements IPositionService
     private final PositionRepos positionRepository;
 
     public Position getSelectedPosition(int id) throws PositionException {
-        return positionRepository.findById(id).orElseThrow(()->new PositionException("The required position not found"));
+        return positionRepository.findById(id).orElseThrow(()->new PositionException(ResponseObject.POSITION_NOT_FOUND));
     }
 
     public boolean isPresent(int id) throws PositionException {
-            Position pos = positionRepository.findById(id).orElseThrow(()->new PositionException("The required position not found"));
+            Position pos = positionRepository.findById(id).orElseThrow(()->new PositionException(ResponseObject.POSITION_NOT_FOUND));
             if(pos.getExpireDate().toLocalDate().isBefore(LocalDate.now())){
                 return false;
             }
@@ -39,7 +40,7 @@ public class PositionService implements IPositionService
     public String editPosition(Integer positionID, Position position) {
         try {
             Position existingPosition = positionRepository.findById(positionID)
-                    .orElseThrow(() -> new PositionException("The required position not found"));
+                    .orElseThrow(() -> new PositionException(ResponseObject.POSITION_NOT_FOUND));
 
             existingPosition.setTitle(position.getTitle());
             existingPosition.setJobDescription(position.getJobDescription());
@@ -49,9 +50,9 @@ public class PositionService implements IPositionService
             existingPosition.setLocation(position.getLocation());
             positionRepository.save(existingPosition);
 
-            return "Position updated successfully";
+            return ResponseObject.UPDATED_SUCCESS;
         } catch (PositionException e) {
-            return "Error updating position: " + e.getMessage();
+            return ResponseObject.UPDATED_FAIL+": "+ e.getMessage();
         }
     }
 

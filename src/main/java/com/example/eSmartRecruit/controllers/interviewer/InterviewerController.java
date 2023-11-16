@@ -40,27 +40,23 @@ public class InterviewerController {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!")
-                        .status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
+
             Integer interviewerId = userInfo.getUserId();
             List<InterviewSession> interviewSessionList = interviewSessionService.findByInterviewerID(interviewerId);
 
             // trường hợp danh sách phiên phỏng vấn trống
             if (interviewSessionList.isEmpty()) {
                 return new ResponseEntity<>(ResponseObject.builder()
-                        .message("No interview sessions found").status("SUCCESS")
+                        .message(ResponseObject.NO_INTERVIEWSESSION).status(ResponseObject.SUCCESS_STATUS)
                         .data(Collections.emptyList()).build(), HttpStatus.OK);
             }
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message("").status("SUCCESS")
+                    .message("").status(ResponseObject.SUCCESS_STATUS)
                     .data(interviewSessionList).build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                     .message(e.getMessage())
-                    .status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                    .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -69,19 +65,15 @@ public class InterviewerController {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!")
-                        .status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
+
             InterviewSession interviewSession = interviewSessionService.findByID(interviewersessionID);
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message("").status("SUCCESS")
+                    .message("").status(ResponseObject.SUCCESS_STATUS)
                     .data(interviewSession).build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                     .message(e.getMessage())
-                    .status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                    .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -91,16 +83,12 @@ public class InterviewerController {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!")
-                        .status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
+
 
             if (!interviewSessionService.isAlready(interviewersessionID)) {
                 return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Interview Session not already done!")
-                        .status("ERROR").build(), HttpStatus.BAD_REQUEST);
+                        .message(ResponseObject.INTERVIEW_SESSION)
+                        .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
             }
 
             Report report = Report.builder()
@@ -110,13 +98,13 @@ public class InterviewerController {
                     .createDate(Date.valueOf(LocalDate.now()))
                     .updateDate(Date.valueOf(LocalDate.now())).build();
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .status("SUCCESS")
+                    .status(ResponseObject.SUCCESS_STATUS)
                     .message(reportService.reportInterviewSession(report)).build(), HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                     .message(e.getMessage())
-                    .status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                    .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -127,10 +115,7 @@ public class InterviewerController {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
+
 
             Integer userId = userInfo.getUserId();
             User user = userService.getUserById(userId);
@@ -141,9 +126,9 @@ public class InterviewerController {
             data.put("phonenumber", user.getPhoneNumber());
             data.put("roleName", user.getRoleName().name());
 
-            return new ResponseEntity<>(ResponseObject.builder().status("SUCCESS").data(data).build(), HttpStatus.OK);
+            return new ResponseEntity<>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).data(data).build(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(ResponseObject.builder().status("ERROR")
+            return new ResponseEntity<>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS)
                     .message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -166,10 +151,10 @@ public class InterviewerController {
             data.put("email", user.getEmail());
             data.put("phoneNumber", user.getPhoneNumber());
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .status("SUCCESS").data(data).build(), HttpStatus.OK);
+                    .status(ResponseObject.SUCCESS_STATUS).data(data).build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .status("ERROR").message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                    .status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -178,16 +163,13 @@ public class InterviewerController {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
+
 
             User candidate = userService.getUserById(candidateId);
             if (!candidate.getRoleName().equals(Role.Candidate)) {
                 return new ResponseEntity<>(ResponseObject.builder()
-                        .message("Not a candidate")
-                        .status("ERROR").build(), HttpStatus.BAD_REQUEST);
+                        .message(ResponseObject.NOT_CANDIDATE)
+                        .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
             }
 
             Map<String, String> data = new HashMap<>();
@@ -196,9 +178,9 @@ public class InterviewerController {
             data.put("phonenumber", candidate.getPhoneNumber());
             data.put("roleName", candidate.getRoleName().name());
 
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).data(data).build(), HttpStatus.OK);
         } catch (Exception exception) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR")
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS)
                     .message(exception.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
