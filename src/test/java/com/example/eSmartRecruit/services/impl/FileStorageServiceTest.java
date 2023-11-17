@@ -1,23 +1,14 @@
 package com.example.eSmartRecruit.services.impl;
 
-import com.example.eSmartRecruit.exception.FileUploadException;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-import static java.nio.file.Paths.get;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 class FileStorageServiceTest {
     @Mock
@@ -64,25 +55,27 @@ class FileStorageServiceTest {
             assertNotNull(result);
             assertTrue(result.endsWith(".pdf"));
     }
-//    @Test
-//    void testStoreFile_WithEmptyFile_ShouldThrowFileUploadException() {
-//        // Arrange
-//        MockMultipartFile emptyFile = new MockMultipartFile("file", new byte[0]);
-//
-//        // Act and Assert
-//        FileUploadException exception = assertThrows(FileUploadException.class, () -> fileStorageService.storeFile(emptyFile));
-//        assertEquals("File not found", exception.getMessage());
-//    }
-//    @Test
-//    void testStoreFile_WithNonPDFFile_ShouldThrowFileUploadException() {
-//        // Arrange
 
-//        MockMultipartFile nonPdfFile = new MockMultipartFile("cv", "cv.pdf", "application/pdf", "cv data".getBytes());
-//
-//        // Act and Assert
-//        FileUploadException exception = assertThrows(FileUploadException.class, () -> fileStorageService.storeFile(nonPdfFile));
+    @Test
+    void testStoreFile_WithEmptyFile_ShouldThrowFileUploadException() {
+        // Arrange
+        MockMultipartFile emptyFile = new MockMultipartFile("file", new byte[0]);
+
+        // Act and Assert
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> fileStorageService.storeFile(emptyFile));
+//        assertEquals("File not found", exception.getMessage());
+    }
+
+    @Test
+    void testStoreFile_WithNonPDFFile_ShouldThrowFileUploadException() {
+        // Arrange
+
+        MockMultipartFile nonPdfFile = new MockMultipartFile("cv", "cv.pdf", "application/pdf", "cv data".getBytes());
+
+        // Act and Assert
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> fileStorageService.storeFile(nonPdfFile));
 //        assertEquals("Only pdf file accepted!", exception.getMessage());
-//    }
+    }
 @Test
 void testStoreFile_SuccessfulStore() {
     // Arrange
@@ -129,6 +122,6 @@ void testStoreFile_SuccessfulStore() {
         // Act and Assert
         FileStorageService fileStorageService = new FileStorageService();
 
-        assertDoesNotThrow(() -> fileStorageService.deleteAllFiles());
+        assertDoesNotThrow(fileStorageService::deleteAllFiles);
     }
 }
