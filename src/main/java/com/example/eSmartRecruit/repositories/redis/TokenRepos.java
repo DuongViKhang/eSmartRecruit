@@ -1,5 +1,6 @@
 package com.example.eSmartRecruit.repositories.redis;
 
+import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.models.redis.Token;
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -34,6 +35,6 @@ public class TokenRepos {
             return "No token found";
         }
         template.opsForHash().delete(username,HASH_KEY);
-        return "Token removed!";
+        return ResponseObject.LOGOUT_SUCCESS;
     }
 }

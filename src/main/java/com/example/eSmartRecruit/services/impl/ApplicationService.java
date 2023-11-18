@@ -1,5 +1,6 @@
 package com.example.eSmartRecruit.services.impl;
 
+import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.exception.ApplicationException;
 import com.example.eSmartRecruit.exception.NotFoundException;
 import com.example.eSmartRecruit.exception.UnauthorizedAccessException;
@@ -23,11 +24,11 @@ public class ApplicationService implements IApplicationService {
     public String apply(Application application){
         try{
             if(isApplied(application.getCandidateID(),application.getPositionID())){
-                throw new ApplicationException("You have already applied to this position!");
+                throw new ApplicationException(ResponseObject.APPLICATION_EXISTED);
             }
 
             applicationRepository.save(application);
-            return "Successfully applied";
+            return ResponseObject.APPLY_SUCCESS;
         }catch (Exception e){
             return e.getMessage();
         }
@@ -45,21 +46,21 @@ public class ApplicationService implements IApplicationService {
         return applicationRepository.findByCandidateID(candidateID);
     }
     public Application getApplicationById(Integer ID) throws ApplicationException {
-        return applicationRepository.findById(ID).orElseThrow(()->new ApplicationException("Cant find the required application!"));
+        return applicationRepository.findById(ID).orElseThrow(()->new ApplicationException(ResponseObject.APPLICATION_NOT_FOUND));
     }
 
 
     public String update(Integer candidateId, Application applications, Integer id) {
         try{
-            Application exApplication = applicationRepository.findById(id).orElseThrow(()->new ApplicationException("Application not found!"));
+            Application exApplication = applicationRepository.findById(id).orElseThrow(()->new ApplicationException(ResponseObject.APPLICATION_NOT_FOUND));
             if(!candidateId.equals(exApplication.getCandidateID())){
-                throw new ApplicationException("This is not your application!");
+                throw new ApplicationException(ResponseObject.NOT_YOUR_APPLICATION);
             }
 
             exApplication.setCv(applications.getCv());
             exApplication.setUpdateDate(Date.valueOf(LocalDate.now()));
             applicationRepository.save(exApplication);
-            return "update Success";
+            return ResponseObject.UPDATED_SUCCESS;
         }catch (Exception e){
             return e.toString();
         }
@@ -73,10 +74,10 @@ public class ApplicationService implements IApplicationService {
             exApplication.setUpdateDate(Date.valueOf(LocalDate.now()));
             applicationRepository.save(exApplication);
             if(status == ApplicationStatus.Approved){
-                return "Approve application successfully!";
+                return ResponseObject.APPROVE;
             }
             else if (status == ApplicationStatus.Declined){
-                return "Decline application successfully!";
+                return ResponseObject.DECLINE;
             }
         }catch (Exception e){
             return e.toString();
@@ -86,7 +87,7 @@ public class ApplicationService implements IApplicationService {
 
     public Boolean isPresent(Integer jobid){
         try{
-            Application application = applicationRepository.findById(jobid).orElseThrow(()->new ApplicationException("Cant find this application!"));
+            Application application = applicationRepository.findById(jobid).orElseThrow(()->new ApplicationException(ResponseObject.APPLICATION_NOT_FOUND));
             if(application == null){
                 return false;
             }
@@ -106,7 +107,7 @@ public class ApplicationService implements IApplicationService {
                 throw new UnauthorizedAccessException("This is not your application!");
             }
             applicationRepository.deleteById(jobid);
-            return "Successfully deleted!";
+            return ResponseObject.DELETED_SUCCESS;
         }catch (Exception e){
             return e.getMessage();
         }

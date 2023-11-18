@@ -49,7 +49,7 @@ class GuestControllerTest {
     @Test
     void forgotPassword_SuccessfulPasswordChange() throws UserException {
         // Mock successful password change
-        when(userService.updateUserpassword(anyString(), anyString())).thenReturn("Successfully saved");
+        when(userService.updateUserpassword(anyString(), anyString())).thenReturn(ResponseObject.UPDATED_SUCCESS);
 //
         // Create a mock ChangePasswordRequest
         ChangePasswordRequest mockChangePasswordRequest = new ChangePasswordRequest();
@@ -61,14 +61,14 @@ class GuestControllerTest {
 
         // Assert the results
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals("Success", responseEntity.getBody().getStatus());
-        assertEquals("Successfully saved", responseEntity.getBody().getMessage());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseEntity.getBody().getStatus());
+        assertEquals(ResponseObject.UPDATED_SUCCESS, responseEntity.getBody().getMessage());
     }
 
     @Test
     void forgotPassword_UnsuccessfulPasswordChange() throws UserException {
         // Mock unsuccessful password change
-        when(userService.updateUserpassword(anyString(), anyString())).thenReturn("Could not save");
+        when(userService.updateUserpassword(anyString(), anyString())).thenReturn(ResponseObject.UPDATED_FAIL);
 
         // Create a mock ChangePasswordRequest
         ChangePasswordRequest mockChangePasswordRequest = new ChangePasswordRequest();
@@ -80,8 +80,8 @@ class GuestControllerTest {
 
         // Assert the results
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals("Success", responseEntity.getBody().getStatus());
-        assertEquals("Could not save", responseEntity.getBody().getMessage());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseEntity.getBody().getStatus());
+        assertEquals(ResponseObject.UPDATED_FAIL, responseEntity.getBody().getMessage());
     }
 
     @Test
@@ -99,7 +99,7 @@ class GuestControllerTest {
 
         // Assert the results for the exception case
         assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
-        assertEquals("Error", responseEntity.getBody().getStatus()); // Adjust this based on your actual implementation
+        assertEquals(ResponseObject.ERROR_STATUS, responseEntity.getBody().getStatus()); // Adjust this based on your actual implementation
         // Additional assertions based on how you handle exceptions in your application
     }
 
@@ -109,8 +109,8 @@ class GuestControllerTest {
         when(positionService.searchPositions(anyString())).thenReturn(Arrays.asList(new Position(), new Position()));
         ResponseEntity<ResponseObject> responseEntity = guestController.searchJob(anyString());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals("Success", responseEntity.getBody().getStatus());
-        assertEquals("Search successfully!", responseEntity.getBody().getMessage());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseEntity.getBody().getStatus());
+        assertEquals(ResponseObject.SEARCH_SUCCESS, responseEntity.getBody().getMessage());
          // Add more assertions based on your expected search result
         verify(positionService, times(1)).searchPositions(anyString());
 
@@ -125,8 +125,8 @@ class GuestControllerTest {
 
         // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals("Success", responseEntity.getBody().getStatus());
-        assertEquals("Search successfully!", responseEntity.getBody().getMessage());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseEntity.getBody().getStatus());
+        assertEquals(ResponseObject.SEARCH_SUCCESS, responseEntity.getBody().getMessage());
         verify(positionService, times(1)).searchPositions(anyString());
     }
 
@@ -139,7 +139,7 @@ class GuestControllerTest {
         ResponseEntity<ResponseObject> responseEntity = guestController.searchJob(anyString());
 
         assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
-        assertEquals("Error", responseEntity.getBody().getStatus());
+        assertEquals(ResponseObject.ERROR_STATUS, responseEntity.getBody().getStatus());
         verify(positionService, times(1)).searchPositions(anyString());
     }
 
