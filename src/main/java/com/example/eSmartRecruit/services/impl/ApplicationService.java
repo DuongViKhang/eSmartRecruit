@@ -2,23 +2,19 @@ package com.example.eSmartRecruit.services.impl;
 
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.exception.ApplicationException;
+import com.example.eSmartRecruit.exception.NotFoundException;
+import com.example.eSmartRecruit.exception.UnauthorizedAccessException;
 import com.example.eSmartRecruit.models.Application;
-
 import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.services.IApplicationService;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContextException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -103,12 +99,12 @@ public class ApplicationService implements IApplicationService {
     }
     public String deletejob(Integer candidateId, Integer jobid){
         try{
-            Application application = applicationRepository.findById(jobid).orElseThrow(()->new ApplicationException("Cant find this application!"));
+            Application application = applicationRepository.findById(jobid).orElseThrow(() -> new NotFoundException("Cant find this application!"));
             if(!isPresent(jobid)){
-                throw new ApplicationException(ResponseObject.APPLICATION_NOT_FOUND);
+                throw new NotFoundException("Cant find this application!");
             }
             if(!candidateId.equals(application.getCandidateID())){
-                throw new ApplicationException(ResponseObject.NOT_YOUR_APPLICATION);
+                throw new UnauthorizedAccessException("This is not your application!");
             }
             applicationRepository.deleteById(jobid);
             return ResponseObject.DELETED_SUCCESS;
@@ -120,7 +116,8 @@ public class ApplicationService implements IApplicationService {
     public Long getcountApplication() {
         return applicationRepository.count();
     }
-    public Application findById(int id) throws ApplicationException{
-        return applicationRepository.findById(id).orElseThrow(()->new ApplicationContextException(ResponseObject.APPLICATION_NOT_FOUND));
+
+    public Application findById(int id) throws NotFoundException {
+        return applicationRepository.findById(id).orElseThrow(() -> new NotFoundException("Application not found!"));
     }
 }

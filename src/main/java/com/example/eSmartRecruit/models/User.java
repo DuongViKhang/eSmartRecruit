@@ -97,5 +97,6 @@ public class User implements UserDetails {
 	}
 
 
-
+    public void setEnabled(boolean b) {
+    }
 }

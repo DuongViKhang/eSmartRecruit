@@ -24,15 +24,7 @@ public class InterviewSessionService implements IInterviewSessionService {
         return  interviewSessionRepos.findByInterviewerID(userId);
     }
     public  InterviewSession findByID(Integer ID) throws InterviewSessionException {
-//        try {
-//            Optional<InterviewSession> interviewSession = interviewSessionRepos.findById(ID);
-//            if (interviewSession.isPresent()) {
-//                return  interviewSession.orElseThrow(()->new InterviewSessionException("The required interview Session not found"))
-//            } else return null;
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-        return  interviewSessionRepos.findById(ID).orElseThrow(()->new InterviewSessionException(ResponseObject.NO_INTERVIEWSESSION));
+        return  interviewSessionRepos.findById(ID).orElseThrow(()->new InterviewSessionException("The required interview session not found"));
     }
 
     public boolean isAlready(Integer interviewersessionID) throws InterviewSessionException {
@@ -51,11 +43,13 @@ public class InterviewSessionService implements IInterviewSessionService {
     }
     public InterviewSession scheduleInterview(int id, InterviewSessionRequest interviewSessionRequest) throws InterviewSessionException {
         InterviewSession interviewSession = findByID(id);
+
         interviewSession.setInterviewerID(interviewSessionRequest.getInterviewerId());
         interviewSession.setDate(interviewSessionRequest.getDate());
         interviewSession.setLocation(interviewSessionRequest.getLocation());
         interviewSession.setStatus(SessionStatus.Yet);
         interviewSession.setNotes(interviewSessionRequest.getNotes());
+
         save(interviewSession);
         return interviewSession;
     }

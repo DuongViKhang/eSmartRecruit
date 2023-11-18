@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -99,9 +98,6 @@ public class UserService {
 
         String checkDuplicationEmail = checkDuplicateEmail(exUser);
         String checkDuplicationPhone = checkDuplicatePhone(exUser);
-//        if(checkDuplication!=null && (!user.getEmail().equals(oldMail)||!user.getPhoneNumber().equals(oldPhone))){
-//            throw new UserException(checkDuplication);
-//        }
         if(checkDuplicationEmail!=null && !user.getEmail().equals(oldMail)){
             throw new UserException(checkDuplicationEmail);
         }
@@ -153,10 +149,10 @@ public class UserService {
         if (checkDuplicationUsername != null && user.getUsername().equals(editUserRequest.getUsername())){
             throw new UserException(checkDuplicationUsername);
         }
-        if(checkDuplicationEmail!=null && !user.getEmail().equals(editUserRequest.getEmail())){
+        if (checkDuplicationEmail != null && user.getEmail().equals(editUserRequest.getEmail())) {
             throw new UserException(checkDuplicationEmail);
         }
-        if(checkDuplicationPhone!=null && !user.getPhoneNumber().equals(editUserRequest.getPhonenumber())){
+        if (checkDuplicationPhone != null && user.getPhoneNumber().equals(editUserRequest.getPhonenumber())) {
             throw new UserException(checkDuplicationPhone);
         }
         try{
@@ -172,4 +168,5 @@ public class UserService {
             return null;
         }
     }
+
 }
