@@ -1,20 +1,13 @@
-package com.example.eSmartRecruit.controllers.Guest;
+package com.example.eSmartRecruit.controllers.guest;
 
 import com.example.eSmartRecruit.config.ExtractUser;
-import com.example.eSmartRecruit.controllers.candidate.CandidateController;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.ChangePasswordRequest;
 import com.example.eSmartRecruit.exception.UserException;
-import com.example.eSmartRecruit.models.Application;
 import com.example.eSmartRecruit.models.Position;
-import com.example.eSmartRecruit.models.User;
-import com.example.eSmartRecruit.models.enumModel.Role;
-import com.example.eSmartRecruit.models.enumModel.UserStatus;
 import com.example.eSmartRecruit.repositories.UserRepos;
 import com.example.eSmartRecruit.services.impl.PositionService;
 import com.example.eSmartRecruit.services.impl.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,10 +17,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.sql.Date;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

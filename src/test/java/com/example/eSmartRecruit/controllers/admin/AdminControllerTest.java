@@ -980,7 +980,7 @@ class AdminControllerTest {
 
     //Start testing getReport() function
     @Test
-    void getReport_shouldReturnSuccess() throws ApplicationException {
+    void getReport_shouldReturnSuccess() throws Exception {
         Integer sessionId = 1;
         Report report = new Report();
         report.setId(1);
@@ -1007,7 +1007,7 @@ class AdminControllerTest {
         assertEquals(data,response.getBody().getData());
     }
     @Test
-    void getReport_shouldReturnNotFound() throws ApplicationException {
+    void getReport_shouldReturnNotFound() throws Exception {
         Integer sessionId = 1;
         Report report = new Report();
         report.setId(1);
@@ -1026,7 +1026,7 @@ class AdminControllerTest {
         assertEquals(ResponseObject.REPORT_NOT_FOUND, response.getBody().getMessage());
     }
     @Test
-    void getReport_shouldReturnInternalServerError() throws ApplicationException {
+    void getReport_shouldReturnInternalServerError() throws Exception {
         Integer sessionId = 1;
         Report report = new Report();
         report.setId(1);

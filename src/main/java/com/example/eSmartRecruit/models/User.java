@@ -95,7 +95,7 @@ public class User implements UserDetails {
 		return UserStatus.Active.equals(this.status);
 
 	}
-
-
+	public void setEnabled(boolean b) {
+	}
 
 }

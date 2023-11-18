@@ -20,7 +20,7 @@ public class ReportService {
             return e.getMessage();
         }
     }
-    public Report getReportBySessionId(Integer sessionID) throws ApplicationException {
+    public Report getReportBySessionId(Integer sessionID) throws Exception {
         return reportRepos.findBySessionID(sessionID);
     }
 }

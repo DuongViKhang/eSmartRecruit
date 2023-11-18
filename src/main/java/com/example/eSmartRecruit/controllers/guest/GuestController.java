@@ -1,15 +1,10 @@
-package com.example.eSmartRecruit.controllers.Guest;
+package com.example.eSmartRecruit.controllers.guest;
 
-import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.ChangePasswordRequest;
 import com.example.eSmartRecruit.exception.UserException;
-import com.example.eSmartRecruit.models.Position;
-import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.services.impl.PositionService;
 import com.example.eSmartRecruit.services.impl.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
