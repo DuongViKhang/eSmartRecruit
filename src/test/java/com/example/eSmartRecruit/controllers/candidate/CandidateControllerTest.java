@@ -279,18 +279,6 @@ class CandidateControllerTest {
         verify(applicationService, times(1)).apply(any(Application.class));
     }
 
-//    @Test
-//    void applyForPosition_badRequest_whenUserNotEnabled() throws Exception {
-//        UserNotEnabled();
-//
-//        ResponseEntity<ResponseObject> responseEntity = candidateController.applyForPosition(1, mockRequest1, mockFile);
-//
-//        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-//        ResponseObject responseObject = responseEntity.getBody();
-//        assertNotNull(responseObject);
-//        assertEquals(ResponseObject.ERROR_STATUS, responseObject.getStatus());
-//        assertEquals("Account not active!", responseObject.getMessage());
-//    }
 
     @Test
     void applyForPosition_badRequest_whenCVNotEnabled() {
@@ -433,23 +421,6 @@ class CandidateControllerTest {
         assertEquals(expectedData, responseEntity.getBody().getData());
     }
 
-//    @Test
-//    void getApplicationDetails_whenUserNotEnabled() throws Exception {
-//        UserNotEnabled();
-//
-//        // Gọi API để nhận response - mockrRequest1
-//        ResponseEntity<ResponseObject> responseEntity = candidateController.getApplicationDetails(1, mockRequest1);
-//
-//        // Kiểm tra HTTP status code
-//        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-//
-//        // Kiểm tra response body
-//        ResponseObject responseObject = responseEntity.getBody();
-//        assertNotNull(responseObject);
-//        assertEquals("ERROR", responseObject.getStatus());
-//        assertEquals("Account not active!", responseObject.getMessage());
-//    }
-
     @Test
     void getApplicationDetails_internalServerError() throws Exception {
         // Giả lập một ngoại lệ từ service
@@ -491,22 +462,6 @@ class CandidateControllerTest {
         assertEquals(expectedData, responseObject.getData());
     }
 
-//    @Test
-//    void getDetailUser_whenUserNotEnabled() throws Exception {
-//        UserNotEnabled();
-//
-//        // Gọi API để nhận response - mockRequest1
-//        ResponseEntity<ResponseObject> responseEntity = candidateController.getDetailUser(mockRequest1);
-//
-//        // Kiểm tra HTTP status code
-//        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-//
-//        // Kiểm tra response body
-//        ResponseObject responseObject = responseEntity.getBody();
-//        assertNotNull(responseObject);
-//        assertEquals("ERROR", responseObject.getStatus());
-//        assertEquals("Account not active!", responseObject.getMessage());
-//    }
 
     @Test
     void getDetailUser_internalServerError() throws Exception {
@@ -560,21 +515,6 @@ class CandidateControllerTest {
         assertEquals(expectedData, responseObject.getData());
     }
 
-//    @Test
-//    void updateUser_whenUserNotEnabled() throws Exception {
-//        UserNotEnabled();
-//        // Gọi API để nhận response
-//        ResponseEntity<ResponseObject> responseEntity = candidateController.updateUser(mockRequest1, new UserRequest());
-//
-//        // Kiểm tra HTTP status code
-//        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-//
-//        // Kiểm tra response body
-//        ResponseObject responseObject = responseEntity.getBody();
-//        assertNotNull(responseObject);
-//        assertEquals("ERROR", responseObject.getStatus());
-//        assertEquals("Account not active!", responseObject.getMessage());
-//    }
 
     @Test
     void updateUser_internalServerError() throws Exception {
@@ -613,22 +553,6 @@ class CandidateControllerTest {
         assertEquals(ResponseObject.UPDATED_SUCCESS, responseObject.getMessage());
     }
 
-//    @Test
-//    void updateApplyPosition_whenUserNotEnabled() throws Exception {
-//        UserNotEnabled();
-//        // Gọi API để nhận response
-//        ResponseEntity<ResponseObject> responseEntity = candidateController.updateApplyPosition(1, mockRequest1, mockFile);
-//
-//        // Kiểm tra HTTP status code
-//        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-//
-//        // Kiểm tra response body
-//        ResponseObject responseObject = responseEntity.getBody();
-//        assertNotNull(responseObject);
-//        assertEquals("ERROR", responseObject.getStatus());
-//        assertEquals("Account not active!", responseObject.getMessage());
-//    }
-
     @Test
     void updateApplyPosition_internalServerError() throws Exception {
         // Giả lập ngoại lệ từ service
@@ -662,21 +586,6 @@ class CandidateControllerTest {
 
         verify(applicationService, times(1)).deletejob(4, 1);
     }
-
-//    @Test
-//    public void deleteApplyPosition_whenUserNotEnabled() throws Exception {
-//        UserNotEnabled();
-//
-//        ResponseEntity<ResponseObject> responseEntity = candidateController.deleteApplyPosition(1, mockRequest1);
-//        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-//
-//        ResponseObject responseObject = responseEntity.getBody();
-//        assertNotNull(responseObject);
-//        assertEquals("ERROR", responseObject.getStatus());
-//        assertEquals("Account not active!", responseObject.getMessage());
-//
-//        verify(applicationService, never()).deletejob(anyInt(), anyInt());
-//    }
 
     @Test
     public void deleteApplyPosition_internalServerError() throws Exception {

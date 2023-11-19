@@ -30,7 +30,7 @@ CREATE TABLE Users (
     Status ENUM('Active', 'Inactive') DEFAULT('Active'),
     CreateDate Date,
     UpdateDate Date,
-    FOREIGN KEY (RoleName) REFERENCE Roles(ID)
+    FOREIGN KEY (RoleName) REFERENCES Roles(ID)
 );
 
 -- Tạo bảng Vị trí tuyển dụng
@@ -59,16 +59,6 @@ CREATE TABLE Applications (
     FOREIGN KEY (PositionID) REFERENCES Positions(ID)
 );
 
--- Tạo bảng Blacklist
-CREATE TABLE Blacklists (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    CandidateID INT,
-    Reason TEXT,
-    CreateDate Date,
-    UpdateDate Date,
-    FOREIGN KEY (CandidateID) REFERENCES Users(ID)
-);
-
 -- Tạo bảng Kỹ năng của Ứng viên
 CREATE TABLE Skills (
     ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -89,17 +79,6 @@ CREATE TABLE InterviewSessions (
     Notes TEXT,
     FOREIGN KEY (InterviewerID) REFERENCES Users(ID),
     FOREIGN KEY (ApplicationID) REFERENCES Applications(ID)
-);
-
--- Tạo bảng Liên lạc
-CREATE TABLE Communications (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    CandidateID INT,
-    Notes TEXT,
-    DateContacted DATE,
-    CreateDate Date,
-    UpdateDate Date,
-    FOREIGN KEY (CandidateID) REFERENCES Users(ID)
 );
 
 -- Tạo bảng Reports
