@@ -28,5 +28,6 @@ public class InterviewSessionRequest {
     String notes;
 
     String status;
+
     String result;
 }

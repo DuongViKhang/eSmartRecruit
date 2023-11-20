@@ -1,4 +1,5 @@
 package com.example.eSmartRecruit.controllers.admin;
+
 import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.config.JwtService;
@@ -11,11 +12,9 @@ import com.example.eSmartRecruit.models.Application;
 import com.example.eSmartRecruit.models.InterviewSession;
 import com.example.eSmartRecruit.models.Position;
 import com.example.eSmartRecruit.models.User;
-import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
-import com.example.eSmartRecruit.models.enumModel.Role;
-import com.example.eSmartRecruit.models.enumModel.SessionStatus;
-import com.example.eSmartRecruit.models.enumModel.UserStatus;
+import com.example.eSmartRecruit.models.enumModel.*;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
+import com.example.eSmartRecruit.repositories.InterviewSessionRepos;
 import com.example.eSmartRecruit.services.IStorageService;
 import com.example.eSmartRecruit.services.impl.ApplicationService;
 import com.example.eSmartRecruit.services.impl.InterviewSessionService;
@@ -68,8 +67,9 @@ class AdminControllerTest {
 
     @Mock
     InterviewSessionService interviewSessionService;
+    @Mock
+    InterviewSessionRepos interviewSessionRepos;
     private HttpServletRequest mockRequest;
-
 
 
     @BeforeEach
@@ -97,9 +97,11 @@ class AdminControllerTest {
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
     }
+
     private String jwtToken;
+
     @Test
-    void getPosition_shouldThrowUserExceptionWhenAccountNotFound1()  throws UserException{
+    void getPosition_shouldThrowUserExceptionWhenAccountNotFound1() throws UserException {
 
         ResponseEntity<ResponseObject> responseEntity = adminController.getPositionAdmin(mockRequest);
 
@@ -108,6 +110,7 @@ class AdminControllerTest {
         assertNotNull(responseObject);
         assertEquals("ERROR", responseObject.getStatus());
     }
+
     @Test
     void getPosition_shouldThrowUserExceptionWhenAccountNotFound() throws UserException {
 
@@ -527,6 +530,7 @@ class AdminControllerTest {
         assertEquals("SUCCESS", responseEntity.getBody().getStatus());
         assertEquals("Application", responseEntity.getBody().getMessage());
     }
+
     @Test
     public void getDetailApplication_shouldReturnErrorWhenApplicationNotFound() throws Exception {
 
@@ -580,6 +584,7 @@ class AdminControllerTest {
         assertEquals("ERROR", responseObject.getStatus());
         assertEquals("Application not found", responseObject.getMessage());
     }
+
     @Test
     public void getDetailApplications_shouldReturnForbiddenWhenUserNotAdmin() throws Exception {
 
@@ -625,6 +630,7 @@ class AdminControllerTest {
         assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode());
         assertNull(responseEntity.getBody());
     }
+
     @Test
     public void getApplications_shouldReturnSuccessWithApplicationList() throws Exception {
 
@@ -724,6 +730,7 @@ class AdminControllerTest {
         assertEquals("ERROR", responseEntity.getBody().getStatus());
         assertEquals("Account not active!", responseEntity.getBody().getMessage());
     }
+
     @Test
     void deletePosition_shouldReturnSuccessWhenPositionDeletedSuccessfully() throws JSONException, UserException, PositionException {
 
@@ -760,6 +767,7 @@ class AdminControllerTest {
         assertEquals("SUCCESS", responseObject.getStatus());
         assertEquals("Position deleted successfully", responseObject.getMessage());
     }
+
     @Test
     void deletePosition_shouldReturnErrorWhenPositionExceptionThrown() throws JSONException, UserException, PositionException {
 
@@ -794,6 +802,7 @@ class AdminControllerTest {
         assertEquals("ERROR", responseObject.getStatus());
         assertEquals("Error deleting position: Simulated exception", responseObject.getMessage());
     }
+
     //Finish testing createUser() function
     @Test
     void deletePosition_shouldReturnBadRequestWhenAccountNotActive() throws JSONException, UserException, PositionException {
@@ -815,6 +824,7 @@ class AdminControllerTest {
         assertEquals("ERROR", responseObject.getStatus());
         assertEquals("Account not active!", responseObject.getMessage());
     }
+
     @Test
     void editPosition_shouldReturnBadRequestWhenAccountNotActive() throws JSONException, UserException, PositionException {
 
@@ -859,6 +869,7 @@ class AdminControllerTest {
         assertEquals("ERROR", responseObject.getStatus());
         assertEquals("Account not active!", responseObject.getMessage());
     }
+
     @Test
     void editPosition_shouldReturnSuccessWhenPositionEditedSuccessfully() throws JSONException, UserException, PositionException {
 
@@ -901,27 +912,19 @@ class AdminControllerTest {
         // Verify that the editPosition method is called once with the updated position
         verify(positionService, times(1)).editPosition(eq(1), any(Position.class));
     }
+
     @Test
-    void listInterviewsession() throws UserException, JSONException, InterviewSessionException {
-        User mockUser = new User();
-        mockUser.setId(5);
-        mockUser.setUsername("thuytrang");
-        mockUser.setPassword("$2a$10$HLVCKSnNE1iUAo8zLh0ioe9CkF3n1L8HM6HNZawxvW2cFswUt9Vlu");
-        mockUser.setEmail("trang@gmail.com");
-        mockUser.setPhoneNumber("0384928392");
-        mockUser.setRoleName(Role.Admin);
-        mockUser.setStatus(UserStatus.Active);
-        mockUser.setCreateDate(Date.valueOf("2023-11-10"));
-        mockUser.setUpdateDate(Date.valueOf("2023-11-10"));
+    void listInterviewsession_shouldReturnInterviewSessionSuccessList() throws UserException, JSONException, InterviewSessionException {
 
-        var jwtToken = jwtService.generateToken(mockUser);
-
+        // Mock user
         ExtractUser mockUserInfo = mock(ExtractUser.class);
         lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
         lenient().when(mockUserInfo.getUserId()).thenReturn(5);
         lenient().when(userService.isEnabled(5)).thenReturn(true);
+        lenient().when(userService.getUserRole(2)).thenReturn("Admin");
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
 
         List<InterviewSession> mockInterviewSessions = new ArrayList<>();
         InterviewSession interviewSession = new InterviewSession();
@@ -951,69 +954,102 @@ class AdminControllerTest {
         mockInterviewSessions.add(interviewSession);
 
 
+        when(interviewSessionService.getAllInterviewSession()).thenReturn(mockInterviewSessions);
         ResponseEntity<ResponseObject> responseEntity = adminController.listInterviewsession(mockRequest);
-//
+
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
         assertEquals("SUCCESS", responseObject.getStatus());
-        assertEquals("Loading position successfully", responseObject.getMessage());
-
-        List<InterviewSession> returnedData = (List<InterviewSession>) responseObject.getData();
-        assertNotNull(returnedData);
-
-        verify(interviewSessionService, times(1)).getAllInterviewSession();
+        assertEquals("Loading interviewsession successfully", responseObject.getMessage());
+        assertEquals(mockInterviewSessions, responseObject.getData());
 
     }
 
     @Test
-    void getInterviewSessionId() throws UserException, InterviewSessionException {
-        User mockUser = new User();
-        mockUser.setId(2);
-        mockUser.setUsername("bcd");
-        mockUser.setPassword("$2a$10$SgZX47bsE057V9z4n1NeG.y0hJkv1scG07pmPjPmBovIAnw4RhB7y");
-        mockUser.setEmail("b123@gmail.com");
-        mockUser.setPhoneNumber("0988888888");
-        mockUser.setRoleName(Role.Admin);
-        mockUser.setStatus(UserStatus.Active);
-        mockUser.setCreateDate(Date.valueOf("2023-10-23"));
-        mockUser.setUpdateDate(Date.valueOf("2023-10-23"));
+    void listInterviewsession_shouldReturnErrorWhenInterviewSessionNotFound() throws UserException, JSONException, InterviewSessionException {
 
-        var jwtToken = jwtService.generateToken(mockUser);
+        lenient().when(interviewSessionService.getAllInterviewSession()).thenReturn(null);
+        // Act
+        ResponseEntity<ResponseObject> responseEntity = adminController.listInterviewsession(mockRequest);
+
+        // Assert
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals("ERROR", responseObject.getStatus());
+
+    }
+
+    @Test
+    void detailInterviewSessionId_success() throws UserException, InterviewSessionException {
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(2);
+        lenient().when(userService.isEnabled(2)).thenReturn(true);
+        lenient().when(userService.getUserRole(2)).thenReturn("Admin");
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        InterviewSession mockInterviewSession = new InterviewSession();
+        mockInterviewSession.setId(1);
+        mockInterviewSession.setInterviewerID(1);
+        mockInterviewSession.setApplicationID(1);
+        mockInterviewSession.setDate(Date.valueOf("2023-10-29"));
+        mockInterviewSession.setLocation("fpt");
+        mockInterviewSession.setStatus(SessionStatus.valueOf("NotOnSchedule"));
+        mockInterviewSession.setResult(SessionResult.valueOf("NotYet"));
+        mockInterviewSession.setNotes("abc");
+
+        lenient().when(interviewSessionService.findByID(1)).thenReturn(mockInterviewSession);
+        ResponseEntity<ResponseObject> responseEntity = adminController.detailInterviewSessionId(1, mockRequest);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals("Loading interviewsession successfully", responseObject.getMessage());
+    }
+
+    @Test
+    void detailInterviewSessionId_notFound() throws Exception{
 
         ExtractUser mockUserInfo = mock(ExtractUser.class);
         lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
         lenient().when(mockUserInfo.getUserId()).thenReturn(2);
         lenient().when(userService.isEnabled(2)).thenReturn(true);
+        lenient().when(userService.getUserRole(2)).thenReturn("Admin");
+
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
 
-        InterviewSession mockinterviewSession = new InterviewSession();
-        mockinterviewSession.setId(1);
-        mockinterviewSession.setInterviewerID(null);
-        mockinterviewSession.setApplicationID(1);
-//        mockinterviewSession.setPositionID(null);
-//        mockinterviewSession.setCandidateID(null);
-        mockinterviewSession.setDate(Date.valueOf("2023-10-29"));
-        mockinterviewSession.setLocation("fpt");
-        mockinterviewSession.setStatus(SessionStatus.valueOf("NotOnSchedule"));
-        mockinterviewSession.setLocation("NotYet");
-        mockinterviewSession.setNotes("abc");
+        when(interviewSessionService.findByID(anyInt())).thenReturn(null);
+        ResponseEntity<ResponseObject> responseEntity = adminController.detailInterviewSessionId(1, mockRequest);
 
-        when(interviewSessionService.getSelectedInterviewSession(1)).thenReturn(mockinterviewSession);
-        ResponseEntity<ResponseObject> responseEntity = adminController.detailInterviewSessionId(1,mockRequest);
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("SUCCESS", responseObject.getStatus());
-        assertEquals("Loading detailinterviewsession successfully", responseObject.getMessage());
+        assertEquals("ERROR", responseObject.getStatus());
 
-        InterviewSession returnedInterviewsession = (InterviewSession) responseObject.getData();
-        assertNotNull(returnedInterviewsession);
-        assertEquals(1, returnedInterviewsession.getId());
-        assertEquals("NotOnSchedule", returnedInterviewsession.getStatus());
+    }
 
+    @Test
+    void detailInterviewSessionId_internalServerError() throws Exception{
+
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(2);
+        lenient().when(userService.isEnabled(2)).thenReturn(true);
+        lenient().when(userService.getUserRole(2)).thenReturn("Admin");
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        when(interviewSessionService.findByID(anyInt())).thenThrow(new RuntimeException("Some error occurred."));
+        ResponseEntity<ResponseObject> responseEntity = adminController.detailInterviewSessionId(1, mockRequest);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals("Internal server error", responseEntity.getBody().getMessage());
 
     }
 
@@ -1024,5 +1060,3 @@ class AdminControllerTest {
 }
 
 
-
-}
