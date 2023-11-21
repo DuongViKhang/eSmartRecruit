@@ -469,18 +469,16 @@ public class AdminController {
 
 
     @PutMapping("/interviewsession/evaluate/{interviewsessionid}")
-    public ResponseEntity<ResponseObject> getEvaluate(@PathVariable Integer interviewsessionid, @RequestBody EvaluateRequest evaluateRequest, HttpServletRequest request) throws JSONException, UserException, InterviewSessionException {
+    public ResponseEntity<ResponseObject> getEvaluate(@PathVariable Integer interviewsessionid, @RequestBody @Valid EvaluateRequest evaluateRequest, HttpServletRequest request) throws JSONException, UserException, InterviewSessionException
+    {
         String authHeader = request.getHeader("Authorization");
         ExtractUser userInfo = new ExtractUser(authHeader, userService);
-        if (!userInfo.isEnabled()) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-        }
+
         try {
             SessionResult.valueOf(evaluateRequest.getResult());
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(ResponseObject.builder()
-                    .message("Invalid status").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+                    .message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
         }
         SessionResult result = SessionResult.valueOf(evaluateRequest.getResult());
         String message = interviewSessionService.interviewUpdate(interviewsessionid, result);
@@ -497,12 +495,12 @@ public class AdminController {
         data.put("notes", interviewSession.getNotes());
 
         return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                .message(ResponseObject.EVALUATED).status("SUCCESS").data(data).build(), HttpStatus.OK);
+                .message(ResponseObject.EVALUATED).status(ResponseObject.SUCCESS_STATUS).data(data).build(), HttpStatus.OK);
     }
-}
+
 
     @GetMapping("/profile")
-    ResponseEntity<ResponseObject> getProfile(HttpServletRequest request) {
+    public ResponseEntity<ResponseObject> getProfile(HttpServletRequest request) {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
@@ -524,7 +522,7 @@ public class AdminController {
     }
 
     @PutMapping("/profile")
-    ResponseEntity<ResponseObject> updateProfile(HttpServletRequest request,
+    public ResponseEntity<ResponseObject> updateProfile(HttpServletRequest request,
                                               @RequestBody @Valid UserRequest user0) {
         try {
             String authHeader = request.getHeader("Authorization");
@@ -544,5 +542,7 @@ public class AdminController {
                     .message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 }
 
