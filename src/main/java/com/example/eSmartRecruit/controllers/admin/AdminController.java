@@ -459,4 +459,47 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(ResponseObject.INTERNAL_SERVER_ERROR).build());
         }
     }
+    @GetMapping("/profile")
+    ResponseEntity<ResponseObject> getProfile(HttpServletRequest request) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
+            Integer userId = userInfo.getUserId();
+            User user = userService.getUserById(userId);
+
+            Map<String, String> data = new LinkedHashMap<>();
+            data.put("username", user.getUsername());
+            data.put("email", user.getEmail());
+            data.put("phonenumber", user.getPhoneNumber());
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS)
+                    .message(ResponseObject.LOAD_SUCCESS).data(data).build(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS)
+                    .message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/profile")
+    ResponseEntity<ResponseObject> updateProfile(HttpServletRequest request,
+                                              @RequestBody @Valid UserRequest user0) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            //return new ResponseEntity<String>("hello",HttpStatus.OK);
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
+            Integer userId = userInfo.getUserId();
+            User user = userService.updateUser(user0, userId);
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("email", user.getEmail());
+            data.put("phoneNumber", user.getPhoneNumber());
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS)
+                    .message(ResponseObject.UPDATED_SUCCESS).data(data).build(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS)
+                    .message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
