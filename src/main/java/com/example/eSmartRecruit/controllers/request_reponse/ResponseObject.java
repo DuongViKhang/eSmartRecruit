@@ -46,6 +46,7 @@ public class ResponseObject {
     public static final String NO_INTERVIEWSESSION = "No interview sessions found!";
     public static final String INVALID_STATUS = "Invalid Status";
     public static final String CREATED = "Successfully created!";
+    public static final String EVALUATED = "Successfully evaluated!";
 
     private String status;
     private String message;

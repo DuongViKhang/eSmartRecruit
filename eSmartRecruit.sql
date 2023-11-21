@@ -3,21 +3,21 @@ USE eSmartRecruit;
 
 -- Tạo bảng Roles
 Create table Roles(
-	ID INT AUTO_INCREMENT PRIMARY KEY,
+	ID INT primary key,
     RoleName VARCHAR(20) UNIQUE NOT NULL);
     
 INSERT INTO `esmartrecruit`.`roles`
-(`RoleName`)
+(`ID`,`RoleName`)
 VALUES
-("Candidate");
+(0,"Candidate");
 INSERT INTO `esmartrecruit`.`roles`
-(`RoleName`)
+(`ID`,`RoleName`)
 VALUES
-("Admin");
+(1, "Admin");
 INSERT INTO `esmartrecruit`.`roles`
-(`RoleName`)
+(`ID`,`RoleName`)
 VALUES
-("Interviewer");
+(2, "Interviewer");
 
 -- Tạo bảng Users
 CREATE TABLE Users (

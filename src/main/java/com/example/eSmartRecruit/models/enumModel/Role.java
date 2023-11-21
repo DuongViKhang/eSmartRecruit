@@ -5,9 +5,9 @@ import lombok.Data;
 
 @AllArgsConstructor
 public enum Role {
-    Candidate(1),
-    Admin(2),
-    Interviewer(3);
+    Candidate(0),
+    Admin(1),
+    Interviewer(2);
 
     private final Integer value;
 

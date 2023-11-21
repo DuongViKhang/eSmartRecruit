@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.sql.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class InterviewSessionRequest {
     @NotNull(message = "This must be filled!")
     Integer interviewerId;
@@ -24,6 +26,5 @@ public class InterviewSessionRequest {
     @Pattern(message = "Please fill in the right format!", regexp = "^[a-zA-Z0-9!@#$%^&*()-=_+{}|;:'\",.<>?/\\[\\]\\\\]+$")
     String location;
     @NotBlank(message = "This must be filled!")
-    @Pattern(message = "Please fill in the right format!", regexp = "^[a-zA-Z0-9]+$")
     String notes;
 }

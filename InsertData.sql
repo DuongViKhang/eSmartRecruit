@@ -1,7 +1,8 @@
 USE eSmartRecruit;
-INSERT INTO `esmartrecruit`.`users` (`ID`, `Username`, `Password`, `Email`, `PhoneNumber`, `RoleName`, `Status`, `CreateDate`, `UpdateDate`) VALUES ('1', 'abc', 'a123', 'a123@gmail.com', '0999999999', 'Candidate', 'Active', '2023-10-26', '2023-10-26');
-INSERT INTO `esmartrecruit`.`users` (`ID`, `Username`, `Password`, `Email`, `PhoneNumber`, `RoleName`, `Status`, `CreateDate`, `UpdateDate`) VALUES ('2', 'bcd', 'b123', 'b123@gmail.com', '0988888888', 'Admin', 'Active', '2023-10-23', '2023-10-23');
-INSERT INTO `esmartrecruit`.`users` (`ID`, `Username`, `Password`, `Email`, `PhoneNumber`, `RoleName`, `Status`, `CreateDate`, `UpdateDate`) VALUES ('3', 'cde', 'c123', 'c123@gmail.com', '0977777777', 'Interviewer', 'Active', '2023-10-24', '2023-10-24');
+-- Mật khẩu là khang123
+INSERT INTO `esmartrecruit`.`users` (`ID`, `Username`, `Password`, `Email`, `PhoneNumber`, `RoleName`, `Status`, `CreateDate`, `UpdateDate`) VALUES ('1', 'abc', '$2a$10$S5x1eUGgsbXA4RJfrnc07ueCheYAVNMXsqw23/HfivFQJsaowrTXW', 'a123@gmail.com', '0999999999', 0, 'Active', '2023-10-26', '2023-10-26');
+INSERT INTO `esmartrecruit`.`users` (`ID`, `Username`, `Password`, `Email`, `PhoneNumber`, `RoleName`, `Status`, `CreateDate`, `UpdateDate`) VALUES ('2', 'bcd', '$2a$10$S5x1eUGgsbXA4RJfrnc07ueCheYAVNMXsqw23/HfivFQJsaowrTXW', 'b123@gmail.com', '0988888888', 1, 'Active', '2023-10-23', '2023-10-23');
+INSERT INTO `esmartrecruit`.`users` (`ID`, `Username`, `Password`, `Email`, `PhoneNumber`, `RoleName`, `Status`, `CreateDate`, `UpdateDate`) VALUES ('3', 'cde', '$2a$10$S5x1eUGgsbXA4RJfrnc07ueCheYAVNMXsqw23/HfivFQJsaowrTXW', 'c123@gmail.com', '0977777777', 2, 'Active', '2023-10-24', '2023-10-24');
 
 INSERT INTO `esmartrecruit`.`positions` (`ID`, `Title`, `JobDescription`, `JobRequirements`, `Salary`, `PostDate`, `ExpireDate`, `Location`) VALUES ('1', 'Front-end Dev', 'abc', 'abc', '1000', '2023-10-26', '2023-10-26', 'fpt');
 INSERT INTO `esmartrecruit`.`positions` (`ID`, `Title`, `JobDescription`, `JobRequirements`, `Salary`, `PostDate`, `ExpireDate`, `Location`) VALUES ('2', 'Back-end Dev', 'bcd', 'bcd', '2000', '2023-10-25', '2023-10-25', 'fpt');

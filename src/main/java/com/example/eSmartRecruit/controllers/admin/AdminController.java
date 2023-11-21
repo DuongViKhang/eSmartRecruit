@@ -5,12 +5,15 @@ import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.*;
+import com.example.eSmartRecruit.exception.InterviewSessionException;
 import com.example.eSmartRecruit.exception.PositionException;
 import com.example.eSmartRecruit.exception.UserException;
 
 import com.example.eSmartRecruit.models.*;
 import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
 import com.example.eSmartRecruit.models.enumModel.Role;
+import com.example.eSmartRecruit.models.enumModel.SessionResult;
+import com.example.eSmartRecruit.models.enumModel.SessionStatus;
 import com.example.eSmartRecruit.repositories.ApplicationRepos;
 import com.example.eSmartRecruit.repositories.InterviewSessionRepos;
 import com.example.eSmartRecruit.services.impl.*;
@@ -70,7 +73,7 @@ public class AdminController {
         //return new ResponseEntity<String>("hello",HttpStatus.OK);
         ExtractUser userInfo = new ExtractUser(authHeader, userService);
 
-        // System.out.println("đã chạy create post");
+        System.out.println("đã chạy create post");
         Position createPosition = positionService.createPost(position);
         Map<String, Object> datapost = new LinkedHashMap<>();
         datapost.put("title", createPosition.getTitle());
@@ -454,6 +457,49 @@ public class AdminController {
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(ResponseObject.INTERNAL_SERVER_ERROR).build());
+        }
+    }
+    @GetMapping("/profile")
+    ResponseEntity<ResponseObject> getProfile(HttpServletRequest request) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
+            Integer userId = userInfo.getUserId();
+            User user = userService.getUserById(userId);
+
+            Map<String, String> data = new LinkedHashMap<>();
+            data.put("username", user.getUsername());
+            data.put("email", user.getEmail());
+            data.put("phonenumber", user.getPhoneNumber());
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS)
+                    .message(ResponseObject.LOAD_SUCCESS).data(data).build(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS)
+                    .message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/profile")
+    ResponseEntity<ResponseObject> updateProfile(HttpServletRequest request,
+                                              @RequestBody @Valid UserRequest user0) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            //return new ResponseEntity<String>("hello",HttpStatus.OK);
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
+            Integer userId = userInfo.getUserId();
+            User user = userService.updateUser(user0, userId);
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("email", user.getEmail());
+            data.put("phoneNumber", user.getPhoneNumber());
+
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS)
+                    .message(ResponseObject.UPDATED_SUCCESS).data(data).build(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS)
+                    .message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
