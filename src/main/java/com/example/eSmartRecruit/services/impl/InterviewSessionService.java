@@ -88,19 +88,15 @@ public class InterviewSessionService implements IInterviewSessionService {
     }
     public String interviewUpdate(Integer id, SessionResult result){
         try{
-            InterviewSession exInterviewSession = interviewSessionRepos.findById(id).orElseThrow(()->new ApplicationException("InterviewSession not found!"));
-           // exInterviewSession.setStatus(status);
+            InterviewSession exInterviewSession = interviewSessionRepos.findById(id).orElseThrow(()->new InterviewSessionException("InterviewSession not found!"));
+            // exInterviewSession.setStatus(status);
             exInterviewSession.setResult(result);
             interviewSessionRepos.save(exInterviewSession);
 
-//            if (result == SessionResult.NotYet || result == SessionResult.Good || result == SessionResult.Bad)
-//            {
-//                return "Change successful!!";
-//            }
-
+            return "Successfully evaluated!";
         }catch (Exception e){
             return e.toString();
         }
-        return null;
+       // return null;
     }
 }

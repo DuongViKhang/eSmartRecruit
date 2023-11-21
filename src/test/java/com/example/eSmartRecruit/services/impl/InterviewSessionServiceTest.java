@@ -3,6 +3,7 @@ package com.example.eSmartRecruit.services.impl;
 import com.example.eSmartRecruit.controllers.request_reponse.request.InterviewSessionRequest;
 import com.example.eSmartRecruit.exception.InterviewSessionException;
 import com.example.eSmartRecruit.models.InterviewSession;
+import com.example.eSmartRecruit.models.enumModel.SessionResult;
 import com.example.eSmartRecruit.models.enumModel.SessionStatus;
 import com.example.eSmartRecruit.repositories.InterviewSessionRepos;
 import org.junit.jupiter.api.BeforeEach;
@@ -158,5 +159,57 @@ public class InterviewSessionServiceTest {
         assertEquals(interviewSessionRequest.getLocation(), result.getLocation());
         assertEquals(SessionStatus.Yet, result.getStatus());
         assertEquals(interviewSessionRequest.getNotes(), result.getNotes());
+    }
+    @Test
+    void interviewUpdate_shouldUpdateResultSuccessfully() throws InterviewSessionException {
+        Integer interviewSessionId = 1;
+        SessionResult result = SessionResult.Good;
+        InterviewSession exInterviewSession = new InterviewSession();
+        exInterviewSession.setResult(result);
+
+        when(interviewSessionRepos.findById(interviewSessionId)).thenReturn(Optional.of(exInterviewSession));
+
+        // Act
+        String result1 = interviewSessionService.interviewUpdate(interviewSessionId,result);
+
+        // Assert
+        verify(interviewSessionRepos, times(1)).findById(interviewSessionId);
+        verify(interviewSessionRepos, times(1)).save(exInterviewSession);
+        assertEquals("Successfully evaluated!", result1);
+
+    }
+    @Test
+    void interviewUpdate_shouldHandleException() {
+        // Arrange
+        Integer id = 1;
+        SessionResult result = SessionResult.Good;
+
+        when(interviewSessionRepos.findById(id)).thenReturn(Optional.of(new InterviewSession()));
+        doThrow(RuntimeException.class).when(interviewSessionRepos).save(any());
+
+        // Act
+        String resultMessage = interviewSessionService.interviewUpdate(id, result);
+
+        // Assert
+        verify(interviewSessionRepos, times(1)).findById(id);
+        verify(interviewSessionRepos, times(1)).save(any());
+        assertNotNull(resultMessage);
+        assertEquals("java.lang.RuntimeException", resultMessage);
+    }
+    @Test
+    void getAllInterviewSession_shouldReturnInterviewSessions() throws InterviewSessionException {
+        // Arrange
+        List<InterviewSession> expectedInterviewSessions = new ArrayList<>();
+        expectedInterviewSessions.add(new InterviewSession());
+        expectedInterviewSessions.add(new InterviewSession());
+
+        when(interviewSessionRepos.findAll()).thenReturn(expectedInterviewSessions);
+
+        // Act
+        List<InterviewSession> result = interviewSessionService.getAllInterviewSession();
+
+        // Assert
+        verify(interviewSessionRepos, times(1)).findAll();
+        assertEquals(expectedInterviewSessions, result);
     }
 }
