@@ -1,20 +1,13 @@
-package com.example.eSmartRecruit.controllers.Guest;
+package com.example.eSmartRecruit.controllers.guest;
 
 import com.example.eSmartRecruit.config.ExtractUser;
-import com.example.eSmartRecruit.controllers.candidate.CandidateController;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.ChangePasswordRequest;
 import com.example.eSmartRecruit.exception.UserException;
-import com.example.eSmartRecruit.models.Application;
 import com.example.eSmartRecruit.models.Position;
-import com.example.eSmartRecruit.models.User;
-import com.example.eSmartRecruit.models.enumModel.Role;
-import com.example.eSmartRecruit.models.enumModel.UserStatus;
 import com.example.eSmartRecruit.repositories.UserRepos;
 import com.example.eSmartRecruit.services.impl.PositionService;
 import com.example.eSmartRecruit.services.impl.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,10 +17,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.sql.Date;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,7 +40,7 @@ class GuestControllerTest {
     @Test
     void forgotPassword_SuccessfulPasswordChange() throws UserException {
         // Mock successful password change
-        when(userService.updateUserpassword(anyString(), anyString())).thenReturn("Successfully saved");
+        when(userService.updateUserpassword(anyString(), anyString())).thenReturn(ResponseObject.UPDATED_SUCCESS);
 //
         // Create a mock ChangePasswordRequest
         ChangePasswordRequest mockChangePasswordRequest = new ChangePasswordRequest();
@@ -61,14 +52,14 @@ class GuestControllerTest {
 
         // Assert the results
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals("Success", responseEntity.getBody().getStatus());
-        assertEquals("Successfully saved", responseEntity.getBody().getMessage());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseEntity.getBody().getStatus());
+        assertEquals(ResponseObject.UPDATED_SUCCESS, responseEntity.getBody().getMessage());
     }
 
     @Test
     void forgotPassword_UnsuccessfulPasswordChange() throws UserException {
         // Mock unsuccessful password change
-        when(userService.updateUserpassword(anyString(), anyString())).thenReturn("Could not save");
+        when(userService.updateUserpassword(anyString(), anyString())).thenReturn(ResponseObject.UPDATED_FAIL);
 
         // Create a mock ChangePasswordRequest
         ChangePasswordRequest mockChangePasswordRequest = new ChangePasswordRequest();
@@ -80,8 +71,8 @@ class GuestControllerTest {
 
         // Assert the results
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals("Success", responseEntity.getBody().getStatus());
-        assertEquals("Could not save", responseEntity.getBody().getMessage());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseEntity.getBody().getStatus());
+        assertEquals(ResponseObject.UPDATED_FAIL, responseEntity.getBody().getMessage());
     }
 
     @Test
@@ -99,7 +90,7 @@ class GuestControllerTest {
 
         // Assert the results for the exception case
         assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
-        assertEquals("Error", responseEntity.getBody().getStatus()); // Adjust this based on your actual implementation
+        assertEquals(ResponseObject.ERROR_STATUS, responseEntity.getBody().getStatus()); // Adjust this based on your actual implementation
         // Additional assertions based on how you handle exceptions in your application
     }
 
@@ -109,8 +100,8 @@ class GuestControllerTest {
         when(positionService.searchPositions(anyString())).thenReturn(Arrays.asList(new Position(), new Position()));
         ResponseEntity<ResponseObject> responseEntity = guestController.searchJob(anyString());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals("Success", responseEntity.getBody().getStatus());
-        assertEquals("Search successfully!", responseEntity.getBody().getMessage());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseEntity.getBody().getStatus());
+        assertEquals(ResponseObject.SEARCH_SUCCESS, responseEntity.getBody().getMessage());
          // Add more assertions based on your expected search result
         verify(positionService, times(1)).searchPositions(anyString());
 
@@ -125,8 +116,8 @@ class GuestControllerTest {
 
         // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals("Success", responseEntity.getBody().getStatus());
-        assertEquals("Search successfully!", responseEntity.getBody().getMessage());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseEntity.getBody().getStatus());
+        assertEquals(ResponseObject.SEARCH_SUCCESS, responseEntity.getBody().getMessage());
         verify(positionService, times(1)).searchPositions(anyString());
     }
 
@@ -139,7 +130,7 @@ class GuestControllerTest {
         ResponseEntity<ResponseObject> responseEntity = guestController.searchJob(anyString());
 
         assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
-        assertEquals("Error", responseEntity.getBody().getStatus());
+        assertEquals(ResponseObject.ERROR_STATUS, responseEntity.getBody().getStatus());
         verify(positionService, times(1)).searchPositions(anyString());
     }
 

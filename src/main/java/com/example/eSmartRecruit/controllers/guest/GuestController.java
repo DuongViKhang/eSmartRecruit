@@ -1,15 +1,10 @@
-package com.example.eSmartRecruit.controllers.Guest;
+package com.example.eSmartRecruit.controllers.guest;
 
-import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.ChangePasswordRequest;
 import com.example.eSmartRecruit.exception.UserException;
-import com.example.eSmartRecruit.models.Position;
-import com.example.eSmartRecruit.models.User;
 import com.example.eSmartRecruit.services.impl.PositionService;
 import com.example.eSmartRecruit.services.impl.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,9 +22,9 @@ public class GuestController {
     @PutMapping("/resetpassword")
     public ResponseEntity<ResponseObject> forgotPassword(@RequestBody @Valid ChangePasswordRequest user) throws UserException {
         try {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message(userService.updateUserpassword(user.getUsername(), user.getNewPassword())).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(userService.updateUserpassword(user.getUsername(), user.getNewPassword())).build(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Error").message(e.getMessage()).build(), HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build(), HttpStatus.NOT_IMPLEMENTED);
         }
 
     }
@@ -39,9 +34,9 @@ public class GuestController {
     public ResponseEntity<ResponseObject> searchJob(@PathVariable("keyword") String keyword)
     {
         try{
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Search succesfully!").data(positionService.searchPositions(keyword)).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.SEARCH_SUCCESS).data(positionService.searchPositions(keyword)).build(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Error").message(e.getMessage()).build(), HttpStatus.NOT_IMPLEMENTED);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build(), HttpStatus.NOT_IMPLEMENTED);
         }
 
     }

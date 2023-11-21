@@ -37,7 +37,7 @@ public class AuthenticationController {
             return ResponseEntity.ok(authenticationService.register(request));
         }
         catch (Exception exception){
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -49,16 +49,16 @@ public class AuthenticationController {
         try{
             return ResponseEntity.ok(authenticationService.authenticate(request));
         }catch (Exception exception){
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.Authentication authentication) {
-        // Đăng xuất người dùng và xóa phiên làm việc
-        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
-        logoutHandler.logout(request, response, authentication);
-        return ResponseEntity.ok("{\"status\": \"SUCCESS\", \"message\": \"Sign out successfully!\"}");
+    public ResponseEntity<ResponseObject> logout(HttpServletRequest request) {
+
+        String jwt = request.getHeader("Authorization").substring(7);
+        ResponseObject message = authenticationService.logout(jwt);
+        return ResponseEntity.ok(message);
     }
     @GetMapping("/hello")
     public List<User> sayHello() throws UserException {

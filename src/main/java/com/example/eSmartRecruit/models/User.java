@@ -39,8 +39,8 @@ public class User implements UserDetails {
     @Column(name = "PhoneNumber", unique = true)
     private String phoneNumber;
     
-    @Column(name = "RoleName")
-	@Enumerated(EnumType.STRING)
+    @Column(name = "RoleName",columnDefinition = "INT")
+	@Enumerated(EnumType.ORDINAL)
     private Role roleName;
 
     @Column(name = "Status")
@@ -52,23 +52,6 @@ public class User implements UserDetails {
 
     @Column(name = "UpdateDate")
     private Date updateDate;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
 
 
 	public User(String username, String password, String email, String phoneNumber, String roleName, String status,
@@ -112,7 +95,7 @@ public class User implements UserDetails {
 		return UserStatus.Active.equals(this.status);
 
 	}
-
-
+	public void setEnabled(boolean b) {
+	}
 
 }

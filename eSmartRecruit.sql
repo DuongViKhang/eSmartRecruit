@@ -1,6 +1,24 @@
 CREATE DATABASE IF NOT EXISTS eSmartRecruit;
 USE eSmartRecruit;
 
+-- Tạo bảng Roles
+Create table Roles(
+	ID INT primary key,
+    RoleName VARCHAR(20) UNIQUE NOT NULL);
+    
+INSERT INTO `esmartrecruit`.`roles`
+(`ID`,`RoleName`)
+VALUES
+(0,"Candidate");
+INSERT INTO `esmartrecruit`.`roles`
+(`ID`,`RoleName`)
+VALUES
+(1, "Admin");
+INSERT INTO `esmartrecruit`.`roles`
+(`ID`,`RoleName`)
+VALUES
+(2, "Interviewer");
+
 -- Tạo bảng Users
 CREATE TABLE Users (
     ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -8,10 +26,11 @@ CREATE TABLE Users (
     Password VARCHAR(255),
     Email VARCHAR(255) UNIQUE,
     PhoneNumber VARCHAR(20) UNIQUE,
-    RoleName ENUM('Candidate', 'Admin', 'Interviewer') DEFAULT('Candidate'),
+    RoleName INT NOT NULL,
     Status ENUM('Active', 'Inactive') DEFAULT('Active'),
     CreateDate Date,
-    UpdateDate Date
+    UpdateDate Date,
+    FOREIGN KEY (RoleName) REFERENCES Roles(ID)
 );
 
 -- Tạo bảng Vị trí tuyển dụng
@@ -40,16 +59,6 @@ CREATE TABLE Applications (
     FOREIGN KEY (PositionID) REFERENCES Positions(ID)
 );
 
--- Tạo bảng Blacklist
-CREATE TABLE Blacklists (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    CandidateID INT,
-    Reason TEXT,
-    CreateDate Date,
-    UpdateDate Date,
-    FOREIGN KEY (CandidateID) REFERENCES Users(ID)
-);
-
 -- Tạo bảng Kỹ năng của Ứng viên
 CREATE TABLE Skills (
     ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -70,17 +79,6 @@ CREATE TABLE InterviewSessions (
     Notes TEXT,
     FOREIGN KEY (InterviewerID) REFERENCES Users(ID),
     FOREIGN KEY (ApplicationID) REFERENCES Applications(ID)
-);
-
--- Tạo bảng Liên lạc
-CREATE TABLE Communications (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    CandidateID INT,
-    Notes TEXT,
-    DateContacted DATE,
-    CreateDate Date,
-    UpdateDate Date,
-    FOREIGN KEY (CandidateID) REFERENCES Users(ID)
 );
 
 -- Tạo bảng Reports

@@ -45,9 +45,9 @@ public class CandidateController {
     public ResponseEntity<ResponseObject> home() {
         try {
             List<Position> data = positionService.getAllPosition();
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(data).message("List position successfully!").build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).data(data).message(ResponseObject.LIST_SUCCESS).build(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -56,12 +56,12 @@ public class CandidateController {
         try {
             Position pos = positionService.getSelectedPosition(id);
             if (pos == null) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message("Position not found").build(), HttpStatus.NOT_FOUND);
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message("Position not found").build(), HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS").data(pos).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).data(pos).build(), HttpStatus.OK);
 
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -70,20 +70,16 @@ public class CandidateController {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
 
             // kiểm tra đã đẩy cv lên chưa
             if (cv == null || cv.isEmpty()) {
                 return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("CV is required!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+                        .message(ResponseObject.CV_NOT_FOUND).status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
             }
 
             if (!positionService.isPresent(id)) {
                 return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Position not open!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+                        .message(ResponseObject.NOT_OPEN).status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
             }
 
             String generatedFileName = storageService.storeFile(cv);
@@ -91,10 +87,10 @@ public class CandidateController {
             Application application = new Application(candidateId, id, generatedFileName);
 
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message(applicationService.apply(application)).status("SUCCESS").build(), HttpStatus.OK);
+                    .message(applicationService.apply(application)).status(ResponseObject.SUCCESS_STATUS).build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message(e.getMessage()).status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                    .message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -105,7 +101,7 @@ public class CandidateController {
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             if (!userInfo.isEnabled()) {
                 return new ResponseEntity<>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+                        .message("Account not active!").status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
             }
 
             Integer userId = userInfo.getUserId();
@@ -115,7 +111,7 @@ public class CandidateController {
             // trường hợp không có hồ sơ nào được nộp
             if (applications.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.OK).body(ResponseObject.builder()
-                        .message("No applications found.").status("SUCCESS").data(Collections.emptyList()).build());
+                        .message(ResponseObject.APPLICATION_NOT_FOUND).status(ResponseObject.SUCCESS_STATUS).data(Collections.emptyList()).build());
             }
 
             List<Map<String, Object>> applicationList = new ArrayList<>();
@@ -129,10 +125,10 @@ public class CandidateController {
             }
 
             return ResponseEntity.status(HttpStatus.OK).body(ResponseObject.builder()
-                    .message("Loading applications success").status("SUCCESS").data(applicationList).build());
+                    .message(ResponseObject.LOAD_SUCCESS).status(ResponseObject.SUCCESS_STATUS).data(applicationList).build());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder()
-                    .message(e.getMessage()).status("ERROR").build());
+                    .message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build());
         }
     }
 
@@ -141,10 +137,6 @@ public class CandidateController {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
 
             Integer userId = userInfo.getUserId();
             User user = userService.getUserById(userId);
@@ -158,10 +150,10 @@ public class CandidateController {
             data.put("cv", application.getCv());
             data.put("applicationDate", application.getCreateDate().toString());
 
-            return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").data(data).build());
+            return ResponseEntity.ok(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).data(data).build());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder()
-                    .message(e.getMessage()).status("ERROR").build());
+                    .message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build());
         }
     }
 
@@ -171,11 +163,7 @@ public class CandidateController {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!")
-                        .status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
+
             Integer userId = userInfo.getUserId();
             User user = userService.getUserById(userId);
 
@@ -184,10 +172,10 @@ public class CandidateController {
             data.put("email", user.getEmail());
             data.put("phonenumber", user.getPhoneNumber());
 
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS")
-                    .message("Loading data success!").data(data).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS)
+                    .message(ResponseObject.LOAD_SUCCESS).data(data).build(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR")
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS)
                     .message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -200,21 +188,17 @@ public class CandidateController {
             String authHeader = request.getHeader("Authorization");
             //return new ResponseEntity<String>("hello",HttpStatus.OK);
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!")
-                        .status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
+
             Integer userId = userInfo.getUserId();
             User user = userService.updateUser(user0, userId);
             Map<String, Object> data = new LinkedHashMap<>();
             data.put("email", user.getEmail());
             data.put("phoneNumber", user.getPhoneNumber());
 
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("SUCCESS")
-                    .message("Update information successfully!").data(data).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS)
+                    .message(ResponseObject.UPDATED_SUCCESS).data(data).build(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR")
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS)
                     .message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -224,10 +208,7 @@ public class CandidateController {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
+
 
             String generatedFileName = storageService.storeFile(cv);
             int candidateId = userInfo.getUserId();
@@ -236,10 +217,10 @@ public class CandidateController {
 
             // xử lý cập nhật ở hàm applicationService.update bên dưới
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message(applicationService.update(candidateId, application, id)).status("SUCCESS").build(), HttpStatus.OK);
+                    .message(applicationService.update(candidateId, application, id)).status(ResponseObject.SUCCESS_STATUS).build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message(e.getMessage()).status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                    .message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -248,17 +229,14 @@ public class CandidateController {
         try {
             String authHeader = request.getHeader("Authorization");
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
-            if (!userInfo.isEnabled()) {
-                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-            }
+
             Integer candidateId = userInfo.getUserId();
 
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message(applicationService.deletejob(candidateId, id)).status("SUCCESS").build(), HttpStatus.OK);
+                    .message(applicationService.deletejob(candidateId, id)).status(ResponseObject.SUCCESS_STATUS).build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message(e.getMessage()).status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                    .message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

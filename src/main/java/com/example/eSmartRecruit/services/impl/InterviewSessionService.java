@@ -1,5 +1,6 @@
 package com.example.eSmartRecruit.services.impl;
 
+import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.InterviewSessionRequest;
 import com.example.eSmartRecruit.exception.ApplicationException;
 import com.example.eSmartRecruit.exception.InterviewSessionException;
@@ -7,6 +8,7 @@ import com.example.eSmartRecruit.exception.PositionException;
 import com.example.eSmartRecruit.models.Application;
 import com.example.eSmartRecruit.models.InterviewSession;
 import com.example.eSmartRecruit.models.Position;
+
 import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
 import com.example.eSmartRecruit.models.enumModel.SessionResult;
 import com.example.eSmartRecruit.models.enumModel.SessionStatus;
@@ -36,11 +38,11 @@ public class InterviewSessionService implements IInterviewSessionService {
 //        } catch (Exception e) {
 //            throw new RuntimeException(e);
 //        }
-        return  interviewSessionRepos.findById(ID).orElseThrow(()->new InterviewSessionException("The required interview session not found"));
+        return  interviewSessionRepos.findById(ID).orElseThrow(()->new InterviewSessionException(ResponseObject.NO_INTERVIEWSESSION));
     }
 
     public boolean isAlready(Integer interviewersessionID) throws InterviewSessionException {
-        InterviewSession interviewSession = interviewSessionRepos.findById(interviewersessionID).orElseThrow(()->new InterviewSessionException("The required position not found"));
+        InterviewSession interviewSession = interviewSessionRepos.findById(interviewersessionID).orElseThrow(()->new InterviewSessionException(ResponseObject.POSITION_NOT_FOUND));
         if(interviewSession.getStatus() != SessionStatus.Already ){
             return false;
         }
