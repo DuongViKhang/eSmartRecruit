@@ -1,3 +1,4 @@
+
 2023-11-21 08:31:54,637 INFO c.e.e.ESmartRecruitApplication [main] Starting ESmartRecruitApplication using Java 19.0.2 with PID 13580 (E:\eSmartRecruit\target\classes started by khang in E:\eSmartRecruit)
 2023-11-21 08:31:54,645 DEBUG c.e.e.ESmartRecruitApplication [main] Running with Spring Boot v3.1.4, Spring v6.0.12
 2023-11-21 08:31:54,647 INFO c.e.e.ESmartRecruitApplication [main] No active profile set, falling back to 1 default profile: "default"
@@ -5311,3 +5312,4 @@ com.example.eSmartRecruit.exception.AuthenticationException: Invalid token
 2023-11-21 15:11:20,384 INFO o.s.o.j.LocalContainerEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
 2023-11-21 15:11:20,414 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
 2023-11-21 15:11:20,428 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+

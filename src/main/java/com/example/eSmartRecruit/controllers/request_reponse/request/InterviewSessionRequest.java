@@ -27,4 +27,7 @@ public class InterviewSessionRequest {
     String location;
     @NotBlank(message = "This must be filled!")
     String notes;
+
+
+    String result;
 }

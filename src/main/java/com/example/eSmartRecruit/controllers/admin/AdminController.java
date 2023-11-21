@@ -62,7 +62,9 @@ public class AdminController {
         homeList.put("no_position", positionService.getcountPosition());
         homeList.put("no_application", applicationService.getcountApplication());
         homeList.put("no_interview_session", interviewSessionService.getCountInterview());
+
         return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(homeList).build(), HttpStatus.OK);
+
 
     }
 
@@ -361,7 +363,7 @@ public class AdminController {
 
     @PutMapping("/user/{userId}")
     ResponseEntity<ResponseObject> editUser(@PathVariable("userId") Integer userId, HttpServletRequest request,
-                                              @RequestBody @Valid EditUserRequest editUserRequest) {
+                                            @RequestBody @Valid EditUserRequest editUserRequest) {
         try {
 
 
@@ -379,9 +381,11 @@ public class AdminController {
         }
         catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
     }
-    @PutMapping ("/application/{applicationID}")
+
+    @PutMapping("/application/{applicationID}")
     public ResponseEntity<ResponseObject> updateApplicationStatus(@PathVariable("applicationID") Integer id, HttpServletRequest request, @RequestBody ApplicationResultRequest applicationResultRequest) {
         try {
             try {
@@ -392,7 +396,7 @@ public class AdminController {
             }
             ApplicationStatus status1 = ApplicationStatus.valueOf(applicationResultRequest.getStatus());
             String message = applicationService.adminUpdate(id, status1);
-            Application application =  applicationService.findById(id);
+            Application application = applicationService.findById(id);
             Map<String, Object> data = new LinkedHashMap<>();
             data.put("applicationID", application.getId());
             data.put("positionTitle", positionService.getSelectedPosition(application.getPositionID()).getTitle());
@@ -403,6 +407,7 @@ public class AdminController {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build(), HttpStatus.NOT_IMPLEMENTED);
         }
     }
+
     @GetMapping("/interviewsession")
     public ResponseEntity<ResponseObject> listInterviewsession (HttpServletRequest request) throws JSONException, UserException{
         try {
@@ -410,6 +415,9 @@ public class AdminController {
             ExtractUser userInfo = new ExtractUser(authHeader, userService);
             Integer userId = userInfo.getUserId();
 
+            if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
             List<InterviewSession> interviewSessions = interviewSessionRepos.findAll();
             List<Map<String, Object>> listIntervewsession = new ArrayList<>();
 
@@ -425,12 +433,11 @@ public class AdminController {
                 list.put("notes", interview.getNotes());
                 listIntervewsession.add(list);
             }
-            return ResponseEntity.ok(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(interviewSessions).build());
+            return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").message("Applications retrieved successfully.").data(interviewSessions).build());
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message(e.getMessage()).build());
         }
-
     }
     @GetMapping("/interviewsession/{interviewsessionID}")
     public ResponseEntity<ResponseObject> getDetailInterviewSession(@PathVariable("interviewsessionID") Integer Id, HttpServletRequest request) {
@@ -459,6 +466,41 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(ResponseObject.INTERNAL_SERVER_ERROR).build());
         }
     }
+
+
+    @PutMapping("/interviewsession/evaluate/{interviewsessionid}")
+    public ResponseEntity<ResponseObject> getEvaluate(@PathVariable Integer interviewsessionid, @RequestBody EvaluateRequest evaluateRequest, HttpServletRequest request) throws JSONException, UserException, InterviewSessionException {
+        String authHeader = request.getHeader("Authorization");
+        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+        if (!userInfo.isEnabled()) {
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                    .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+        }
+        try {
+            SessionResult.valueOf(evaluateRequest.getResult());
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(ResponseObject.builder()
+                    .message("Invalid status").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+        }
+        SessionResult result = SessionResult.valueOf(evaluateRequest.getResult());
+        String message = interviewSessionService.interviewUpdate(interviewsessionid, result);
+        InterviewSession interviewSession = interviewSessionService.findByID(interviewsessionid);
+        interviewSession.setResult(result);
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("id", interviewSession.getId());
+        data.put("interviewerID", interviewSession.getInterviewerID());
+        data.put("applicationID", interviewSession.getApplicationID()   );
+        data.put("date", interviewSession.getDate());
+        data.put("location", interviewSession.getLocation());
+        data.put("status", interviewSession.getStatus());
+        data.put("result", interviewSession.getResult());
+        data.put("notes", interviewSession.getNotes());
+
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                .message(ResponseObject.EVALUATED).status("SUCCESS").data(data).build(), HttpStatus.OK);
+    }
+}
+
     @GetMapping("/profile")
     ResponseEntity<ResponseObject> getProfile(HttpServletRequest request) {
         try {
@@ -503,3 +545,4 @@ public class AdminController {
         }
     }
 }
+

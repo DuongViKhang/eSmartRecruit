@@ -4,7 +4,6 @@ public enum SessionStatus {
     NotOnSchedule,
     Yet,
     Already;
-
     public boolean isNotOnSchedule() {
         return this == NotOnSchedule;
     }
