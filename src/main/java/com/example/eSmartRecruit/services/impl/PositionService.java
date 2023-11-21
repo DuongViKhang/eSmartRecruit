@@ -8,6 +8,7 @@ import com.example.eSmartRecruit.services.IPositionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -66,6 +67,8 @@ public class PositionService implements IPositionService
     }
 
     public Position createPost(Position position) {
+        position.setPostDate(Date.valueOf(LocalDate.now()));
+        position.setUpdateDate(Date.valueOf(LocalDate.now()));
         return positionRepository.save(position);
     }
 }

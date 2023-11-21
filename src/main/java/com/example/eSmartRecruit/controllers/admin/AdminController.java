@@ -73,7 +73,7 @@ public class AdminController {
         //return new ResponseEntity<String>("hello",HttpStatus.OK);
         ExtractUser userInfo = new ExtractUser(authHeader, userService);
 
-        // System.out.println("đã chạy create post");
+        System.out.println("đã chạy create post");
         Position createPosition = positionService.createPost(position);
         Map<String, Object> datapost = new LinkedHashMap<>();
         datapost.put("title", createPosition.getTitle());

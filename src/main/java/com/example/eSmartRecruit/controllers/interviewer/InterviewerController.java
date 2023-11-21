@@ -51,7 +51,7 @@ public class InterviewerController {
                         .data(Collections.emptyList()).build(), HttpStatus.OK);
             }
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message("").status(ResponseObject.SUCCESS_STATUS)
+                    .message(ResponseObject.LOAD_SUCCESS).status(ResponseObject.SUCCESS_STATUS)
                     .data(interviewSessionList).build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
@@ -68,7 +68,7 @@ public class InterviewerController {
 
             InterviewSession interviewSession = interviewSessionService.findByID(interviewersessionID);
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message("").status(ResponseObject.SUCCESS_STATUS)
+                    .message(ResponseObject.LOAD_SUCCESS).status(ResponseObject.SUCCESS_STATUS)
                     .data(interviewSession).build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
@@ -126,7 +126,7 @@ public class InterviewerController {
             data.put("phonenumber", user.getPhoneNumber());
             data.put("roleName", user.getRoleName().name());
 
-            return new ResponseEntity<>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).data(data).build(), HttpStatus.OK);
+            return new ResponseEntity<>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(data).build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS)
                     .message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -151,7 +151,7 @@ public class InterviewerController {
             data.put("email", user.getEmail());
             data.put("phoneNumber", user.getPhoneNumber());
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .status(ResponseObject.SUCCESS_STATUS).data(data).build(), HttpStatus.OK);
+                    .status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.UPDATED_SUCCESS).data(data).build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
                     .status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -178,7 +178,7 @@ public class InterviewerController {
             data.put("phonenumber", candidate.getPhoneNumber());
             data.put("roleName", candidate.getRoleName().name());
 
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).data(data).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(data).build(), HttpStatus.OK);
         } catch (Exception exception) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS)
                     .message(exception.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);

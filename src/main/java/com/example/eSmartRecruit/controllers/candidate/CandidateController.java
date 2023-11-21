@@ -51,6 +51,7 @@ public class CandidateController {
         }
     }
 
+
     @GetMapping("/position/{positionID}")
     ResponseEntity<ResponseObject> getDetailPosition(@PathVariable("positionID") @Valid Integer id) {
         try {
