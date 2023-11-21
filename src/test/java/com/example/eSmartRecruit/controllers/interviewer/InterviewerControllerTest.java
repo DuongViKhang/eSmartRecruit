@@ -401,7 +401,6 @@ class InterviewerControllerTest {
         expectedData.put("username", mockInterviewer.getUsername());
         expectedData.put("email", mockInterviewer.getEmail());
         expectedData.put("phonenumber", mockInterviewer.getPhoneNumber());
-        expectedData.put("roleName", mockInterviewer.getRoleName().name());
 
         assertEquals(expectedData, responseObject.getData());
     }
@@ -529,7 +528,7 @@ class InterviewerControllerTest {
         data.put("username", "thang1");
         data.put("email", "thang1234@gmail.com");
         data.put("phonenumber", "0999996789");
-        data.put("roleName", Role.Candidate.toString());
+
 
         assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
         assertEquals(data, responseObject.getData());
@@ -550,7 +549,6 @@ class InterviewerControllerTest {
         data.put("username", "thang");
         data.put("email", "thang1234@gmail.com");
         data.put("phonenumber", "0999996789");
-        data.put("roleName", Role.Candidate.toString());
 
         assertEquals(data, responseObject.getData());
         verify(userService, times(1)).getUserById(mockCandidate.getId());

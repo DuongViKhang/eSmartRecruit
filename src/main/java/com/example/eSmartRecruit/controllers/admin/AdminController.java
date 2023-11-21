@@ -418,7 +418,7 @@ public class AdminController {
             if (!userInfo.isEnabled() || !userService.getUserRole(userId).toLowerCase().equalsIgnoreCase("admin")) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
-            List<InterviewSession> interviewSessions = interviewSessionRepos.findAll();
+            List<InterviewSession> interviewSessions = interviewSessionService.getAllInterviewSession();
             List<Map<String, Object>> listIntervewsession = new ArrayList<>();
 
             for (InterviewSession interview : interviewSessions) {
@@ -433,10 +433,10 @@ public class AdminController {
                 list.put("notes", interview.getNotes());
                 listIntervewsession.add(list);
             }
-            return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").message("Applications retrieved successfully.").data(interviewSessions).build());
+            return ResponseEntity.ok(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(interviewSessions).build());
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message(e.getMessage()).build());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build());
         }
     }
     @GetMapping("/interviewsession/{interviewsessionID}")
