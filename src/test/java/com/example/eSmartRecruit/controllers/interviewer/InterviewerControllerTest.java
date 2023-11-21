@@ -6,16 +6,9 @@ import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
 import com.example.eSmartRecruit.controllers.request_reponse.request.ReportRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.request.UserRequest;
 import com.example.eSmartRecruit.exception.UserException;
-import com.example.eSmartRecruit.models.InterviewSession;
-import com.example.eSmartRecruit.models.Report;
-import com.example.eSmartRecruit.models.User;
-import com.example.eSmartRecruit.models.enumModel.Role;
-import com.example.eSmartRecruit.models.enumModel.SessionResult;
-import com.example.eSmartRecruit.models.enumModel.SessionStatus;
-import com.example.eSmartRecruit.models.enumModel.UserStatus;
-import com.example.eSmartRecruit.services.impl.InterviewSessionService;
-import com.example.eSmartRecruit.services.impl.ReportService;
-import com.example.eSmartRecruit.services.impl.UserService;
+import com.example.eSmartRecruit.models.*;
+import com.example.eSmartRecruit.models.enumModel.*;
+import com.example.eSmartRecruit.services.impl.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.*;
 
@@ -47,6 +41,12 @@ class InterviewerControllerTest {
     private ReportService reportService;
     @Mock
     private UserService userService;
+
+    @Mock
+    private ApplicationService applicationService;
+
+    @Mock
+    private PositionService positionService;
     private JwtService jwtService;
     // Biến instance để lưu trữ
     private MockMultipartFile mockFile;
@@ -57,6 +57,9 @@ class InterviewerControllerTest {
     InterviewSession mockSession2;
     ReportRequest mockReportRequest;
     User mockCandidate;
+
+    private Position mockPos1;
+    private Application mockApp1;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -129,6 +132,30 @@ class InterviewerControllerTest {
         mockCandidate.setStatus(UserStatus.Active);
         mockCandidate.setCreateDate(Date.valueOf("2023-11-08"));
         mockCandidate.setUpdateDate(Date.valueOf("2023-11-08"));
+
+
+        // setup position
+        mockPos1 = new Position();
+        mockPos1.setId(1);
+        mockPos1.setTitle("Software Engineer");
+        mockPos1.setJobDescription("Build web applications");
+        mockPos1.setJobRequirements("3 years of experience");
+        mockPos1.setSalary(BigDecimal.valueOf(5000));
+        mockPos1.setPostDate(Date.valueOf("2023-10-10"));
+        mockPos1.setExpireDate(Date.valueOf("2023-10-30"));
+        mockPos1.setUpdateDate(Date.valueOf("2023-10-10"));
+        mockPos1.setLocation("FPT, Thu Duc City");
+
+
+        mockApp1 = new Application();
+        mockApp1.setId(1);
+        mockApp1.setCandidateID(4);
+        mockApp1.setPositionID(1);
+        mockApp1.setStatus(ApplicationStatus.Pending);
+        mockApp1.setCv("application1.pdf");
+        mockApp1.setCreateDate(Date.valueOf("2023-11-5"));
+        mockApp1.setUpdateDate(Date.valueOf("2023-11-5"));
+
     }
 
     // thiết lập user cho trường hợp user k tồn tại
@@ -302,6 +329,57 @@ class InterviewerControllerTest {
         ResponseEntity<ResponseObject> responseEntity = interviewerController.reportInterviewSession(1, mockRequest, mockReportRequest);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals(ResponseObject.ERROR_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.INTERNAL_SERVER_ERROR, responseObject.getMessage());
+    }
+
+    /////////////////
+    @Test
+    void getApplicationDetails_success() throws Exception{
+        // Giả lập dữ liệu trả về từ service
+        when(applicationService.getApplicationById(anyInt())).thenReturn(mockApp1);
+        when(userService.getUserById(anyInt())).thenReturn(mockCandidate);
+        when(positionService.getSelectedPosition(mockApp1.getPositionID())).thenReturn(mockPos1);
+
+        // Gọi API để nhận response
+        ResponseEntity<ResponseObject> responseEntity = interviewerController.getApplicationDetails(1, mockRequest);
+
+        // Kiểm tra HTTP status code
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        // Kiểm tra response body
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
+
+        // Kiểm tra dữ liệu trả về
+        Map<String, Object> expectedData = new LinkedHashMap<>();
+        expectedData.put("applicationID", 1);
+        expectedData.put("candidateName", mockCandidate.getUsername());
+        expectedData.put("positionTitle", mockPos1.getTitle());
+        expectedData.put("status", mockApp1.getStatus());
+        expectedData.put("cv", mockApp1.getCv());
+        expectedData.put("applicationDate", mockApp1.getCreateDate().toString());
+
+        // So sánh dữ liệu trả về với dữ liệu mong đợi
+        assertEquals(expectedData, responseEntity.getBody().getData());
+    }
+
+    @Test
+    void getApplicationDetails_internalServerError() throws Exception {
+        // Giả lập một ngoại lệ từ service
+        when(applicationService.getApplicationById(1)).thenThrow(new RuntimeException(ResponseObject.INTERNAL_SERVER_ERROR));
+        lenient().when(userService.getUserById(2)).thenReturn(mockCandidate);
+
+        // Gọi API để nhận response
+        ResponseEntity<ResponseObject> responseEntity = interviewerController.getApplicationDetails(1, mockRequest);
+
+        // Kiểm tra HTTP status code
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+
+        // Kiểm tra response body
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
         assertEquals(ResponseObject.ERROR_STATUS, responseObject.getStatus());
