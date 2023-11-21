@@ -45,7 +45,7 @@ public class CandidateController {
     public ResponseEntity<ResponseObject> home() {
         try {
             List<Position> data = positionService.getAllPosition();
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).data(data).message(ResponseObject.LIST_SUCCESS).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(data).message(ResponseObject.LIST_SUCCESS).build(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -59,7 +59,7 @@ public class CandidateController {
             if (pos == null) {
                 return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message("Position not found").build(), HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).data(pos).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(pos).build(), HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
