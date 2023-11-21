@@ -64,7 +64,7 @@ public class AdminController {
         homeList.put("no_position", positionService.getcountPosition());
         homeList.put("no_application", applicationService.getcountApplication());
         homeList.put("no_interview_session", interviewSessionService.getCountInterview());
-        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").data(homeList).build(), HttpStatus.OK);
+        return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("Success").message("Load successfully!").data(homeList).build(), HttpStatus.OK);
 
     }
 
@@ -482,28 +482,69 @@ public class AdminController {
         }
     }
 
-    D
+    @GetMapping("/interviewsession/{interviewsessionID}")
+    public ResponseEntity<ResponseObject> detailInterviewSessionId(@PathVariable("interviewsessionID") Integer Id, HttpServletRequest request) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+
+            if (!userInfo.isEnabled()) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR")
+                        .message("Account not active!").build(), HttpStatus.BAD_REQUEST);
+            }
+
+            InterviewSession interviewSession = interviewSessionService.findByID(Id);
+            if (interviewSession == null) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message("InterviewSession not found").build(), HttpStatus.NOT_FOUND);
+            }
+
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("id", interviewSession.getId());
+            data.put("interviewid", interviewSession.getInterviewerID());
+            data.put("applicationid", interviewSession.getApplicationID());
+            data.put("date", interviewSession.getDate());
+            data.put("location", interviewSession.getLocation());
+            data.put("status", interviewSession.getStatus());
+            data.put("result", interviewSession.getResult());
+            data.put("notes", interviewSession.getNotes());
+            return ResponseEntity.ok(ResponseObject.builder().status("SUCCESS").message("Loading interviewsession successfully").data(data).build());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder().status("ERROR").message("Internal server error").build());
+        }
+
+    }
 
     @PutMapping("/interviewsession/evaluate/{interviewsessionid}")
     public ResponseEntity<ResponseObject> getEvaluate(@PathVariable Integer interviewsessionid, @RequestBody InterviewSessionRequest interviewSessionRequest, HttpServletRequest request) throws JSONException, UserException, InterviewSessionException {
-        String authHeader = request.getHeader("Authorization");
-        ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            String authHeader = request.getHeader("Authorization");
+            ExtractUser userInfo = new ExtractUser(authHeader, userService);
+            if (!userInfo.isEnabled()) {
+                return new ResponseEntity<ResponseObject>(ResponseObject.builder()
+                        .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+            }
+            try {
+               // SessionStatus.valueOf(interviewSessionRequest.getStatus());
+                SessionResult.valueOf(interviewSessionRequest.getResult());
+            } catch (IllegalArgumentException e) {
+                return new ResponseEntity<>(ResponseObject.builder()
+                        .message("Invalid status").status("ERROR").build(), HttpStatus.BAD_REQUEST);
+            }
+           // SessionStatus status1 = SessionStatus.valueOf(interviewSessionRequest.getStatus());
+            //SessionResult result = SessionResult.valueOf(interviewSessionRequest.getResult());
+           // String message = interviewSessionService.interviewUpdate(interviewsessionid, result);
+            InterviewSession interviewSession = interviewSessionService.findByID(interviewsessionid);
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("id", interviewSession.getId());
+            data.put("interviewerID", interviewSession.getInterviewerID());
+            data.put("applicationID", interviewSession.getApplicationID()   );
+            data.put("date", interviewSession.getDate());
+            data.put("location", interviewSession.getLocation());
+            data.put("status", interviewSession.getStatus());
+            data.put("result", interviewSession.getResult());
+            data.put("notes", interviewSession.getNotes());
 
-        if (!userInfo.isEnabled()) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message("Account not active!").status("ERROR").build(), HttpStatus.BAD_REQUEST);
-        }
-        try {
-            InterviewSession evaluateInterview = interviewSessionService.getSelectedInterviewSession(interviewsessionid);
-            evaluateInterview.setStatus(SessionStatus.valueOf(interviewSessionRequest.getStatus()));
-            evaluateInterview.setResult(SessionResult.valueOf(interviewSessionRequest.getResult()));
-            interviewSessionRepos.save(evaluateInterview);
-
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().data(evaluateInterview)
-                    .status("SUCCESS").message("InterviewSession updated successfully").build(), HttpStatus.OK);
-        } catch (InterviewSessionException e) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder()
-                    .message("Error editing information: " + e.getMessage()).status("ERROR").build(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+                    .message(ResponseObject.EVALUATED).status("SUCCESS").data(data).build(), HttpStatus.OK);
     }
 }

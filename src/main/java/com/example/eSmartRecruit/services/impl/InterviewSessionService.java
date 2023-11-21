@@ -1,16 +1,21 @@
 package com.example.eSmartRecruit.services.impl;
 
 import com.example.eSmartRecruit.controllers.request_reponse.request.InterviewSessionRequest;
+import com.example.eSmartRecruit.exception.ApplicationException;
 import com.example.eSmartRecruit.exception.InterviewSessionException;
 import com.example.eSmartRecruit.exception.PositionException;
+import com.example.eSmartRecruit.models.Application;
 import com.example.eSmartRecruit.models.InterviewSession;
 import com.example.eSmartRecruit.models.Position;
+import com.example.eSmartRecruit.models.enumModel.ApplicationStatus;
+import com.example.eSmartRecruit.models.enumModel.SessionResult;
 import com.example.eSmartRecruit.models.enumModel.SessionStatus;
 import com.example.eSmartRecruit.repositories.InterviewSessionRepos;
 import com.example.eSmartRecruit.services.IInterviewSessionService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -78,5 +83,22 @@ public class InterviewSessionService implements IInterviewSessionService {
 
     public List<InterviewSession> getAllInterviewSession() throws InterviewSessionException {
         return  interviewSessionRepos.findAll();
+    }
+    public String interviewUpdate(Integer id, SessionResult result){
+        try{
+            InterviewSession exInterviewSession = interviewSessionRepos.findById(id).orElseThrow(()->new ApplicationException("InterviewSession not found!"));
+           // exInterviewSession.setStatus(status);
+            exInterviewSession.setResult(result);
+            interviewSessionRepos.save(exInterviewSession);
+
+//            if (result == SessionResult.NotYet || result == SessionResult.Good || result == SessionResult.Bad)
+//            {
+//                return "Change successful!!";
+//            }
+
+        }catch (Exception e){
+            return e.toString();
+        }
+        return null;
     }
 }

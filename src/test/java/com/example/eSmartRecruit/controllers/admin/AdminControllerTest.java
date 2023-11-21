@@ -4,6 +4,7 @@ import com.example.eSmartRecruit.authentication.request_reponse.RegisterRequest;
 import com.example.eSmartRecruit.config.ExtractUser;
 import com.example.eSmartRecruit.config.JwtService;
 import com.example.eSmartRecruit.controllers.request_reponse.ResponseObject;
+import com.example.eSmartRecruit.controllers.request_reponse.request.InterviewSessionRequest;
 import com.example.eSmartRecruit.controllers.request_reponse.request.PositionRequest;
 import com.example.eSmartRecruit.exception.InterviewSessionException;
 import com.example.eSmartRecruit.exception.PositionException;
@@ -1054,7 +1055,37 @@ class AdminControllerTest {
     }
 
     @Test
-    void getEvaluate() {
+    void getEvaluate_shouldReturnErrorWhenInterviewSessionNotFound() throws UserException, InterviewSessionException, JSONException {
+
+        ExtractUser mockUserInfo = mock(ExtractUser.class);
+        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
+        lenient().when(mockUserInfo.getUserId()).thenReturn(5);
+        lenient().when(userService.isEnabled(5)).thenReturn(true);
+        lenient().when(userService.getUserRole(2)).thenReturn("Admin");
+
+        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
+
+        InterviewSessionRequest interviewSessionRequest = new InterviewSessionRequest();
+        interviewSessionRequest.setStatus("NotOnSchedule");
+        interviewSessionRequest.setResult("NotYet");
+
+        InterviewSession existingInterviewSession = new InterviewSession();
+        existingInterviewSession.setStatus(SessionStatus.valueOf("NotOnSchedule"));
+        existingInterviewSession.setResult(SessionResult.valueOf("NotYet"));
+
+        // Mocking behaviors
+        when(interviewSessionService.getSelectedInterviewSession(1)).thenReturn(existingInterviewSession);
+        // Act
+        ResponseEntity<ResponseObject> responseEntity = adminController.getEvaluate(1, interviewSessionRequest, mockRequest);
+        // Assert
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        ResponseObject responseObject = responseEntity.getBody();
+        assertNotNull(responseObject);
+        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals("Change successfull!!", responseObject.getMessage());
+
+       // verify(interviewSessionService, times(1)).interviewUpdate(eq(1), any(InterviewSession.class));
 
     }
 }
