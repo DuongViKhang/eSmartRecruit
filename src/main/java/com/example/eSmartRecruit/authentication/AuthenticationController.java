@@ -37,7 +37,7 @@ public class AuthenticationController {
             return ResponseEntity.ok(authenticationService.register(request));
         }
         catch (Exception exception){
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -49,7 +49,7 @@ public class AuthenticationController {
         try{
             return ResponseEntity.ok(authenticationService.authenticate(request));
         }catch (Exception exception){
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status("ERROR").message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(exception.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 

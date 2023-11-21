@@ -71,7 +71,7 @@ public class AuthenticationService {
         try {
             userRepo.save(user);
         }catch (Exception e){
-            return ResponseObject.builder().status("ERROR").message(e.getMessage()).build();
+            return ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(e.getMessage()).build();
         }
         var jwtToken = jwtService.generateToken(user);
         Token token = new Token(user.getUsername(),jwtToken);
@@ -79,9 +79,9 @@ public class AuthenticationService {
         tokenRepos.save(token);
 
         return ResponseObject.builder()
-                .status("SUCCESS")
+                .status(ResponseObject.SUCCESS_STATUS)
                 .data(jwtToken)
-                .message("Registered successfully!")
+                .message(ResponseObject.REGISTER_SUCCESS)
                 .build();
     }
 
@@ -96,11 +96,6 @@ public class AuthenticationService {
             );
 
             var user = userRepo.findByUsername(request.getUsername()).orElseThrow(()->new UserException("User not found!"));
-            if (!user.isEnabled()){
-                return ResponseObject.builder()
-                        .message("Account not active")
-                        .build();
-            }
 
             var jwtToken = jwtService.generateToken(user);
 
@@ -118,8 +113,8 @@ public class AuthenticationService {
 
             return ResponseObject.builder()
                     .data(jwtToken)
-                    .status("SUCCESS")
-                    .message("Authenticated!")
+                    .status(ResponseObject.SUCCESS_STATUS)
+                    .message(ResponseObject.SIGN_IN_SUCCESS)
                     .build();
         }catch (Exception exception){
             //throw new UserException("User name or password is wrong");
@@ -132,7 +127,7 @@ public class AuthenticationService {
     public ResponseObject logout(String token){
         String username = jwtService.extractUserName(token);
         String message = tokenRepos.deleteToken(username);
-        return ResponseObject.builder().status("SUCCESS").message(message).build();
+        return ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(message).build();
     }
 
 }

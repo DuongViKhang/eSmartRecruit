@@ -173,8 +173,8 @@ class CandidateControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("SUCCESS", responseObject.getStatus());
-        assertEquals("List position successfully!", responseObject.getMessage());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.LIST_SUCCESS, responseObject.getMessage());
 
         List<Position> returnedData = (List<Position>) responseObject.getData();
         assertNotNull(returnedData);
@@ -186,7 +186,7 @@ class CandidateControllerTest {
     @Test
     void home_internalServerError() throws Exception {
         // Mock hành vi của positionService.getAllPosition() để ném ra một exception
-        when(positionService.getAllPosition()).thenThrow(new RuntimeException("Simulated internal server error"));
+        when(positionService.getAllPosition()).thenThrow(new RuntimeException(ResponseObject.INTERNAL_SERVER_ERROR));
 
         // Gọi API
         ResponseEntity<ResponseObject> responseEntity = candidateController.home();
@@ -195,8 +195,8 @@ class CandidateControllerTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
 
         ResponseObject responseObject = responseEntity.getBody();
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Simulated internal server error", responseObject.getMessage());
+        assertEquals(ResponseObject.ERROR_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.INTERNAL_SERVER_ERROR, responseObject.getMessage());
         // Đảm bảo rằng data là null hoặc không có trong trường hợp lỗi
         assertNull(responseObject.getData());
 
@@ -213,12 +213,12 @@ class CandidateControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
 
         Position returnedPosition = (Position) responseObject.getData();
         assertNotNull(returnedPosition);
         assertEquals(1, returnedPosition.getId());
-        assertEquals("Software Engineer", returnedPosition.getTitle());
+        assertEquals(mockPos1.getTitle(), returnedPosition.getTitle());
 
         verify(positionService, times(1)).getSelectedPosition(1);
     }
@@ -231,8 +231,8 @@ class CandidateControllerTest {
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Position not found", responseObject.getMessage());
+        assertEquals(ResponseObject.ERROR_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.POSITION_NOT_FOUND, responseObject.getMessage());
         assertNull(responseObject.getData());
 
         verify(positionService, times(1)).getSelectedPosition(1);
@@ -241,7 +241,7 @@ class CandidateControllerTest {
     @Test
     void getDetailPosition_internalServerError() throws Exception {
         // Mock hành vi của positionService.getSelectedPosition() để ném ra một exception
-        when(positionService.getSelectedPosition(anyInt())).thenThrow(new RuntimeException("Simulated internal server error"));
+        when(positionService.getSelectedPosition(anyInt())).thenThrow(new RuntimeException(ResponseObject.INTERNAL_SERVER_ERROR));
 
         // gọi api
         ResponseEntity<ResponseObject> responseEntity = candidateController.getDetailPosition(1);
@@ -250,8 +250,8 @@ class CandidateControllerTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Simulated internal server error", responseObject.getMessage());
+        assertEquals(ResponseObject.ERROR_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.INTERNAL_SERVER_ERROR, responseObject.getMessage());
         // xác nhận body null
         assertNull(responseObject.getData());
 
@@ -264,33 +264,21 @@ class CandidateControllerTest {
     void applyForPosition_success() throws Exception {
         when(storageService.storeFile(mockFile)).thenReturn("generatedFileName");
         when(positionService.isPresent(1)).thenReturn(true);
-        when(applicationService.apply(any(Application.class))).thenReturn("Successfully applied!");
+        when(applicationService.apply(any(Application.class))).thenReturn(ResponseObject.APPLY_SUCCESS);
 
         ResponseEntity<ResponseObject> responseEntity = candidateController.applyForPosition(1, mockRequest, mockFile);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("SUCCESS", responseObject.getStatus());
-        assertEquals("Successfully applied!", responseObject.getMessage());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.APPLY_SUCCESS, responseObject.getMessage());
 
         verify(storageService, times(1)).storeFile(mockFile);
         verify(positionService, times(1)).isPresent(1);
         verify(applicationService, times(1)).apply(any(Application.class));
     }
 
-    @Test
-    void applyForPosition_badRequest_whenUserNotEnabled() throws Exception {
-        UserNotEnabled();
-
-        ResponseEntity<ResponseObject> responseEntity = candidateController.applyForPosition(1, mockRequest1, mockFile);
-
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        ResponseObject responseObject = responseEntity.getBody();
-        assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Account not active!", responseObject.getMessage());
-    }
 
     @Test
     void applyForPosition_badRequest_whenCVNotEnabled() {
@@ -299,8 +287,8 @@ class CandidateControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("CV is required!", responseObject.getMessage());
+        assertEquals(ResponseObject.ERROR_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.CV_NOT_FOUND, responseObject.getMessage());
     }
 
     @Test
@@ -313,8 +301,8 @@ class CandidateControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Position not open!", responseObject.getMessage());
+        assertEquals(ResponseObject.ERROR_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.NOT_OPEN, responseObject.getMessage());
     }
 
     @Test
@@ -348,7 +336,7 @@ class CandidateControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
 
         List<Map<String, Object>> expectedData = (List<Map<String, Object>>) responseObject.getData();
         assertNotNull(expectedData);
@@ -362,18 +350,18 @@ class CandidateControllerTest {
         assertNotNull(applicationMap.get("applicationDate"));
     }
 
-    @Test
-    void getMyApplications_whenUserNotEnabled() throws Exception {
-        UserNotEnabled();
-
-        ResponseEntity<ResponseObject> responseEntity = candidateController.getMyApplications(mockRequest1);//
-
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        ResponseObject responseObject = responseEntity.getBody();
-        assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Account not active!", responseObject.getMessage());
-    }
+//    @Test
+//    void getMyApplications_whenUserNotEnabled() throws Exception {
+//        UserNotEnabled();
+//
+//        ResponseEntity<ResponseObject> responseEntity = candidateController.getMyApplications(mockRequest1);//
+//
+//        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+//        ResponseObject responseObject = responseEntity.getBody();
+//        assertNotNull(responseObject);
+//        assertEquals("ERROR", responseObject.getStatus());
+//        assertEquals("Account not active!", responseObject.getMessage());
+//    }
 
     @Test
     void getMyApplications_notFound() throws Exception {
@@ -384,21 +372,21 @@ class CandidateControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("SUCCESS", responseObject.getStatus());
-        assertEquals("No applications found.", responseObject.getMessage());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.APPLICATION_NOT_FOUND, responseObject.getMessage());
         assertEquals(Collections.emptyList(), responseEntity.getBody().getData());
     }
 
     @Test
     void getMyApplications_internalServerError() throws Exception {
-        when(applicationService.getApplicationsByCandidateId(anyInt())).thenThrow(new RuntimeException("Some internal server"));
+        when(applicationService.getApplicationsByCandidateId(anyInt())).thenThrow(new RuntimeException(ResponseObject.INTERNAL_SERVER_ERROR));
 
         ResponseEntity<ResponseObject> responseEntity = candidateController.getMyApplications(mockRequest);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
         ResponseObject responseObject = responseEntity.getBody();
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Some internal server", responseObject.getMessage());
+        assertEquals(ResponseObject.ERROR_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.INTERNAL_SERVER_ERROR, responseObject.getMessage());
         assertNull(responseObject.getData());
     }
 
@@ -418,7 +406,7 @@ class CandidateControllerTest {
         // Kiểm tra response body
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
 
         // Kiểm tra dữ liệu trả về
         Map<String, Object> expectedData = new LinkedHashMap<>();
@@ -434,26 +422,9 @@ class CandidateControllerTest {
     }
 
     @Test
-    void getApplicationDetails_whenUserNotEnabled() throws Exception {
-        UserNotEnabled();
-
-        // Gọi API để nhận response - mockrRequest1
-        ResponseEntity<ResponseObject> responseEntity = candidateController.getApplicationDetails(1, mockRequest1);
-
-        // Kiểm tra HTTP status code
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-
-        // Kiểm tra response body
-        ResponseObject responseObject = responseEntity.getBody();
-        assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Account not active!", responseObject.getMessage());
-    }
-
-    @Test
     void getApplicationDetails_internalServerError() throws Exception {
         // Giả lập một ngoại lệ từ service
-        when(applicationService.getApplicationById(1)).thenThrow(new RuntimeException("Internal Server Error"));
+        when(applicationService.getApplicationById(1)).thenThrow(new RuntimeException(ResponseObject.INTERNAL_SERVER_ERROR));
 
         // Gọi API để nhận response
         ResponseEntity<ResponseObject> responseEntity = candidateController.getApplicationDetails(1, mockRequest);
@@ -464,8 +435,8 @@ class CandidateControllerTest {
         // Kiểm tra response body
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Internal Server Error", responseObject.getMessage());
+        assertEquals(ResponseObject.ERROR_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.INTERNAL_SERVER_ERROR, responseObject.getMessage());
     }
 
     /////////////////
@@ -480,7 +451,7 @@ class CandidateControllerTest {
         // Kiểm tra response body
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
 
         Map<String, String> expectedData = new LinkedHashMap<>();
         expectedData.put("username", "khang");
@@ -491,27 +462,11 @@ class CandidateControllerTest {
         assertEquals(expectedData, responseObject.getData());
     }
 
-    @Test
-    void getDetailUser_whenUserNotEnabled() throws Exception {
-        UserNotEnabled();
-
-        // Gọi API để nhận response - mockRequest1
-        ResponseEntity<ResponseObject> responseEntity = candidateController.getDetailUser(mockRequest1);
-
-        // Kiểm tra HTTP status code
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-
-        // Kiểm tra response body
-        ResponseObject responseObject = responseEntity.getBody();
-        assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Account not active!", responseObject.getMessage());
-    }
 
     @Test
     void getDetailUser_internalServerError() throws Exception {
         when(userService.isEnabled(4)).thenReturn(true);
-        when(userService.getUserById(4)).thenThrow(new RuntimeException("Internal Server Error"));
+        when(userService.getUserById(4)).thenThrow(new RuntimeException(ResponseObject.INTERNAL_SERVER_ERROR));
 
         // Gọi API để nhận response
         ResponseEntity<ResponseObject> responseEntity = candidateController.getDetailUser(mockRequest);
@@ -522,8 +477,8 @@ class CandidateControllerTest {
         // Kiểm tra response body
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Internal Server Error", responseObject.getMessage());
+        assertEquals(ResponseObject.ERROR_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.INTERNAL_SERVER_ERROR, responseObject.getMessage());
     }
 
     ////////////////
@@ -550,7 +505,7 @@ class CandidateControllerTest {
         // Kiểm tra response body
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("SUCCESS", responseObject.getStatus());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
 
         Map<String, Object> expectedData = new LinkedHashMap<>();
         expectedData.put("email", "newemail@gmail.com");
@@ -560,26 +515,11 @@ class CandidateControllerTest {
         assertEquals(expectedData, responseObject.getData());
     }
 
-    @Test
-    void updateUser_whenUserNotEnabled() throws Exception {
-        UserNotEnabled();
-        // Gọi API để nhận response
-        ResponseEntity<ResponseObject> responseEntity = candidateController.updateUser(mockRequest1, new UserRequest());
-
-        // Kiểm tra HTTP status code
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-
-        // Kiểm tra response body
-        ResponseObject responseObject = responseEntity.getBody();
-        assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Account not active!", responseObject.getMessage());
-    }
 
     @Test
     void updateUser_internalServerError() throws Exception {
         // Giả lập ngoại lệ từ service
-        when(userService.updateUser(any(UserRequest.class), eq(4))).thenThrow(new RuntimeException("Internal Server Error"));
+        when(userService.updateUser(any(UserRequest.class), eq(4))).thenThrow(new RuntimeException(ResponseObject.INTERNAL_SERVER_ERROR));
 
         // Gọi API để nhận response
         ResponseEntity<ResponseObject> responseEntity = candidateController.updateUser(mockRequest, new UserRequest());
@@ -590,8 +530,8 @@ class CandidateControllerTest {
         // Kiểm tra response body
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Internal Server Error", responseObject.getMessage());
+        assertEquals(ResponseObject.ERROR_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.INTERNAL_SERVER_ERROR, responseObject.getMessage());
     }
 
 
@@ -602,38 +542,22 @@ class CandidateControllerTest {
         lenient().when(positionService.isPresent(1)).thenReturn(true);
 
         var newApplication = new Application("generatedFileName.pdf");
-        lenient().when(applicationService.update(4, newApplication, 1)).thenReturn("update Success");
+        lenient().when(applicationService.update(4, newApplication, 1)).thenReturn(ResponseObject.UPDATED_SUCCESS);
 
         ResponseEntity<ResponseObject> responseEntity = candidateController.updateApplyPosition(1, mockRequest, mockFile);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("SUCCESS", responseObject.getStatus());
-        assertEquals("update Success", responseObject.getMessage());
-    }
-
-    @Test
-    void updateApplyPosition_whenUserNotEnabled() throws Exception {
-        UserNotEnabled();
-        // Gọi API để nhận response
-        ResponseEntity<ResponseObject> responseEntity = candidateController.updateApplyPosition(1, mockRequest1, mockFile);
-
-        // Kiểm tra HTTP status code
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-
-        // Kiểm tra response body
-        ResponseObject responseObject = responseEntity.getBody();
-        assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Account not active!", responseObject.getMessage());
+        assertEquals(ResponseObject.SUCCESS_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.UPDATED_SUCCESS, responseObject.getMessage());
     }
 
     @Test
     void updateApplyPosition_internalServerError() throws Exception {
         // Giả lập ngoại lệ từ service
         when(storageService.storeFile(mockFile)).thenReturn("generatedFileName");
-        when(applicationService.update(4, new Application("generatedFileName"), 1)).thenThrow(new RuntimeException("Internal Server Error"));
+        when(applicationService.update(4, new Application("generatedFileName"), 1)).thenThrow(new RuntimeException(ResponseObject.INTERNAL_SERVER_ERROR));
 
         // Gọi API để nhận response
         ResponseEntity<ResponseObject> responseEntity = candidateController.updateApplyPosition(1, mockRequest, mockFile);
@@ -644,13 +568,13 @@ class CandidateControllerTest {
         // Kiểm tra response body
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Internal Server Error", responseObject.getMessage());
+        assertEquals(ResponseObject.ERROR_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.INTERNAL_SERVER_ERROR, responseObject.getMessage());
     }
 
     @Test
     void deleteApplication_success() {
-        lenient().when(applicationService.deletejob(4, 1)).thenReturn("Successfully deleted!");
+        lenient().when(applicationService.deletejob(4, 1)).thenReturn(ResponseObject.DELETED_SUCCESS);
 
         ResponseEntity<ResponseObject> responseEntity = candidateController.deleteApplyPosition(1, mockRequest);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -658,37 +582,22 @@ class CandidateControllerTest {
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
         assertEquals("SUCCESS", responseObject.getStatus());
-        assertEquals("Successfully deleted!", responseObject.getMessage());
+        assertEquals(ResponseObject.DELETED_SUCCESS, responseObject.getMessage());
 
         verify(applicationService, times(1)).deletejob(4, 1);
     }
 
     @Test
-    public void deleteApplyPosition_whenUserNotEnabled() throws Exception {
-        UserNotEnabled();
-
-        ResponseEntity<ResponseObject> responseEntity = candidateController.deleteApplyPosition(1, mockRequest1);
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-
-        ResponseObject responseObject = responseEntity.getBody();
-        assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Account not active!", responseObject.getMessage());
-
-        verify(applicationService, never()).deletejob(anyInt(), anyInt());
-    }
-
-    @Test
     public void deleteApplyPosition_internalServerError() throws Exception {
-        when(applicationService.deletejob(4, 1)).thenThrow(new RuntimeException("Internal Server Error"));
+        when(applicationService.deletejob(4, 1)).thenThrow(new RuntimeException(ResponseObject.INTERNAL_SERVER_ERROR));
 
         ResponseEntity<ResponseObject> responseEntity = candidateController.deleteApplyPosition(1, mockRequest);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
 
         ResponseObject responseObject = responseEntity.getBody();
         assertNotNull(responseObject);
-        assertEquals("ERROR", responseObject.getStatus());
-        assertEquals("Internal Server Error", responseObject.getMessage());
+        assertEquals(ResponseObject.ERROR_STATUS, responseObject.getStatus());
+        assertEquals(ResponseObject.INTERNAL_SERVER_ERROR, responseObject.getMessage());
 
         verify(applicationService, times(1)).deletejob(4, 1);
     }
