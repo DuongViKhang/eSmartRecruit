@@ -92,7 +92,7 @@ class ApplicationServiceTest {
         assertFalse(result);
     }
     @Test
-    void testGetApplicationsByCandidateId() {
+    void testGetApplicationsByCandidateId() throws ApplicationException {
         // Arrange
         Integer candidateID = 1;
         List<Application> expectedApplications = Arrays.asList(new Application(), new Application());

@@ -351,36 +351,6 @@ class AdminControllerTest {
         }
     }
 
-//    @Test
-//    void getUsers_shouldReturnForbiddenWhenUserNotEnabled() throws JSONException, UserException {
-//
-//        ExtractUser mockUserInfo = mock(ExtractUser.class);
-//        lenient().when(mockUserInfo.isEnabled()).thenReturn(false);
-//        lenient().when(mockUserInfo.getUserId()).thenReturn(2);
-//        lenient().when(userService.isEnabled(2)).thenReturn(false);
-//        lenient().when(userService.getUserRole(2)).thenReturn("Admin");
-//        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
-//        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
-//
-//        ResponseEntity<ResponseObject> response = adminController.getUsers(mockRequest);
-//        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-//    }
-
-//    @Test
-//    void getUsers_shouldReturnForbiddenWhenUserIsNotAdmin() throws JSONException, UserException {
-//
-//        ExtractUser mockUserInfo = mock(ExtractUser.class);
-//        lenient().when(mockUserInfo.isEnabled()).thenReturn(true);
-//        lenient().when(mockUserInfo.getUserId()).thenReturn(2);
-//        lenient().when(userService.isEnabled(2)).thenReturn(true);
-//        lenient().when(userService.getUserRole(2)).thenReturn("Candidate");
-//        HttpServletRequest mockRequest = mock(HttpServletRequest.class);
-//        lenient().when(mockRequest.getHeader("Authorization")).thenReturn("Bearer " + jwtToken);
-//
-//        ResponseEntity<ResponseObject> response = adminController.getUsers(mockRequest);
-//        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-//    }
-
     @Test
     void getUsers_shouldReturnInternalServerErrorResponseWhenCatchUserException() throws JSONException, UserException {
 

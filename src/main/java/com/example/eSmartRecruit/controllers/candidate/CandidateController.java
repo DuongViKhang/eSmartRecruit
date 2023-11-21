@@ -51,6 +51,7 @@ public class CandidateController {
         }
     }
 
+
     @GetMapping("/position/{positionID}")
     ResponseEntity<ResponseObject> getDetailPosition(@PathVariable("positionID") @Valid Integer id) {
         try {
@@ -150,7 +151,7 @@ public class CandidateController {
             data.put("cv", application.getCv());
             data.put("applicationDate", application.getCreateDate().toString());
 
-            return ResponseEntity.ok(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).data(data).build());
+            return ResponseEntity.ok(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(data).build());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseObject.builder()
                     .message(e.getMessage()).status(ResponseObject.ERROR_STATUS).build());

@@ -46,7 +46,7 @@ public class ApplicationService implements IApplicationService {
         return true;
     }
 
-    public List<Application> getApplicationsByCandidateId(Integer candidateID) {
+    public List<Application> getApplicationsByCandidateId(Integer candidateID) throws ApplicationException{
         return applicationRepository.findByCandidateID(candidateID);
     }
     public Application getApplicationById(Integer ID) throws ApplicationException {
