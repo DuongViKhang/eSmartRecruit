@@ -209,32 +209,6 @@ public class InterviewerController {
     }
 
 
-    @GetMapping("/candidate/{candidateId}")
-    ResponseEntity<ResponseObject> getCandidateInformation(@PathVariable("candidateId") Integer candidateId, HttpServletRequest request) {
-        try {
-            String authHeader = request.getHeader("Authorization");
-            ExtractUser userInfo = new ExtractUser(authHeader, userService);
-
-
-            User candidate = userService.getUserById(candidateId);
-            if (!candidate.getRoleName().equals(Role.Candidate)) {
-                return new ResponseEntity<>(ResponseObject.builder()
-                        .message(ResponseObject.NOT_CANDIDATE)
-                        .status(ResponseObject.ERROR_STATUS).build(), HttpStatus.BAD_REQUEST);
-            }
-
-            Map<String, String> data = new HashMap<>();
-            data.put("username", candidate.getUsername());
-            data.put("email", candidate.getEmail());
-            data.put("phonenumber", candidate.getPhoneNumber());
-            data.put("roleName", candidate.getRoleName().name());
-
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(data).build(), HttpStatus.OK);
-        } catch (Exception exception) {
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS)
-                    .message(exception.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 
 
 }
