@@ -58,7 +58,7 @@ public class InterviewerController {
         }
     }
 
-    @GetMapping("/interview-session/{interview-sessionID}")
+    @GetMapping("/interviewsession/{interview-sessionID}")
     ResponseEntity<ResponseObject> findByInterviewSessionID(@PathVariable("interview-sessionID") Integer interviewersessionID, HttpServletRequest request) {
         try {
             String authHeader = request.getHeader("Authorization");

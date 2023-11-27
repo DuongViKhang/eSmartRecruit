@@ -355,7 +355,7 @@ public class AdminController {
             data.put("status", user.getStatus().toString());
             data.put("create_date", user.getCreateDate().toString());
             data.put("update_date", user.getUpdateDate().toString());
-            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.UPDATED_SUCCESS).data(data).build(), HttpStatus.OK);
+            return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.SUCCESS_STATUS).message(ResponseObject.LOAD_SUCCESS).data(data).build(), HttpStatus.OK);
         } catch (Exception exception) {
             return new ResponseEntity<ResponseObject>(ResponseObject.builder().status(ResponseObject.ERROR_STATUS).message(exception.getMessage()).build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
